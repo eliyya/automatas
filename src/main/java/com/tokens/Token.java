@@ -17,10 +17,17 @@ public class Token {
 
     public static HashSet<String> operadores = new HashSet<>(
             List.of(
+                    // ternarios
+                    "?", ":",
+                    // logicos ternarios
                     "&&", "||", "!",
+                    // aritmeticos
                     "+", "-", "*", "/", "%", "++", "--",
+                    // relacionales
                     "==", "!=", ">", "<", ">=", "<=",
+                    // bitwise
                     "&", "|", "^", "~", "<<", ">>",
+                    // asignacion
                     "=", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "<<=", ">>="));
 
     public static HashSet<String> separadores = new HashSet<>(

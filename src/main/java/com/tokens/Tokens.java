@@ -128,12 +128,19 @@ public class Tokens {
                     var partes = token.split("\\.");
                     for (var k = 0; k < partes.length; k++) {
                         var parte = partes[k];
+
+                        if (parte.isEmpty())
+                            continue;
+
                         if (parte.matches("[a-zA-Z_$][a-zA-Z_$0-9]*")) {
                             tokens.add(new Token(parte, TokenType.IDENTIFICADOR));
+
                             if (k < partes.length - 1)
                                 tokens.add(new Token(".", TokenType.SEPARADOR));
+
                             continue;
                         }
+
                         tokens.add(new Token(parte, TokenType.DESCONOCIDO));
                     }
                     continue;
@@ -150,9 +157,11 @@ public class Tokens {
 
         System.out.println("Tokens encontrados: " + tokens.size());
         System.out.println();
-        var space = 0;
         for (var token : tokens)
-            System.out.println("Tipo: " + token.getTipo() + " ".repeat(15 - token.getTipo().length()) + "Valor: "
+            System.out.println("Tipo: "
+                    + (token.getTipo().equals(TokenType.DESCONOCIDO) ? "\u001B[31m" + token.getTipo() + "\u001B[0m"
+                            : token.getTipo())
+                    + " ".repeat(15 - token.getTipo().length()) + "Valor: "
                     + token.getValor());
     }
 }
