@@ -13,10 +13,9 @@ public class Tokens {
 
         try {
             // leo un archivo y agrego las lineas al ArrayList
-            try (var file = new Scanner(new File("./src/main/java/com/tokens/Ejemplo.java"))) {
-                while (file.hasNext()) {
+            try (var file = new Scanner(new File("./src/main/java/com/tokens/Token.java"))) {
+                while (file.hasNext())
                     lineas.add(file.nextLine());
-                }
             }
         } catch (FileNotFoundException e) {
             System.out.println("No se encontró el archivo.");
@@ -25,8 +24,7 @@ public class Tokens {
         var comentarioMultiLinea = false;
         var semicolon = false;
         // recorro el ArrayList
-        for (var i = 0; i < lineas.size(); i++) {
-            var linea = lineas.get(i);
+        for (var linea : lineas) {
 
             if (semicolon) {
                 tokens.add(new Token(";", TokenType.SEPARADOR));
@@ -38,9 +36,7 @@ public class Tokens {
             var comentario = false;
             var literal = "";
 
-            for (var j = 0; j < actualTokens.length; j++) {
-                var token = actualTokens[j];
-
+            for (String token : actualTokens) {
                 if (token.isEmpty())
                     continue;
 
@@ -126,8 +122,8 @@ public class Tokens {
 
                 if (token.contains(".")) {
                     var partes = token.split("\\.");
-                    for (var k = 0; k < partes.length; k++) {
-                        var parte = partes[k];
+                    for (var i = 0; i < partes.length; i++) {
+                        var parte = partes[i];
 
                         if (parte.isEmpty())
                             continue;
@@ -135,7 +131,7 @@ public class Tokens {
                         if (parte.matches("[a-zA-Z_$][a-zA-Z_$0-9]*")) {
                             tokens.add(new Token(parte, TokenType.IDENTIFICADOR));
 
-                            if (k < partes.length - 1)
+                            if (i < partes.length - 1)
                                 tokens.add(new Token(".", TokenType.SEPARADOR));
 
                             continue;
