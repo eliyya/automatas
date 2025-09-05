@@ -19,6 +19,7 @@ public class Tokens {
             }
         } catch (FileNotFoundException e) {
             System.out.println("No se encontró el archivo.");
+            return;
         }
 
         var comentarioMultiLinea = false;
