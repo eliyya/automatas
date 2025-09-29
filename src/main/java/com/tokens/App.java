@@ -43,12 +43,16 @@ public class App {
             //     System.out.println("No se pudo escribir el archivo.");
             // }
 
+            System.out.print(" Analizando expresión: ");
+            for (var token : tokens) {
+                System.out.print(token.getValue() + " ");
+            }
+
             var expression = Analizer.parseExpressions(tokens, 0);
             System.out.println("Expresión encontrada: " + expression.toString());
             
         } catch (NullPointerException e) {
             System.out.println("No se encontró el archivo.");
-            e.printStackTrace();
         }
     }
 }
