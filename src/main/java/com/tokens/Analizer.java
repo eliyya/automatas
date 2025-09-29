@@ -213,25 +213,35 @@ public class Analizer {
     }
 
     public static Expression parseExpressions(ArrayList<Token> tokens, float minBp) {
+        Expression lhs = null;
         // left hand side
         var ft = tokens.remove(0);
         if (ft == null) {
             throw new RuntimeException("Empty list");
         }
-        if (!(ft.getType() == TokenType.LITERAL || ft.getType() == TokenType.IDENTIFICADOR)) {
-            throw new RuntimeException("Expected " + TokenType.LITERAL + " or " + TokenType.IDENTIFICADOR + ", got " + ft.getType());
+        if (ft.getValue().equals("(")) {
+            lhs = parseExpressions(tokens, 0);
+            if (!tokens.remove(0).getValue().equals(")")) {
+                throw new RuntimeException("Expected )");
+            }
+        } else {
+            if (!(ft.getType() == TokenType.LITERAL || ft.getType() == TokenType.IDENTIFICADOR)) {
+                throw new RuntimeException("Expected " + TokenType.LITERAL + " or " + TokenType.IDENTIFICADOR + ", got " + ft.getType());
+            }
+        }        
+        if (lhs == null) {
+            lhs = new Expression(ft);
         }
-        var lhs = new Expression(ft);
         while (true) {
             // operator
             if (tokens.isEmpty()) {
                 break;
             }
             var op = tokens.get(0);
-            if (op.getType() == TokenType.EOF) {
+            if (op.getType() == TokenType.EOF || op.getValue().equals(";") || op.getValue().equals(")")) {
                 break;
             }
-            if (op.getType() != TokenType.OPERADOR) {
+            if (!(op.getType() == TokenType.OPERADOR || op.getValue().equals(","))) {
                 throw new RuntimeException("Expected operator, got " + op.getType());
             }
             // right hand side
@@ -248,14 +258,16 @@ public class Analizer {
 
      static BindingPower getBindingPower(String op) {
         switch (op) {
+            case ",":
+                return new BindingPower(1.0f, 1.1f);
             case "+":
-                return new BindingPower(1.0f, 1.1f);
+                return new BindingPower(2.0f, 2.1f);
             case "-":
-                return new BindingPower(1.0f, 1.1f);
+                return new BindingPower(2.0f, 2.1f);
             case "*":
-                return new BindingPower(2.0f, 2.1f);
+                return new BindingPower(3.0f, 3.1f);
             case "/":
-                return new BindingPower(2.0f, 2.1f);
+                return new BindingPower(3.0f, 3.1f);
             default:
                 return new BindingPower(0, 0);
         }
