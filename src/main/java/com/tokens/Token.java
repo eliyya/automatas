@@ -74,6 +74,7 @@ public class Token {
                 var semicolon = false;
 
                 if (linea.isEmpty()) {
+                    tokens.add(new Token("\n", TokenType.EOF));
                     continue;
                 }
 
@@ -251,8 +252,12 @@ public class Token {
                     addToken(tokens, new Token(token, TokenType.DESCONOCIDO), semicolon);
 
                 }
+            
+                tokens.add(new Token("\n", TokenType.EOF));
             }
+
         }
         return tokens;
     }
+
 }
