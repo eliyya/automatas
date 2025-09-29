@@ -3,6 +3,7 @@
 
 # Log file
 *.log
+expression.json
 
 # Package Files
 *.jar

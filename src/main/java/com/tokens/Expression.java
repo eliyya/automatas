@@ -1,5 +1,7 @@
 package com.tokens;
 
+import java.util.HashMap;
+
 public class Expression {
 
     private Token operator;
@@ -29,6 +31,10 @@ public class Expression {
         return rhs;
     }
 
+    public boolean isExpression() {
+        return this.operator != null;
+    }
+
     public String getValue() {
         if (this.operator == null) {
             return this.value.getValue();
@@ -42,5 +48,33 @@ public class Expression {
             return this.lhs.getValue();
         }
         return "(" + this.lhs.getValue() + " " + this.operator.getValue() + " " + this.rhs.getValue() + ")";
+    }
+
+    public HashMap<String, Object> toHashMap() {
+        HashMap<String, Object> persona = new HashMap<>();
+        if (this.operator == null) {
+            persona.put("value", this.value.getValue());
+        } else {
+            persona.put("operator", this.operator.getValue());
+            persona.put("lhs", this.lhs.toHashMap());
+            persona.put("rhs", this.rhs.toHashMap());
+        }
+        return persona;
+    }
+
+    public String toJSON() {
+        return toJSON(1);
+    }
+
+    private String toJSON(int indent) {
+        if (this.operator == null) {
+            return "\"" + this.value.getValue() + "\"";
+        }
+        return "{\n" + "    ".repeat(indent) + "\"op\" : \""
+                + (this.operator == null ? this.value.getValue() : this.operator.getValue()) + "\""
+                + (this.operator == null ? ""
+                        : (",\n" + "    ".repeat(indent) + "\"lhs\" : " + this.lhs.toJSON(indent + 1)
+                        + ",\n" + "    ".repeat(indent) + "\"rhs\" : " + this.rhs.toJSON(indent + 1)))
+                + "\n" + "    ".repeat(indent - 1) + "}";
     }
 }

@@ -257,20 +257,14 @@ public class Analizer {
     }
 
      static BindingPower getBindingPower(String op) {
-        switch (op) {
-            case ",":
-                return new BindingPower(1.0f, 1.1f);
-            case "+":
-                return new BindingPower(2.0f, 2.1f);
-            case "-":
-                return new BindingPower(2.0f, 2.1f);
-            case "*":
-                return new BindingPower(3.0f, 3.1f);
-            case "/":
-                return new BindingPower(3.0f, 3.1f);
-            default:
-                return new BindingPower(0, 0);
-        }
+        return switch (op) {
+            case "," -> new BindingPower(1.0f, 1.1f);
+            case "+" -> new BindingPower(2.0f, 2.1f);
+            case "-" -> new BindingPower(2.0f, 2.1f);
+            case "*" -> new BindingPower(3.0f, 3.1f);
+            case "/" -> new BindingPower(3.0f, 3.1f);
+            default -> new BindingPower(0, 0);
+        };
     }
 
 }

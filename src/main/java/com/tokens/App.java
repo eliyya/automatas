@@ -39,9 +39,13 @@ public class App {
 
             var expression = Analizer.parseExpressions(tokens, 0);
             System.out.println("Expresión encontrada: " + expression.toString());
-            
-        } catch (NullPointerException e) {
-            System.out.println("No se encontró el archivo.");
+            System.out.println("JSON: " + expression.toJSON());
+            try (var log = new FileWriter("expression.json")) {
+                log.write(expression.toJSON());
+            }
+        } catch (IOException e) {
+            System.out.println("No se pudo escribir el archivo.");
         }
+
     }
 }
