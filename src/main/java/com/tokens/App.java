@@ -1,5 +1,5 @@
-// C--
 package com.tokens;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -22,18 +22,18 @@ public class App {
     public static void main(String[] args) throws IOException {
         var tokens = new ArrayList<Token>();
         if (args.length == 0) {
-            System.out.println("No se proporcionó ningún archivo.");
+            System.out.println("No se proporcionó ningún archivo. especifique la ruta del archivo como argumento.");
             return;
         }
 
         try {
             // leo un archivo y agrego las lineas al ArrayList
             try (var file = new Scanner(new File(args[0]))) {
+                    var comentarioMultiLinea = false;
                 while (file.hasNext()) {
                     // recorro el ArrayList
                     var linea = file.nextLine().trim();
 
-                    var comentarioMultiLinea = false;
                     var semicolon = false;
 
                     if (linea.isEmpty()) {
@@ -161,7 +161,7 @@ public class App {
 
                         if (token.startsWith("/*")) {
                             comentarioMultiLinea = true;
-                            continue;
+                            break;
                         }
 
                         if (Token.reservadas.contains(token)) {
@@ -222,6 +222,8 @@ public class App {
                                 + (
                                     token.getTipo().equals(TokenType.DESCONOCIDO) ? ConsoleColors.ANSI_RED + token.getTipo() + ConsoleColors.ANSI_RESET
                                     : token.getTipo().equals(TokenType.LITERAL) ? ConsoleColors.ANSI_GREEN + token.getTipo() + ConsoleColors.ANSI_RESET
+                                    : token.getTipo().equals(TokenType.IDENTIFICADOR) ? ConsoleColors.ANSI_BLUE + token.getTipo() + ConsoleColors.ANSI_RESET
+                                    : token.getTipo().equals(TokenType.RESERVADA) ? ConsoleColors.ANSI_PURPLE + token.getTipo() + ConsoleColors.ANSI_RESET
                                     : token.getTipo())
                                 + " ".repeat(15 - token.getTipo().length()) + "Valor: "
                                 + token.getValor());
