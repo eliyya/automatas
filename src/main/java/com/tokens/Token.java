@@ -39,18 +39,18 @@ public class Token {
             List.of("(", ")", "{", "}", "[", "]", ";", ",", "."));
 
     private final String valor;
-    private final String tipo;
+    private final TokenType tipo;
 
-    public Token(String valor, String tipo) {
+    public Token(String valor, TokenType tipo) {
         this.valor = valor;
         this.tipo = tipo;
     }
 
-    public String getValor() {
+    public String getValue() {
         return valor;
     }
 
-    public String getTipo() {
+    public TokenType getType() {
         return tipo;
     }
 

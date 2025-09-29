@@ -22,22 +22,23 @@ public class App {
 
             for (var token : tokens) {
                 System.out.println("Tipo: "
-                        + (token.getTipo().equals(TokenType.DESCONOCIDO) ? ConsoleColors.ANSI_RED + token.getTipo() + ConsoleColors.ANSI_RESET
-                        : token.getTipo().equals(TokenType.LITERAL) ? ConsoleColors.ANSI_GREEN + token.getTipo() + ConsoleColors.ANSI_RESET
-                        : token.getTipo().equals(TokenType.IDENTIFICADOR) ? ConsoleColors.ANSI_BLUE + token.getTipo() + ConsoleColors.ANSI_RESET
-                        : token.getTipo().equals(TokenType.RESERVADA) ? ConsoleColors.ANSI_PURPLE + token.getTipo() + ConsoleColors.ANSI_RESET
-                        : token.getTipo())
-                        + " ".repeat(15 - token.getTipo().length()) + "Valor: "
-                        + token.getValor());
+                        + (token.getType().equals(TokenType.DESCONOCIDO) ? ConsoleColors.ANSI_RED + token.getType().name() + ConsoleColors.ANSI_RESET
+                        : token.getType().equals(TokenType.LITERAL) ? ConsoleColors.ANSI_GREEN + token.getType().name() + ConsoleColors.ANSI_RESET
+                        : token.getType().equals(TokenType.IDENTIFICADOR) ? ConsoleColors.ANSI_BLUE + token.getType().name() + ConsoleColors.ANSI_RESET
+                        : token.getType().equals(TokenType.RESERVADA) ? ConsoleColors.ANSI_PURPLE + token.getType().name() + ConsoleColors.ANSI_RESET
+                        : token.getType().name())
+                        + " ".repeat(15 - token.getType().name().length()) + "Valor: "
+                        + (token.getType() == TokenType.EOF ? "" : token.getValue())
+                );
             }
-            
+
             // write tokens to file
             try (var log = new FileWriter("tokens.txt")) {
                 for (var token : tokens) {
                     log.write("Tipo: "
-                            + token.getTipo()
-                            + " ".repeat(15 - token.getTipo().length()) + "Valor: "
-                            + token.getValor() + "\n");
+                            + token.getType().name()
+                            + " ".repeat(15 - token.getType().name().length()) + "Valor: "
+                            + token.getValue() + "\n");
                 }
             } catch (IOException e) {
                 System.out.println("No se pudo escribir el archivo.");
