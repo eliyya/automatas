@@ -99,7 +99,7 @@ public class Analizer {
         return nuevaLinea;
     }
 
-    private static void tokenizeLine(String line, ArrayList<Token> tokens, MutableBoolean comentarioMultiLinea) {
+    private static void tokenizeLine(String line, ArrayList<Token> tokens, boolean[] comentarioMultiLinea) {
         if (line.isEmpty()) {
             addToken(tokens, new Token("\n", TokenType.EOF), false);
             return;
@@ -113,9 +113,9 @@ public class Analizer {
             }
 
             // validadas anteriormente
-            if (comentarioMultiLinea.get()) {
+            if (comentarioMultiLinea[0]) {
                 if (token.endsWith("*/")) {
-                    comentarioMultiLinea.set (false);
+                    comentarioMultiLinea[0] = false;
                 }
                 continue;
             }
@@ -135,7 +135,7 @@ public class Analizer {
             }
 
             if (token.startsWith("/*")) {
-                comentarioMultiLinea.set(true);
+                comentarioMultiLinea[0] = true;
                 break;
             }
 
@@ -198,7 +198,7 @@ public class Analizer {
 
         // leo un archivo y agrego las lineas al ArrayList
         try (var scanner = new Scanner(file)) {
-            var comentarioMultiLinea = new MutableBoolean();
+            boolean[] comentarioMultiLinea = { false };
             while (scanner.hasNext()) {
                 var linea = normalizeLine(scanner.nextLine().trim());
                 tokenizeLine(linea, tokens, comentarioMultiLinea);

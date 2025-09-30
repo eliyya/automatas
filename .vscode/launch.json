@@ -6,12 +6,6 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Current File",
-            "request": "launch",
-            "mainClass": "${file}"
-        },
-        {
-            "type": "java",
             "name": "Laberinto",
             "request": "launch",
             "mainClass": "com.laberinto.Laberinto",
@@ -22,7 +16,7 @@
             "name": "Compilador",
             "request": "launch",
             "mainClass": "com.tokens.App",
-            "projectName": "hello-world",
+            "projectName": "compilador",
             "args": "test.txt"
         }
     ]
