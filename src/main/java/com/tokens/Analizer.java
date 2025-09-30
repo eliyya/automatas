@@ -6,206 +6,202 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Analizer {
-    static void addToken(ArrayList<Token> tokens, Token token, boolean semicolon) {
+    private static void addToken(ArrayList<Token> tokens, Token token, boolean semicolon) {
         tokens.add(token);
         if (semicolon) {
             tokens.add(new Token(";", TokenType.SEPARADOR));
         }
     }
 
-    public static ArrayList<Token> tokenize(File file) throws FileNotFoundException {
+    private static String normalizeLine(String line) {
+        var nuevaLinea = "";
+        var lit = false;
+        for (String ch : line.split("")) {
+            if (lit) {
+                nuevaLinea += ch;
+                int countBackslashes = 0;
+                if (!nuevaLinea.endsWith("\"")) {
+                    continue;
+                }
+                for (int i = nuevaLinea.length() - 2; i >= 0 && nuevaLinea.charAt(i) == '\\'; i--) {
+                    countBackslashes++;
+                }
+
+                if (countBackslashes % 2 == 0) {
+                    nuevaLinea += " ";
+                    lit = false;
+                }
+                continue;
+            }
+            if (ch.equals("\"")) {
+                lit = true;
+                nuevaLinea += " \"";
+                continue;
+            }
+            if (ch.equals(";")) {
+                nuevaLinea += " ; ";
+                continue;
+            }
+            if (ch.equals("(")) {
+                nuevaLinea += " ( ";
+                continue;
+            }
+            if (ch.equals(")")) {
+                nuevaLinea += " ) ";
+                continue;
+            }
+            if (ch.equals("{")) {
+                nuevaLinea += " { ";
+                continue;
+            }
+            if (ch.equals("}")) {
+                nuevaLinea += " } ";
+                continue;
+            }
+            if (ch.equals("[")) {
+                nuevaLinea += " [ ";
+                continue;
+            }
+            if (ch.equals("]")) {
+                nuevaLinea += " ] ";
+                continue;
+            }
+            if (ch.equals("<")) {
+                nuevaLinea += " < ";
+                continue;
+            }
+            if (ch.equals(">")) {
+                nuevaLinea += " > ";
+                continue;
+            }
+            if (ch.equals(".")) {
+                nuevaLinea += " . ";
+                continue;
+            }
+            if (ch.equals(",")) {
+                nuevaLinea += " , ";
+                continue;
+            }
+            if (ch.equals("!")) {
+                nuevaLinea += " ! ";
+                continue;
+            }
+            nuevaLinea += ch;
+            if (nuevaLinea.endsWith("--")) {
+                nuevaLinea = nuevaLinea.substring(0, nuevaLinea.length() - 2) + " -- ";
+                continue;
+            }
+            if (nuevaLinea.endsWith("++")) {
+                nuevaLinea = nuevaLinea.substring(0, nuevaLinea.length() - 2) + " ++ ";
+                continue;
+            }
+        }
+        return nuevaLinea;
+    }
+
+    private static void tokenizeLine(String line, ArrayList<Token> tokens, MutableBoolean comentarioMultiLinea) {
+        if (line.isEmpty()) {
+            addToken(tokens, new Token("\n", TokenType.EOF), false);
+            return;
+        }
+        
+        var literal = "";
+        var semicolon = false;
+        for (String token : line.trim().split("\\s+")) {
+            if (token.trim().isEmpty()) {
+                continue;
+            }
+
+            // validadas anteriormente
+            if (comentarioMultiLinea.get()) {
+                if (token.endsWith("*/")) {
+                    comentarioMultiLinea.set (false);
+                }
+                continue;
+            }
+
+            if (literal.length() > 0) {
+                literal += " " + token;
+                if (token.endsWith("\"")) {
+                    addToken(tokens, new Token(literal, TokenType.LITERAL), semicolon);
+                    literal = "";
+                }
+                continue;
+            }
+
+            // validaciones
+            if (token.startsWith("//")) {
+                break;
+            }
+
+            if (token.startsWith("/*")) {
+                comentarioMultiLinea.set(true);
+                break;
+            }
+
+            if (Token.reserved.contains(token)) {
+                addToken(tokens, new Token(token, TokenType.RESERVADA), semicolon);
+                continue;
+            }
+
+            if (Token.operators.contains(token)) {
+                addToken(tokens, new Token(token, TokenType.OPERADOR), semicolon);
+                continue;
+            }
+
+            if (Token.types.contains(token)) {
+                addToken(tokens, new Token(token, TokenType.TIPO), semicolon);
+                continue;
+            }
+
+            if (Token.separators.contains(token)) {
+                addToken(tokens, new Token(token, TokenType.SEPARADOR), semicolon);
+                continue;
+            }
+
+            if (token.startsWith("\"")) {
+                literal = "\"";
+                var ntoken = token.substring(1);
+                if (ntoken.endsWith("\"")) {
+                    addToken(tokens, new Token(literal + ntoken, TokenType.LITERAL), semicolon);
+                    literal = "";
+                } else {
+                    literal += ntoken;
+                }
+                continue;
+            }
+
+            if (token.equals(".")) {
+                addToken(tokens, new Token(token, TokenType.SEPARADOR), semicolon);
+                continue;
+            }
+
+            if (token.matches("[0-9]+\\.?[0.9]*")) {
+                addToken(tokens, new Token(token, TokenType.LITERAL), semicolon);
+                continue;
+            }
+
+            if (token.matches("[a-zA-Z_$][a-zA-Z_$0-9]*")) {
+                addToken(tokens, new Token(token, TokenType.IDENTIFICADOR), semicolon);
+                continue;
+            }
+
+            addToken(tokens, new Token(token, TokenType.DESCONOCIDO), semicolon);
+
+        }
+    
+        tokens.add(new Token("\n", TokenType.EOF));
+    }
+
+    public static ArrayList<Token> tokenizeFile(File file) throws FileNotFoundException {
         var tokens = new ArrayList<Token>();
 
         // leo un archivo y agrego las lineas al ArrayList
         try (var scanner = new Scanner(file)) {
-            var comentarioMultiLinea = false;
+            var comentarioMultiLinea = new MutableBoolean();
             while (scanner.hasNext()) {
-                // recorro el ArrayList
-                var linea = scanner.nextLine().trim();
-
-                var semicolon = false;
-
-                if (linea.isEmpty()) {
-                    tokens.add(new Token("\n", TokenType.EOF));
-                    continue;
-                }
-
-                // if (linea.startsWith("//")) {
-                //     continue;
-                // }
-                var nuevaLinea = "";
-                var lit = false;
-                for (String ch : linea.split("")) {
-                    if (lit) {
-                        nuevaLinea += ch;
-                        int countBackslashes = 0;
-                        if (!nuevaLinea.endsWith("\"")) {
-                            continue;
-                        }
-                        for (int i = nuevaLinea.length() - 2; i >= 0 && nuevaLinea.charAt(i) == '\\'; i--) {
-                            countBackslashes++;
-                        }
-
-                        if (countBackslashes % 2 == 0) {
-                            nuevaLinea += " ";
-                            lit = false;
-                        }
-                        continue;
-                    }
-                    if (ch.equals("\"")) {
-                        lit = true;
-                        nuevaLinea += " \"";
-                        continue;
-                    }
-                    if (ch.equals(";")) {
-                        nuevaLinea += " ; ";
-                        continue;
-                    }
-                    if (ch.equals("(")) {
-                        nuevaLinea += " ( ";
-                        continue;
-                    }
-                    if (ch.equals(")")) {
-                        nuevaLinea += " ) ";
-                        continue;
-                    }
-                    if (ch.equals("{")) {
-                        nuevaLinea += " { ";
-                        continue;
-                    }
-                    if (ch.equals("}")) {
-                        nuevaLinea += " } ";
-                        continue;
-                    }
-                    if (ch.equals("[")) {
-                        nuevaLinea += " [ ";
-                        continue;
-                    }
-                    if (ch.equals("]")) {
-                        nuevaLinea += " ] ";
-                        continue;
-                    }
-                    if (ch.equals("<")) {
-                        nuevaLinea += " < ";
-                        continue;
-                    }
-                    if (ch.equals(">")) {
-                        nuevaLinea += " > ";
-                        continue;
-                    }
-                    if (ch.equals(".")) {
-                        nuevaLinea += " . ";
-                        continue;
-                    }
-                    if (ch.equals(",")) {
-                        nuevaLinea += " , ";
-                        continue;
-                    }
-                    if (ch.equals("!")) {
-                        nuevaLinea += " ! ";
-                        continue;
-                    }
-                    nuevaLinea += ch;
-                    if (nuevaLinea.endsWith("--")) {
-                        nuevaLinea = nuevaLinea.substring(0, nuevaLinea.length() - 2) + " -- ";
-                        continue;
-                    }
-                    if (nuevaLinea.endsWith("++")) {
-                        nuevaLinea = nuevaLinea.substring(0, nuevaLinea.length() - 2) + " ++ ";
-                        continue;
-                    }
-                }
-                linea = nuevaLinea;
-
-                // tokenizo la linea por espacios
-                var actualTokens = linea.trim().split("\\s+");
-
-                var literal = "";
-
-                for (String token : actualTokens) {
-                    if (token.trim().isEmpty()) {
-                        continue;
-                    }
-
-                    // validadas anteriormente
-                    if (comentarioMultiLinea) {
-                        if (token.endsWith("*/")) {
-                            comentarioMultiLinea = false;
-                        }
-                        continue;
-                    }
-
-                    if (literal.length() > 0) {
-                        literal += " " + token;
-                        if (token.endsWith("\"")) {
-                            addToken(tokens, new Token(literal, TokenType.LITERAL), semicolon);
-                            literal = "";
-                        }
-                        continue;
-                    }
-
-                    // validaciones
-                    if (token.startsWith("//")) {
-                        break;
-                    }
-
-                    if (token.startsWith("/*")) {
-                        comentarioMultiLinea = true;
-                        break;
-                    }
-
-                    if (Token.reserved.contains(token)) {
-                        addToken(tokens, new Token(token, TokenType.RESERVADA), semicolon);
-                        continue;
-                    }
-
-                    if (Token.operators.contains(token)) {
-                        addToken(tokens, new Token(token, TokenType.OPERADOR), semicolon);
-                        continue;
-                    }
-
-                    if (Token.types.contains(token)) {
-                        addToken(tokens, new Token(token, TokenType.TIPO), semicolon);
-                        continue;
-                    }
-
-                    if (Token.separators.contains(token)) {
-                        addToken(tokens, new Token(token, TokenType.SEPARADOR), semicolon);
-                        continue;
-                    }
-
-                    if (token.startsWith("\"")) {
-                        literal = "\"";
-                        var ntoken = token.substring(1);
-                        if (ntoken.endsWith("\"")) {
-                            addToken(tokens, new Token(literal + ntoken, TokenType.LITERAL), semicolon);
-                            literal = "";
-                        } else {
-                            literal += ntoken;
-                        }
-                        continue;
-                    }
-
-                    if (token.equals(".")) {
-                        addToken(tokens, new Token(token, TokenType.SEPARADOR), semicolon);
-                        continue;
-                    }
-
-                    if (token.matches("[0-9]+\\.?[0.9]*")) {
-                        addToken(tokens, new Token(token, TokenType.LITERAL), semicolon);
-                        continue;
-                    }
-
-                    if (token.matches("[a-zA-Z_$][a-zA-Z_$0-9]*")) {
-                        addToken(tokens, new Token(token, TokenType.IDENTIFICADOR), semicolon);
-                        continue;
-                    }
-
-                    addToken(tokens, new Token(token, TokenType.DESCONOCIDO), semicolon);
-
-                }
-            
-                tokens.add(new Token("\n", TokenType.EOF));
+                var linea = normalizeLine(scanner.nextLine().trim());
+                tokenizeLine(linea, tokens, comentarioMultiLinea);
             }
 
         }
