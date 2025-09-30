@@ -215,7 +215,11 @@ public class Analizer {
         return tokens;
     }
 
-    public static Expression parseExpressions(ArrayList<Token> tokens, float minBp) {
+    public static Expression parseExpression(ArrayList<Token> tokens) {
+        return parseExpression(tokens, 0);
+    }
+
+    public static Expression parseExpression(ArrayList<Token> tokens, float minBp) {
         Expression lhs = null;
         // left hand side
         var ft = tokens.remove(0);
@@ -223,7 +227,7 @@ public class Analizer {
             throw new RuntimeException("Empty list");
         }
         if (ft.getValue().equals("(")) {
-            lhs = parseExpressions(tokens, 0);
+            lhs = parseExpression(tokens, 0);
             if (!tokens.remove(0).getValue().equals(")")) {
                 throw new RuntimeException("Expected )");
             }
@@ -244,7 +248,7 @@ public class Analizer {
             if (op.getType() == TokenType.EOF || op.getValue().equals(";") || op.getValue().equals(")")) {
                 break;
             }
-            if (!(op.getType() == TokenType.OPERADOR || op.getValue().equals(","))) {
+            if (!(op.getType() == TokenType.OPERADOR || op.getValue().equals(",") || Token.asignations.contains(op.getValue()))) {
                 throw new RuntimeException("Expected operator, got " + op.getType());
             }
             // right hand side
@@ -253,42 +257,53 @@ public class Analizer {
                 break;
             }
             tokens.remove(0);
-            var rhs = parseExpressions(tokens, bp.right());
+            var rhs = parseExpression(tokens, bp.right());
             lhs = new Expression(op, lhs, rhs);
         }
         return lhs;
     }
 
     static BindingPower getBindingPower(String op) {
-        return switch (op) {
+        var normalized = normalizeOperator(op);
+        return switch (normalized) {
             case "," ->
                 new BindingPower(1.0f, 1.1f);
+            case "op" ->
+                new BindingPower(2.0f, 2.1f);
             case "+" ->
-                new BindingPower(2.0f, 2.1f);
+                new BindingPower(3.0f, 3.1f);
             case "-" ->
-                new BindingPower(2.0f, 2.1f);
+                new BindingPower(3.0f, 2.1f);
             case "*" ->
-                new BindingPower(3.0f, 3.1f);
+                new BindingPower(4.0f, 4.1f);
             case "/" ->
-                new BindingPower(3.0f, 3.1f);
+                new BindingPower(4.0f, 4.1f);
             default ->
                 new BindingPower(0, 0);
         };
     }
 
-    public static Asignation parseAsignation(ArrayList<Token> tokens) {
+    static String normalizeOperator(String op) {
+        if (Token.asignations.contains(op)) {
+            return "op";
+        }
+        return op;
+    }
+
+    public static Expression parseAsignation(ArrayList<Token> tokens, ArrayList<Token> identificators) {
         var name = tokens.get(0);
         if (name.getType() != TokenType.IDENTIFICADOR) {
             throw new RuntimeException("Expected identifier, got " + name.getValue());
         }
         tokens.remove(0);
-        var next = tokens.get(0);
-        if (next.getType() != TokenType.ASIGNACION) {
-            throw new RuntimeException("Expected =, got " + next.getValue());
+        var operator = tokens.get(0);
+        if (operator.getType() != TokenType.ASIGNACION) {
+            throw new RuntimeException("Expected =, got " + operator.getValue());
         }
         tokens.remove(0);
-        var value = parseExpressions(tokens, 0);
-        return new Asignation(next, name, value); 
+        var value = parseExpression(tokens, 0);
+        identificators.add(name);
+        return new Expression(operator, new Expression(name), value); 
     }
 
     public Analizer(ArrayList<Token> tokens) {

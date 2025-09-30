@@ -67,7 +67,7 @@ public class Expression {
     }
 
     public String toJSON(int indent) {
-        if (this.operator == null) {
+        if (this.rhs == null) {
             return "\"" + this.value.getValue() + "\"";
         }
         return "{\n" + "    ".repeat(indent) + "\"op\" : \"" + this.operator.getValue() + "\""
