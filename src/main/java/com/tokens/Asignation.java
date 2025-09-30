@@ -28,7 +28,14 @@ public class Asignation {
         return name.getValue() + " " + operator.getValue() + " " + value.toString();
     }
 
+    public String toJSON(int indent) {
+        return "{\n" + "    ".repeat(indent) + "\"op\" : \"" + operator.getValue() 
+        + ("\",\n" + "    ".repeat(indent) + "\"name\" : \"" + name.getValue())
+        + ("\",\n" + "    ".repeat(indent) + "\"value\": " + value.toJSON(indent + 1))
+        + "\n" + "    ".repeat(indent - 1) + "}";
+    }
+
     public String toJSON() {
-        return "{\"name\": \"" + name.getValue() + "\", \"operator\": \"" + operator.getValue() + "\", \"value\": " + value.toJSON() + "}";
+        return toJSON(1);
     }
 }

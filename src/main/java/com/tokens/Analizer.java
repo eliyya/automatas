@@ -282,7 +282,7 @@ public class Analizer {
             throw new RuntimeException("Expected identifier, got " + name.getValue());
         }
         tokens.remove(0);
-        var next = tokens.remove(0);
+        var next = tokens.get(0);
         if (next.getType() != TokenType.ASIGNACION) {
             throw new RuntimeException("Expected =, got " + next.getValue());
         }
