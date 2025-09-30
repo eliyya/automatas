@@ -53,5 +53,11 @@ public class App {
             System.out.println("No se pudo escribir el archivo: " + e.getMessage());
         }
 
+        try (FileWriter writer = new FileWriter("tree.json")) {
+            writer.write(asignation.toJSON().replaceAll("\"op\" : (\".*\")", "\"\" : $1").replaceAll("(\"\\w+\") : (\".+\")", "$1 : { \"\" : $2 }"));
+        } catch (IOException e) {
+            System.out.println("No se pudo escribir el archivo: " + e.getMessage());
+        }
+
     }
 }
