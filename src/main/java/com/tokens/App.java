@@ -15,6 +15,5 @@ public class App {
         }
         
         var compiler = new Compiler(new File(args[0]));
-
     }
 }

@@ -290,22 +290,6 @@ public class Analizer {
         return op;
     }
 
-    public static Expression parseAsignation(ArrayList<Token> tokens, ArrayList<Token> identificators) {
-        var name = tokens.get(0);
-        if (name.getType() != TokenType.IDENTIFICADOR) {
-            throw new RuntimeException("Expected identifier, got " + name.getValue());
-        }
-        tokens.remove(0);
-        var operator = tokens.get(0);
-        if (operator.getType() != TokenType.ASIGNACION) {
-            throw new RuntimeException("Expected =, got " + operator.getValue());
-        }
-        tokens.remove(0);
-        var value = parseExpression(tokens, 0);
-        identificators.add(name);
-        return new Expression(operator, new Expression(name), value); 
-    }
-
     public Analizer(ArrayList<Token> tokens) {
         this.tokens = tokens;
     }
@@ -316,25 +300,13 @@ public class Analizer {
         }
     }
 
-    static void parseDeclaration(ArrayList<Token> tokens) {
+    static Declaration parseDeclaration(ArrayList<Token> tokens) {
         var type = tokens.remove(0);
         if (!(type.getType() == TokenType.TIPO || type.getType() == TokenType.IDENTIFICADOR)) {
             throw new RuntimeException("Expected type, got " + type.getValue());
         }
-        var name = tokens.remove(0);
-        if (name.getType() != TokenType.IDENTIFICADOR) {
-            throw new RuntimeException("Expected identifier, got " + name.getValue());
-        }
-        var next = tokens.remove(0);
-        if (!(next.getValue().equals(";") || next.getValue().equals("=") || next.getValue().equals(","))) {
-            throw new RuntimeException("Expected ;, got " + next.getValue());
-        }
-        if (next.getValue().equals(";")) {
-            return;
-        }
-        if (next.getValue().equals(",")) {
-            parseDeclaration(tokens, type);
-        }
+        var expression = parseExpression(tokens, 0);
+        return new Declaration(type, expression);
     }
 
     static void parseDeclaration(ArrayList<Token> tokens, Token type) {

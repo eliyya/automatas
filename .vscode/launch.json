@@ -6,11 +6,17 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Laberinto",
+            "request": "launch",
+            "mainClass": "com.laberinto.Laberinto",
+            "projectName": "oraciones"
+        },
+        {
+            "type": "java",
             "name": "Launch with Arguments Prompt",
             "request": "launch",
             "mainClass": "com.tokens.App",
             "args": "test.txt"
         }
-
     ]
 }

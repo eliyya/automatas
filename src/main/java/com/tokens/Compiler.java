@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+
 public class Compiler {
     private ArrayList<Token> tokens;
     private ArrayList<Token> identificators = new ArrayList<Token>();
@@ -21,6 +22,7 @@ public class Compiler {
 
         // ! parse asignation
         var asignation = Analizer.parseExpression(this.tokens);
+        // var asignation = Analizer.parseDeclaration(this.tokens);
 
         writeAsignationFile(asignation);
         writeAsignationTreeFile(asignation);
