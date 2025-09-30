@@ -9,8 +9,4 @@ public enum TokenType {
     LITERAL,
     TIPO,
     EOF;
-
-    public static String getTokenType(TokenType tokenType) {
-        return tokenType.name();
-    }
 }

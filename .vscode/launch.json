@@ -23,7 +23,7 @@
             "request": "launch",
             "mainClass": "com.tokens.App",
             "projectName": "hello-world",
-            "args": "src/main/java/com/tokens/test.txt"
+            "args": "test.txt"
         }
     ]
 }
