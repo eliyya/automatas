@@ -70,11 +70,9 @@ public class Expression {
         if (this.operator == null) {
             return "\"" + this.value.getValue() + "\"";
         }
-        return "{\n" + "    ".repeat(indent) + "\"op\" : \""
-                + (this.operator == null ? this.value.getValue() : this.operator.getValue()) + "\""
-                + (this.operator == null ? ""
-                        : (",\n" + "    ".repeat(indent) + "\"lhs\" : " + this.lhs.toJSON(indent + 1)
-                        + ",\n" + "    ".repeat(indent) + "\"rhs\" : " + this.rhs.toJSON(indent + 1)))
-                + "\n" + "    ".repeat(indent - 1) + "}";
+        return "{\n" + "    ".repeat(indent) + "\"op\" : \"" + this.operator.getValue() + "\""
+            + (",\n" + "    ".repeat(indent) + "\"lhs\" : " + this.lhs.toJSON(indent + 1)
+            + ",\n" + "    ".repeat(indent) + "\"rhs\" : " + this.rhs.toJSON(indent + 1))
+            + "\n" + "    ".repeat(indent - 1) + "}";
     }
 }
