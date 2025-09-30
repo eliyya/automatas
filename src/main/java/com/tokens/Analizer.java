@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Analizer {
+    private ArrayList<Token> tokens;
+
     private static void addToken(ArrayList<Token> tokens, Token token, boolean semicolon) {
         tokens.add(token);
         if (semicolon) {
@@ -104,7 +106,7 @@ public class Analizer {
             addToken(tokens, new Token("\n", TokenType.EOF), false);
             return;
         }
-        
+
         var literal = "";
         var semicolon = false;
         for (String token : line.trim().split("\\s+")) {
@@ -141,6 +143,11 @@ public class Analizer {
 
             if (Token.reserved.contains(token)) {
                 addToken(tokens, new Token(token, TokenType.RESERVADA), semicolon);
+                continue;
+            }
+
+            if (Token.asignations.contains(token)) {
+                addToken(tokens, new Token(token, TokenType.ASIGNACION), semicolon);
                 continue;
             }
 
@@ -189,7 +196,7 @@ public class Analizer {
             addToken(tokens, new Token(token, TokenType.DESCONOCIDO), semicolon);
 
         }
-    
+
         tokens.add(new Token("\n", TokenType.EOF));
     }
 
@@ -198,7 +205,7 @@ public class Analizer {
 
         // leo un archivo y agrego las lineas al ArrayList
         try (var scanner = new Scanner(file)) {
-            boolean[] comentarioMultiLinea = { false };
+            boolean[] comentarioMultiLinea = {false};
             while (scanner.hasNext()) {
                 var linea = normalizeLine(scanner.nextLine().trim());
                 tokenizeLine(linea, tokens, comentarioMultiLinea);
@@ -224,7 +231,7 @@ public class Analizer {
             if (!(ft.getType() == TokenType.LITERAL || ft.getType() == TokenType.IDENTIFICADOR)) {
                 throw new RuntimeException("Expected " + TokenType.LITERAL + " or " + TokenType.IDENTIFICADOR + ", got " + ft.getType());
             }
-        }        
+        }
         if (lhs == null) {
             lhs = new Expression(ft);
         }
@@ -252,15 +259,83 @@ public class Analizer {
         return lhs;
     }
 
-     static BindingPower getBindingPower(String op) {
+    static BindingPower getBindingPower(String op) {
         return switch (op) {
-            case "," -> new BindingPower(1.0f, 1.1f);
-            case "+" -> new BindingPower(2.0f, 2.1f);
-            case "-" -> new BindingPower(2.0f, 2.1f);
-            case "*" -> new BindingPower(3.0f, 3.1f);
-            case "/" -> new BindingPower(3.0f, 3.1f);
-            default -> new BindingPower(0, 0);
+            case "," ->
+                new BindingPower(1.0f, 1.1f);
+            case "+" ->
+                new BindingPower(2.0f, 2.1f);
+            case "-" ->
+                new BindingPower(2.0f, 2.1f);
+            case "*" ->
+                new BindingPower(3.0f, 3.1f);
+            case "/" ->
+                new BindingPower(3.0f, 3.1f);
+            default ->
+                new BindingPower(0, 0);
         };
     }
 
+    public static Asignation parseAsignation(ArrayList<Token> tokens) {
+        var name = tokens.get(0);
+        if (name.getType() != TokenType.IDENTIFICADOR) {
+            throw new RuntimeException("Expected identifier, got " + name.getValue());
+        }
+        tokens.remove(0);
+        var next = tokens.remove(0);
+        if (next.getType() != TokenType.ASIGNACION) {
+            throw new RuntimeException("Expected =, got " + next.getValue());
+        }
+        tokens.remove(0);
+        var value = parseExpressions(tokens, 0);
+        return new Asignation(next, name, value); 
+    }
+
+    public Analizer(ArrayList<Token> tokens) {
+        this.tokens = tokens;
+    }
+
+    void analize() {
+        if (this.tokens.get(0).getType() == TokenType.TIPO) {
+            parseDeclaration(tokens);
+        }
+    }
+
+    static void parseDeclaration(ArrayList<Token> tokens) {
+        var type = tokens.remove(0);
+        if (!(type.getType() == TokenType.TIPO || type.getType() == TokenType.IDENTIFICADOR)) {
+            throw new RuntimeException("Expected type, got " + type.getValue());
+        }
+        var name = tokens.remove(0);
+        if (name.getType() != TokenType.IDENTIFICADOR) {
+            throw new RuntimeException("Expected identifier, got " + name.getValue());
+        }
+        var next = tokens.remove(0);
+        if (!(next.getValue().equals(";") || next.getValue().equals("=") || next.getValue().equals(","))) {
+            throw new RuntimeException("Expected ;, got " + next.getValue());
+        }
+        if (next.getValue().equals(";")) {
+            return;
+        }
+        if (next.getValue().equals(",")) {
+            parseDeclaration(tokens, type);
+        }
+    }
+
+    static void parseDeclaration(ArrayList<Token> tokens, Token type) {
+        var name = tokens.remove(0);
+        if (name.getType() != TokenType.IDENTIFICADOR) {
+            throw new RuntimeException("Expected identifier, got " + name.getValue());
+        }
+        var next = tokens.remove(0);
+        if (!(next.getValue().equals(";") || next.getValue().equals("=") || next.getValue().equals(","))) {
+            throw new RuntimeException("Expected ;, got " + next.getValue());
+        }
+        if (next.getValue().equals(";")) {
+            return;
+        }
+        if (next.getValue().equals(",")) {
+            parseDeclaration(tokens, type);
+        }
+    }
 }

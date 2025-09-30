@@ -1,0 +1,5 @@
+{"name": "a", "operator": "=", "value": {
+    "op" : "+",
+    "lhs" : "3",
+    "rhs" : "b"
+}}

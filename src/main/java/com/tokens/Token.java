@@ -30,6 +30,9 @@ public class Token {
                     "&", "|", "^", "~", "<<", ">>",
                     // asignacion
                     "=", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "<<=", ">>="));
+    
+    public static HashSet<String> asignations = new HashSet<>(
+            List.of("=", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "<<=", ">>="));
 
     public static HashSet<String> separators = new HashSet<>(
             List.of("(", ")", "{", "}", "[", "]", ";", ",", "."));

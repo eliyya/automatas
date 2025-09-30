@@ -44,11 +44,11 @@ public class App {
             System.out.print(token.getValue() + " ");
         }
 
-        var expression = Analizer.parseExpressions(tokens, 0);
-        System.out.println("Expresión encontrada: " + expression.toString());
+        var asignation = Analizer.parseAsignation(tokens);
+        System.out.println("Asignación encontrada: " + asignation.toString());
         
-        try (FileWriter writer = new FileWriter("expression.json")) {
-            writer.write(expression.toJSON());
+        try (FileWriter writer = new FileWriter("asignation.json")) {
+            writer.write(asignation.toJSON());
         } catch (IOException e) {
             System.out.println("No se pudo escribir el archivo: " + e.getMessage());
         }
