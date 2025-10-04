@@ -1,13 +1,13 @@
 package com.tokens;
 
 public enum TokenType {
-    IDENTIFICADOR,
-    DESCONOCIDO,
-    ASIGNACION,
-    RESERVADA,
-    SEPARADOR,
-    OPERADOR,
+    IDENTIFICATOR,
+    UNKNOWN,
+    ASSIGNATION,
+    RESERVED,
+    SEPARATOR,
+    OPERATOR,
     LITERAL,
-    TIPO,
+    TYPE,
     EOF;
 }

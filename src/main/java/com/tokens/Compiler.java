@@ -36,7 +36,7 @@ public class Compiler {
 
     private Instruction parseInstruction() {
         Node lhs;
-        if (tokens.get(0).getType() == TokenType.TIPO || tokens.get(0).getType() == TokenType.IDENTIFICADOR) {
+        if (tokens.get(0).getType() == TokenType.TYPE || tokens.get(0).getType() == TokenType.IDENTIFICATOR) {
             lhs = Analizer.parseDeclaration(tokens);
         } else {
             lhs = Analizer.parseExpression(tokens);
@@ -45,7 +45,7 @@ public class Compiler {
         if (semi.getValue().equals(";")) {
             tokens.remove(0);
         } else {
-            throw new RuntimeException("Expected ; on line " + semi.getLine());
+            throw new SyntaxError(";", semi.getValue(), semi.getLine());
         }
         var rhst = tokens.get(0);
         if (rhst.getType() == TokenType.EOF) {
