@@ -9,12 +9,16 @@ import java.util.ArrayList;
 
 public class Compiler {
     private ArrayList<Token> tokens;
-    private ArrayList<Token> identificators = new ArrayList<Token>();
+    // private final ArrayList<Token> identificators = new ArrayList<>();
+    private final File file;
 
-    Compiler(File file) throws FileNotFoundException {
+    Compiler(File file) {
+        this.file = file; 
+    }
+
+    public void compile() throws FileNotFoundException {
         // ! tokenize file
         this.tokens = Analizer.tokenizeFile(file);
-
         writeTokensFile(this.tokens);
 
         System.out.print(" Analizando asignacion: ");

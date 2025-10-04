@@ -6,8 +6,8 @@ import com.google.gson.GsonBuilder;
 
 public class Declaration {
 
-    private Token type;
-    private Expression value;
+    private final Token type;
+    private final Expression value;
 
     public Declaration(Token type, Expression value) {
         this.type = type;
