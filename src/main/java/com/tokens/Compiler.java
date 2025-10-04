@@ -46,7 +46,7 @@ public class Compiler {
     private void writeAsignationFile(Expression expression) {
         System.out.println("Expresion encontrada: " + expression.toString());
         try (var log = new FileWriter("asignation.json")) {
-            log.write("Expresion encontrada: " + expression.toString() + "\n");
+            log.write(expression.toJSON());
         } catch (IOException e) {
             System.out.println("No se pudo escribir el archivo.");
         }

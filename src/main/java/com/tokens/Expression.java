@@ -2,6 +2,8 @@ package com.tokens;
 
 import java.util.HashMap;
 
+import com.google.gson.GsonBuilder;
+
 public class Expression {
 
     private Token operator;
@@ -70,9 +72,14 @@ public class Expression {
         if (this.rhs == null) {
             return "\"" + this.value.getValue() + "\"";
         }
-        return "{\n" + "    ".repeat(indent) + "\"op\" : \"" + this.operator.getValue() + "\""
-            + (",\n" + "    ".repeat(indent) + "\"lhs\" : " + this.lhs.toJSON(indent + 1)
-            + ",\n" + "    ".repeat(indent) + "\"rhs\" : " + this.rhs.toJSON(indent + 1))
-            + "\n" + "    ".repeat(indent - 1) + "}";
+        var hash = new HashMap<String, Object>();
+        hash.put("op", this.operator.getValue());
+        hash.put("lhs", this.lhs.toHashMap());
+        hash.put("rhs", this.rhs.toHashMap());
+        
+        return new GsonBuilder()
+            .setPrettyPrinting()
+            .create()
+            .toJson(hash);
     }
 }

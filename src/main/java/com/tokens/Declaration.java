@@ -1,6 +1,11 @@
 package com.tokens;
 
+import java.util.HashMap;
+
+import com.google.gson.GsonBuilder;
+
 public class Declaration {
+
     private Token type;
     private Expression value;
 
@@ -23,6 +28,13 @@ public class Declaration {
     }
 
     public String toJSON() {
-        return "{ \"type\" : \"" + type.getValue() + "\", \"value\" : " + value.toJSON() + " }";
+        var hash = new HashMap<String, Object>();
+        hash.put("type", type.getValue());
+        hash.put("value", value.getValue());
+
+        return new GsonBuilder()
+                .setPrettyPrinting()
+                .create()
+                .toJson(hash);
     }
 }
