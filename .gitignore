@@ -3,7 +3,8 @@
 
 # Log file
 *.log
-expression.json
+asignation.json
+tree.json
 
 # Package Files
 *.jar

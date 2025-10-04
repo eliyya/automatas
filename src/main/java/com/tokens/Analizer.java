@@ -294,10 +294,10 @@ public class Analizer {
         this.tokens = tokens;
     }
 
-    void analize() {
-        if (this.tokens.get(0).getType() == TokenType.TIPO) {
-            parseDeclaration(tokens);
-        }
+    public static Node analize(ArrayList<Token> tokens) {        
+        if (tokens.get(0).getType() == TokenType.TIPO || tokens.get(0).getType() == TokenType.IDENTIFICADOR) {
+            return parseDeclaration(tokens);
+        } else return parseExpression(tokens, 0);
     }
 
     static Declaration parseDeclaration(ArrayList<Token> tokens) {
@@ -307,22 +307,5 @@ public class Analizer {
         }
         var expression = parseExpression(tokens, 0);
         return new Declaration(type, expression);
-    }
-
-    static void parseDeclaration(ArrayList<Token> tokens, Token type) {
-        var name = tokens.remove(0);
-        if (name.getType() != TokenType.IDENTIFICADOR) {
-            throw new RuntimeException("Expected identifier, got " + name.getValue());
-        }
-        var next = tokens.remove(0);
-        if (!(next.getValue().equals(";") || next.getValue().equals("=") || next.getValue().equals(","))) {
-            throw new RuntimeException("Expected ;, got " + next.getValue());
-        }
-        if (next.getValue().equals(";")) {
-            return;
-        }
-        if (next.getValue().equals(",")) {
-            parseDeclaration(tokens, type);
-        }
     }
 }

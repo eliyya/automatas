@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import com.google.gson.GsonBuilder;
 
-public class Expression {
+public class Expression implements Node {
 
     private Token operator;
     private Expression lhs;
@@ -52,18 +52,20 @@ public class Expression {
         return "(" + this.lhs.getValue() + " " + this.operator.getValue() + " " + this.rhs.getValue() + ")";
     }
 
+    @Override
     public HashMap<String, Object> toHashMap() {
         HashMap<String, Object> persona = new HashMap<>();
         if (this.operator == null) {
             persona.put("value", this.value.getValue());
         } else {
-            persona.put("operator", this.operator.getValue());
+            persona.put("op", this.operator.getValue());
             persona.put("lhs", this.lhs.toHashMap());
             persona.put("rhs", this.rhs.toHashMap());
         }
         return persona;
     }
 
+    @Override
     public String toJSON() {
         return toJSON(1);
     }
