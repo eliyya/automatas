@@ -5,6 +5,7 @@ import java.util.HashMap;
 import com.google.gson.GsonBuilder;
 
 public class Instruction implements Node {
+
     private final Node lhs;
     private Node rhs;
     private Token eof;
@@ -22,6 +23,7 @@ public class Instruction implements Node {
     @Override
     public String toJSON() {
         return new GsonBuilder()
+                .disableHtmlEscaping()
                 .setPrettyPrinting()
                 .create()
                 .toJson(toHashMap());

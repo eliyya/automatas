@@ -56,11 +56,19 @@ public class Expression implements Node {
     public HashMap<String, Object> toHashMap() {
         HashMap<String, Object> persona = new HashMap<>();
         if (this.operator == null) {
-            persona.put("value", this.value.getValue());
+            persona.put("", this.value.getValue());
         } else {
             persona.put("op", this.operator.getValue());
-            persona.put("lhs", this.lhs.toHashMap());
-            persona.put("rhs", this.rhs.toHashMap());
+            if (this.lhs.isExpression()) {
+                persona.put("lhs", this.lhs.toHashMap());
+            } else {
+                persona.put("lhs", this.lhs.getValue());
+            }
+            if (this.rhs.isExpression()) {
+                persona.put("rhs", this.rhs.toHashMap());
+            } else {
+                persona.put("rhs", this.rhs.getValue());
+            }
         }
         return persona;
     }
@@ -76,12 +84,21 @@ public class Expression implements Node {
         }
         var hash = new HashMap<String, Object>();
         hash.put("op", this.operator.getValue());
-        hash.put("lhs", this.lhs.toHashMap());
-        hash.put("rhs", this.rhs.toHashMap());
-        
+        if (this.lhs.isExpression()) {
+            hash.put("lhs", this.lhs.toHashMap());
+        } else {
+            hash.put("lhs", this.lhs.getValue());
+        }
+        if (this.rhs.isExpression()) {
+            hash.put("rhs", this.rhs.toHashMap());
+        } else {
+            hash.put("rhs", this.rhs.getValue());
+        }
+
         return new GsonBuilder()
-            .setPrettyPrinting()
-            .create()
-            .toJson(hash);
+                .disableHtmlEscaping()
+                .setPrettyPrinting()
+                .create()
+                .toJson(hash);
     }
 }

@@ -24,12 +24,7 @@ public class Compiler {
         this.tokens = Analizer.tokenizeFile(file);
         writeTokensFile(this.tokens);
 
-        System.out.print(" Analizando asignacion: ");
-        for (var token : this.tokens) {
-            System.out.print(token.getValue() + " ");
-        }
-
-        // ! parse asignation
+        // ! parse instructions
         while (!tokens.isEmpty()) {
             var instruction = parseInstruction();
             lines.add(instruction);
@@ -61,8 +56,6 @@ public class Compiler {
     }
 
     private void writeTokensFile(ArrayList<Token> tokens) {
-        System.out.println("Tokens encontrados: " + tokens.size());
-        System.out.println();
         try (var log = new FileWriter("tokens.log")) {
             for (var token : tokens) {
                 log.write("Tipo: "
@@ -70,19 +63,26 @@ public class Compiler {
                         + " ".repeat(15 - token.getType().name().length()) + "Valor: "
                         + token.getValue() + "\n");
             }
+            System.out.println("Tokens guardados en tokens.log");
         } catch (IOException e) {
             System.out.println("No se pudo escribir el archivo.");
         }
     }
 
     private void writeAsignationFile() {
-        // System.out.println("Expresion encontrada: " + expression.toString());
-        try (var log = new FileWriter("asignation.json")) {
+        try (var log = new FileWriter("analized.json")) {
             var arr = new ArrayList<HashMap<String, Object>>();
             for (var line : lines) {
                 arr.add(line.toHashMap());
             }
-            log.write(new GsonBuilder().setPrettyPrinting().create().toJson(arr));
+            log.write(
+                    new GsonBuilder()
+                            .disableHtmlEscaping()
+                            .setPrettyPrinting()
+                            .create()
+                            .toJson(arr)
+            );
+            System.out.println("Analisis guardado en analized.json");
         } catch (IOException e) {
             System.out.println("No se pudo escribir el archivo.");
         }
@@ -97,11 +97,13 @@ public class Compiler {
             writer.write(
                     new GsonBuilder()
                             .setPrettyPrinting()
+                            .disableHtmlEscaping()
                             .create()
                             .toJson(arr)
-                            .replaceAll("\"op\" : (\".*\")", "\"\" : $1")
-                            .replaceAll("(\"\\w+\") : (\".+\")", "$1 : { \"\" : $2 }")
+                            .replaceAll("\"op\": (\".*\")", "\"\" : $1")
+                            .replaceAll("(\"\\w+\"): (\".+\")", "$1 : { \"\" : $2 }")
             );
+            System.out.println("Arbol guardado en tree.json");
         } catch (IOException e) {
             System.out.println("No se pudo escribir el archivo: " + e.getMessage());
         }

@@ -31,6 +31,7 @@ public class Declaration implements Node {
     public String toJSON() {
         return new GsonBuilder()
                 .setPrettyPrinting()
+                .disableHtmlEscaping()
                 .create()
                 .toJson(toHashMap());
     }
@@ -40,7 +41,11 @@ public class Declaration implements Node {
         var hash = new HashMap<String, Object>();
         hash.put("op", "declaration");
         hash.put("lhs", type.getValue());
-        hash.put("rhs", value.toHashMap());
+        if (value.isExpression()) {
+            hash.put("rhs", value.toHashMap());
+        } else {
+            hash.put("rhs", value.getValue());
+        }
         return hash;
     }
 }
