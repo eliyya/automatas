@@ -45,7 +45,7 @@ public class Compiler {
         if (semi.getValue().equals(";")) {
             tokens.remove(0);
         } else {
-            throw new RuntimeException("Expected ;");
+            throw new RuntimeException("Expected ; on line " + semi.getLine());
         }
         var rhst = tokens.get(0);
         if (rhst.getType() == TokenType.EOF) {

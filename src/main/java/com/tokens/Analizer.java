@@ -11,7 +11,7 @@ public class Analizer {
     private static void addToken(ArrayList<Token> tokens, Token token, boolean semicolon) {
         tokens.add(token);
         if (semicolon) {
-            tokens.add(new Token(";", TokenType.SEPARADOR));
+            tokens.add(new Token(";", TokenType.SEPARADOR, token.getLine()));
         }
     }
 
@@ -101,9 +101,9 @@ public class Analizer {
         return nuevaLinea;
     }
 
-    private static void tokenizeLine(String line, ArrayList<Token> tokens, boolean[] comentarioMultiLinea) {
+    private static void tokenizeLine(String line, ArrayList<Token> tokens, boolean[] comentarioMultiLinea, int lineNum) {
         if (line.isEmpty()) {
-            addToken(tokens, new Token("\n", TokenType.EOF), false);
+            addToken(tokens, new Token("\n", TokenType.EOF, lineNum), false);
             return;
         }
 
@@ -125,7 +125,7 @@ public class Analizer {
             if (literal.length() > 0) {
                 literal += " " + token;
                 if (token.endsWith("\"")) {
-                    addToken(tokens, new Token(literal, TokenType.LITERAL), semicolon);
+                    addToken(tokens, new Token(literal, TokenType.LITERAL, lineNum), semicolon);
                     literal = "";
                 }
                 continue;
@@ -142,27 +142,27 @@ public class Analizer {
             }
 
             if (Token.reserved.contains(token)) {
-                addToken(tokens, new Token(token, TokenType.RESERVADA), semicolon);
+                addToken(tokens, new Token(token, TokenType.RESERVADA, lineNum), semicolon);
                 continue;
             }
 
             if (Token.asignations.contains(token)) {
-                addToken(tokens, new Token(token, TokenType.ASIGNACION), semicolon);
+                addToken(tokens, new Token(token, TokenType.ASIGNACION, lineNum), semicolon);
                 continue;
             }
 
             if (Token.operators.contains(token)) {
-                addToken(tokens, new Token(token, TokenType.OPERADOR), semicolon);
+                addToken(tokens, new Token(token, TokenType.OPERADOR, lineNum), semicolon);
                 continue;
             }
 
             if (Token.types.contains(token)) {
-                addToken(tokens, new Token(token, TokenType.TIPO), semicolon);
+                addToken(tokens, new Token(token, TokenType.TIPO, lineNum), semicolon);
                 continue;
             }
 
             if (Token.separators.contains(token)) {
-                addToken(tokens, new Token(token, TokenType.SEPARADOR), semicolon);
+                addToken(tokens, new Token(token, TokenType.SEPARADOR, lineNum), semicolon);
                 continue;
             }
 
@@ -170,7 +170,7 @@ public class Analizer {
                 literal = "\"";
                 var ntoken = token.substring(1);
                 if (ntoken.endsWith("\"")) {
-                    addToken(tokens, new Token(literal + ntoken, TokenType.LITERAL), semicolon);
+                    addToken(tokens, new Token(literal + ntoken, TokenType.LITERAL, lineNum), semicolon);
                     literal = "";
                 } else {
                     literal += ntoken;
@@ -179,25 +179,25 @@ public class Analizer {
             }
 
             if (token.equals(".")) {
-                addToken(tokens, new Token(token, TokenType.SEPARADOR), semicolon);
+                addToken(tokens, new Token(token, TokenType.SEPARADOR, lineNum), semicolon);
                 continue;
             }
 
             if (token.matches("[0-9]+\\.?[0.9]*")) {
-                addToken(tokens, new Token(token, TokenType.LITERAL), semicolon);
+                addToken(tokens, new Token(token, TokenType.LITERAL, lineNum), semicolon);
                 continue;
             }
 
             if (token.matches("[a-zA-Z_$][a-zA-Z_$0-9]*")) {
-                addToken(tokens, new Token(token, TokenType.IDENTIFICADOR), semicolon);
+                addToken(tokens, new Token(token, TokenType.IDENTIFICADOR, lineNum), semicolon);
                 continue;
             }
 
-            addToken(tokens, new Token(token, TokenType.DESCONOCIDO), semicolon);
+            addToken(tokens, new Token(token, TokenType.DESCONOCIDO, lineNum), semicolon);
 
         }
 
-        tokens.add(new Token("\n", TokenType.EOF));
+        tokens.add(new Token("\n", TokenType.EOF, lineNum));
     }
 
     public static ArrayList<Token> tokenizeFile(File file) throws FileNotFoundException {
@@ -206,9 +206,11 @@ public class Analizer {
         // leo un archivo y agrego las lineas al ArrayList
         try (var scanner = new Scanner(file)) {
             boolean[] comentarioMultiLinea = {false};
+            int lineNum = 1;
             while (scanner.hasNext()) {
                 var linea = normalizeLine(scanner.nextLine().trim());
-                tokenizeLine(linea, tokens, comentarioMultiLinea);
+                tokenizeLine(linea, tokens, comentarioMultiLinea, lineNum);
+                lineNum++;
             }
 
         }
@@ -229,11 +231,11 @@ public class Analizer {
         if (ft.getValue().equals("(")) {
             lhs = parseExpression(tokens, 0);
             if (!tokens.remove(0).getValue().equals(")")) {
-                throw new RuntimeException("Expected )");
+                throw new RuntimeException("Expected ) on line " + ft.getLine());
             }
         } else {
             if (!(ft.getType() == TokenType.LITERAL || ft.getType() == TokenType.IDENTIFICADOR)) {
-                throw new RuntimeException("Expected " + TokenType.LITERAL + " or " + TokenType.IDENTIFICADOR + ", got " + ft.getType());
+                throw new RuntimeException("Expected " + TokenType.LITERAL + " or " + TokenType.IDENTIFICADOR + ", got " + ft.getType() + " on line " + ft.getLine());
             }
         }
         if (lhs == null) {
@@ -249,7 +251,7 @@ public class Analizer {
                 break;
             }
             if (!(op.getType() == TokenType.OPERADOR || op.getValue().equals(",") || Token.asignations.contains(op.getValue()))) {
-                throw new RuntimeException("Expected operator, got " + op.getType());
+                throw new RuntimeException("Expected operator, got " + op.getType() + " on line " + op.getLine());
             }
             // right hand side
             var bp = getBindingPower(op.getValue());
