@@ -1,17 +1,47 @@
-package com.tokens;
+package com.compiler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
-public class Analizer {
-    private ArrayList<Token> tokens;
+import com.google.gson.GsonBuilder;
 
-    private static void addToken(ArrayList<Token> tokens, Token token, boolean semicolon) {
+public final class Analizer {
+
+    private final ArrayList<Token> tokens = new ArrayList<>();
+    private final File file;
+    private final ArrayList<Node> lines = new ArrayList<>();
+
+    public Analizer(File file) throws FileNotFoundException {
+        this.file = file;
+    }
+
+    public ArrayList<Token> getTokens() {
+        return tokens;
+    }
+
+    private void addToken(Token token, boolean semicolon) {
         tokens.add(token);
         if (semicolon) {
             tokens.add(new Token(";", TokenType.SEPARATOR, token.getLine()));
+        }
+    }
+
+    void writeTokensFile() {
+        try (var log = new FileWriter("tokens.log")) {
+            for (var token : this.tokens) {
+                log.write("Tipo: "
+                        + token.getType().name()
+                        + " ".repeat(15 - token.getType().name().length()) + "Valor: "
+                        + token.getValue() + "\n");
+            }
+            System.out.println("Tokens guardados en tokens.log");
+        } catch (IOException e) {
+            System.out.println("No se pudo escribir el archivo.");
         }
     }
 
@@ -95,15 +125,15 @@ public class Analizer {
             }
             if (nuevaLinea.endsWith("++")) {
                 nuevaLinea = nuevaLinea.substring(0, nuevaLinea.length() - 2) + " ++ ";
-                continue;
+                // continue;
             }
         }
         return nuevaLinea;
     }
 
-    private static void tokenizeLine(String line, ArrayList<Token> tokens, boolean[] comentarioMultiLinea, int lineNum) {
+    private void tokenizeLine(String line, boolean[] comentarioMultiLinea, int lineNum) {
         if (line.isEmpty()) {
-            addToken(tokens, new Token("\n", TokenType.EOF, lineNum), false);
+            addToken(new Token("\n", TokenType.EOF, lineNum), false);
             return;
         }
 
@@ -125,7 +155,7 @@ public class Analizer {
             if (literal.length() > 0) {
                 literal += " " + token;
                 if (token.endsWith("\"")) {
-                    addToken(tokens, new Token(literal, TokenType.LITERAL, lineNum), semicolon);
+                    addToken(new Token(literal, TokenType.LITERAL, lineNum), semicolon);
                     literal = "";
                 }
                 continue;
@@ -142,27 +172,27 @@ public class Analizer {
             }
 
             if (Token.reserved.contains(token)) {
-                addToken(tokens, new Token(token, TokenType.RESERVED, lineNum), semicolon);
+                addToken(new Token(token, TokenType.RESERVED, lineNum), semicolon);
                 continue;
             }
 
             if (Token.asignations.contains(token)) {
-                addToken(tokens, new Token(token, TokenType.ASSIGNATION, lineNum), semicolon);
+                addToken(new Token(token, TokenType.ASSIGNATION, lineNum), semicolon);
                 continue;
             }
 
             if (Token.operators.contains(token)) {
-                addToken(tokens, new Token(token, TokenType.OPERATOR, lineNum), semicolon);
+                addToken(new Token(token, TokenType.OPERATOR, lineNum), semicolon);
                 continue;
             }
 
             if (Token.types.contains(token)) {
-                addToken(tokens, new Token(token, TokenType.TYPE, lineNum), semicolon);
+                addToken(new Token(token, TokenType.TYPE, lineNum), semicolon);
                 continue;
             }
 
             if (Token.separators.contains(token)) {
-                addToken(tokens, new Token(token, TokenType.SEPARATOR, lineNum), semicolon);
+                addToken(new Token(token, TokenType.SEPARATOR, lineNum), semicolon);
                 continue;
             }
 
@@ -170,7 +200,7 @@ public class Analizer {
                 literal = "\"";
                 var ntoken = token.substring(1);
                 if (ntoken.endsWith("\"")) {
-                    addToken(tokens, new Token(literal + ntoken, TokenType.LITERAL, lineNum), semicolon);
+                    addToken(new Token(literal + ntoken, TokenType.LITERAL, lineNum), semicolon);
                     literal = "";
                 } else {
                     literal += ntoken;
@@ -179,46 +209,38 @@ public class Analizer {
             }
 
             if (token.equals(".")) {
-                addToken(tokens, new Token(token, TokenType.SEPARATOR, lineNum), semicolon);
+                addToken(new Token(token, TokenType.SEPARATOR, lineNum), semicolon);
                 continue;
             }
 
             if (token.matches("[0-9]+\\.?[0.9]*")) {
-                addToken(tokens, new Token(token, TokenType.LITERAL, lineNum), semicolon);
+                addToken(new Token(token, TokenType.LITERAL, lineNum), semicolon);
                 continue;
             }
 
             if (token.matches("[a-zA-Z_$][a-zA-Z_$0-9]*")) {
-                addToken(tokens, new Token(token, TokenType.IDENTIFICATOR, lineNum), semicolon);
+                addToken(new Token(token, TokenType.IDENTIFICATOR, lineNum), semicolon);
                 continue;
             }
 
-            addToken(tokens, new Token(token, TokenType.UNKNOWN, lineNum), semicolon);
+            addToken(new Token(token, TokenType.UNKNOWN, lineNum), semicolon);
 
         }
 
         tokens.add(new Token("\n", TokenType.EOF, lineNum));
     }
 
-    public static ArrayList<Token> tokenizeFile(File file) throws FileNotFoundException {
-        var tokens = new ArrayList<Token>();
-
-        // leo un archivo y agrego las lineas al ArrayList
+    public ArrayList<Token> tokenize() throws FileNotFoundException {
         try (var scanner = new Scanner(file)) {
             boolean[] comentarioMultiLinea = {false};
             int lineNum = 1;
             while (scanner.hasNext()) {
                 var linea = normalizeLine(scanner.nextLine().trim());
-                tokenizeLine(linea, tokens, comentarioMultiLinea, lineNum);
+                tokenizeLine(linea, comentarioMultiLinea, lineNum);
                 lineNum++;
             }
-
         }
         return tokens;
-    }
-
-    public static Expression parseExpression(ArrayList<Token> tokens) {
-        return parseExpression(tokens, 0);
     }
 
     public static Expression parseExpression(ArrayList<Token> tokens, float minBp) {
@@ -292,22 +314,81 @@ public class Analizer {
         return op;
     }
 
-    public Analizer(ArrayList<Token> tokens) {
-        this.tokens = tokens;
+    public ArrayList<Node> analize() {
+        while (!tokens.isEmpty()) {
+            var instruction = parseInstruction();
+            lines.add(instruction);
+        }
+        return lines;
     }
 
-    public static Node analize(ArrayList<Token> tokens) {        
+    private Instruction parseInstruction() {
+        Node lhs;
         if (tokens.get(0).getType() == TokenType.TYPE || tokens.get(0).getType() == TokenType.IDENTIFICATOR) {
-            return parseDeclaration(tokens);
-        } else return parseExpression(tokens, 0);
+            lhs = parseDeclaration(tokens);
+        } else {
+            lhs = parseExpression(tokens, 0);
+        }
+        var semi = tokens.get(0);
+        if (semi.getValue().equals(";")) {
+            tokens.remove(0);
+        } else {
+            throw new SyntaxError(";", semi.getValue(), semi.getLine());
+        }
+        var rhst = tokens.get(0);
+        if (rhst.getType() == TokenType.EOF) {
+            return new Instruction(lhs, tokens.remove(0));
+        } else {
+            return new Instruction(lhs, parseInstruction());
+        }
     }
 
-    static Declaration parseDeclaration(ArrayList<Token> tokens) {
+    private Declaration parseDeclaration(ArrayList<Token> tokens) {
         var type = tokens.remove(0);
         if (!(type.getType() == TokenType.TYPE || type.getType() == TokenType.IDENTIFICATOR)) {
             throw new SyntaxError(TokenType.TYPE.name(), type.getType().name(), type.getLine());
         }
         var expression = parseExpression(tokens, 0);
         return new Declaration(type, expression);
+    }
+
+    public void writeAsignationFile() {
+        try (var log = new FileWriter("analized.json")) {
+            var arr = new ArrayList<HashMap<String, Object>>();
+            for (var line : lines) {
+                arr.add(line.toHashMap());
+            }
+            log.write(
+                    new GsonBuilder()
+                            .disableHtmlEscaping()
+                            .setPrettyPrinting()
+                            .create()
+                            .toJson(arr)
+            );
+            System.out.println("Analisis guardado en analized.json");
+        } catch (IOException e) {
+            System.out.println("No se pudo escribir el archivo.");
+        }
+    }
+
+    public void writeAsignationTreeFile() {
+        try (FileWriter writer = new FileWriter("tree.json")) {
+            var arr = new ArrayList<HashMap<String, Object>>();
+            for (var line : lines) {
+                arr.add(line.toHashMap());
+            }
+            writer.write(
+                    new GsonBuilder()
+                            .setPrettyPrinting()
+                            .disableHtmlEscaping()
+                            .create()
+                            .toJson(arr)
+                            .replaceAll("\"op\": (\".*\")", "\"\" : $1")
+                            .replaceAll("(\"\\w+\"): (\".+\")", "$1 : { \"\" : $2 }")
+            );
+            System.out.println("Arbol guardado en tree.json");
+        } catch (IOException e) {
+            System.out.println("No se pudo escribir el archivo: " + e.getMessage());
+        }
     }
 }

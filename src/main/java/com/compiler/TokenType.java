@@ -1,4 +1,4 @@
-package com.tokens;
+package com.compiler;
 
 public enum TokenType {
     IDENTIFICATOR,

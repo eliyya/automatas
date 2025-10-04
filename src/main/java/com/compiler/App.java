@@ -1,4 +1,4 @@
-package com.tokens;
+package com.compiler;
 
 import java.io.File;
 import java.io.IOException;

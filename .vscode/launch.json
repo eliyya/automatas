@@ -15,7 +15,7 @@
             "type": "java",
             "name": "Launch with Arguments Prompt",
             "request": "launch",
-            "mainClass": "com.tokens.App",
+            "mainClass": "com.compiler.App",
             "args": "test.txt"
         }
     ]

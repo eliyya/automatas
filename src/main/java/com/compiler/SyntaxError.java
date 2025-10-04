@@ -1,4 +1,4 @@
-package com.tokens;
+package com.compiler;
 
 public class SyntaxError extends RuntimeException {
     private final String message;

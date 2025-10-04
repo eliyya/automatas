@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 import javax.swing.JFrame;
@@ -23,8 +24,9 @@ public class Laberinto extends JPanel {
         try {
             // leo un archivo y agrego las lineas al ArrayList
             try (var file = new Scanner(new File("./laberinto1.txt"))) {
-                while (file.hasNext())
+                while (file.hasNext()) {
                     lineas.add(file.nextLine());
+                }
             }
         } catch (FileNotFoundException e) {
             System.out.println("No se encontró el archivo.");
@@ -33,9 +35,11 @@ public class Laberinto extends JPanel {
 
         // reviso si todas las lineas tienen la misma longitud
         var longitud = 0;
-        for (var linea : lineas)
-            if (linea.length() > longitud)
+        for (var linea : lineas) {
+            if (linea.length() > longitud) {
                 longitud = linea.length();
+            }
+        }
 
         // agrego paredes a las lineas que son mas cortas
         for (var i = 0; i < lineas.size(); i++) {
@@ -48,20 +52,22 @@ public class Laberinto extends JPanel {
         var entrada = false;
         var salida = false;
         for (var linea : lineas) {
-            if (linea.contains(ENTRADA))
+            if (linea.contains(ENTRADA)) {
                 entrada = true;
-            if (linea.contains(SALIDA))
+            }
+            if (linea.contains(SALIDA)) {
                 salida = true;
-            if (entrada && salida)
+            }
+            if (entrada && salida) {
                 break;
+            }
         }
 
         // convertirlo en matriz
         var matriz = new ArrayList<ArrayList<String>>();
         for (var linea : lineas) {
             var vector = new ArrayList<String>();
-            for (var caracter : linea.split(""))
-                vector.add(caracter);
+            vector.addAll(Arrays.asList(linea.split("")));
             matriz.add(vector);
         }
 
@@ -80,18 +86,21 @@ public class Laberinto extends JPanel {
     public Laberinto(ArrayList<ArrayList<String>> matriz) {
         this.matriz = matriz;
         // imprimo la matriz en consola
-        for (var x = 0; x < matriz.size(); x++, System.out.println())
+        for (var x = 0; x < matriz.size(); x++, System.out.println()) {
             for (var y = 0; y < matriz.get(x).size(); y++) {
                 var c = matriz.get(x).get(y);
-                if (c.equals(CAMINO))
-                    System.out.print("\u001B[47m" + c + "\u001B[0m");
-                else if (c.equals(ENTRADA))
-                    System.out.print("\u001B[42m" + c + "\u001B[0m");
-                else if (c.equals(SALIDA))
-                    System.out.print("\u001B[41m" + c + "\u001B[0m");
-                else
-                    System.out.print("\u001B[40m" + c + "\u001B[0m");
+                switch (c) {
+                    case CAMINO ->
+                        System.out.print("\u001B[47m" + c + "\u001B[0m");
+                    case ENTRADA ->
+                        System.out.print("\u001B[42m" + c + "\u001B[0m");
+                    case SALIDA ->
+                        System.out.print("\u001B[41m" + c + "\u001B[0m");
+                    default ->
+                        System.out.print("\u001B[40m" + c + "\u001B[0m");
+                }
             }
+        }
     }
 
     @Override
@@ -99,19 +108,22 @@ public class Laberinto extends JPanel {
         super.paintComponent(g);
 
         // recorro la matriz
-        for (var y = 0; y < matriz.size(); y++)
+        for (var y = 0; y < matriz.size(); y++) {
             for (var x = 0; x < matriz.get(y).size(); x++) {
                 // establezco el color
-                if (matriz.get(y).get(x).equals(PARED))
-                    g.setColor(java.awt.Color.BLACK);
-                else if (matriz.get(y).get(x).equals(ENTRADA))
-                    g.setColor(java.awt.Color.GREEN);
-                else if (matriz.get(y).get(x).equals(SALIDA))
-                    g.setColor(java.awt.Color.RED);
-                else
-                    g.setColor(java.awt.Color.WHITE);
+                switch (matriz.get(y).get(x)) {
+                    case PARED ->
+                        g.setColor(java.awt.Color.BLACK);
+                    case ENTRADA ->
+                        g.setColor(java.awt.Color.GREEN);
+                    case SALIDA ->
+                        g.setColor(java.awt.Color.RED);
+                    default ->
+                        g.setColor(java.awt.Color.WHITE);
+                }
                 // dibujo el pixel
                 g.fillRect(x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
             }
+        }
     }
 }

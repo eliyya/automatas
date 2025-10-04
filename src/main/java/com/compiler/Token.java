@@ -1,4 +1,4 @@
-package com.tokens;
+package com.compiler;
 
 import java.util.HashSet;
 import java.util.List;

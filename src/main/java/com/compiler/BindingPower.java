@@ -1,4 +1,4 @@
-package com.tokens;
+package com.compiler;
 
 public class BindingPower {
     private final float l;
