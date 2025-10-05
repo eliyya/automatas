@@ -138,7 +138,7 @@ public class Compiler {
         var value = token.value();
         if (value.matches("^[0-9]+$")) {
             return "int";
-        } else if (value.matches("^[0-9]+\\.[0-9]+$")) {
+        } else if (value.matches("^\\d+\\.\\d+$")) {
             return "float";
         } else if (value.matches("^(true|false)$")) {
             return "boolean";

@@ -33,13 +33,6 @@ public final class Analizer {
         return tokens;
     }
 
-    private void addToken(Token token, boolean semicolon) {
-        tokens.add(token);
-        if (semicolon) {
-            tokens.add(new Token(";", TokenType.SEPARATOR, token.line()));
-        }
-    }
-
     void writeTokensFile() {
         try (var log = new FileWriter("tokens.log")) {
             for (var token : this.tokens) {
@@ -54,199 +47,122 @@ public final class Analizer {
         }
     }
 
-    private static String normalizeLine(String line) {
-        var nuevaLinea = "";
-        var lit = false;
-        for (String ch : line.split("")) {
-            if (lit) {
-                nuevaLinea += ch;
-                int countBackslashes = 0;
-                if (!nuevaLinea.endsWith("\"")) {
+    public void tokenizeLine(String input, int lineNum) {
+        StringBuilder buffer = new StringBuilder();
+
+        int length = input.length();
+        for (int i = 0; i < length; i++) {
+            char c = input.charAt(i);
+            
+            if (Character.isWhitespace(c)) {
+                flushBuffer(buffer, lineNum);
+                continue;
+            }
+
+            if (c == '"') {
+                flushBuffer(buffer, lineNum);
+                StringBuilder str = new StringBuilder();
+                str.append(c);
+                i++;
+
+                while (i < length) {
+                    char next = input.charAt(i);
+                    str.append(next);
+                    if (next == '\\') {
+                        // Escapar siguiente caracter (p. ej. \")
+                        if (i + 1 < length) {
+                            i++;
+                            str.append(input.charAt(i));
+                        }
+                    } else if (next == '"') {
+                        break;
+                    }
+                    i++;
+                }
+                flushBuffer(str, lineNum);
+                continue;
+            }
+
+            if (i + 1 < length) {
+                String two = "" + c + input.charAt(i + 1);
+                if (two.matches("==|!=|<=|>=|\\+\\+|--|\\+=|-=|\\*=|/=")) {
+                    flushBuffer(buffer, lineNum);
+                    flushBuffer(new StringBuilder(two), lineNum);
+                    i++;
                     continue;
                 }
-                for (int i = nuevaLinea.length() - 2; i >= 0 && nuevaLinea.charAt(i) == '\\'; i--) {
-                    countBackslashes++;
-                }
+            }
 
-                if (countBackslashes % 2 == 0) {
-                    nuevaLinea += " ";
-                    lit = false;
-                }
+            if ("=+-*/;(),{}".indexOf(c) >= 0) {
+                flushBuffer(buffer, lineNum);
+                tokens.add(new Token("" + c, TokenType.OPERATOR, lineNum));
                 continue;
             }
-            if (ch.equals("\"")) {
-                lit = true;
-                nuevaLinea += " \"";
-                continue;
-            }
-            if (ch.equals(";")) {
-                nuevaLinea += " ; ";
-                continue;
-            }
-            if (ch.equals("(")) {
-                nuevaLinea += " ( ";
-                continue;
-            }
-            if (ch.equals(")")) {
-                nuevaLinea += " ) ";
-                continue;
-            }
-            if (ch.equals("{")) {
-                nuevaLinea += " { ";
-                continue;
-            }
-            if (ch.equals("}")) {
-                nuevaLinea += " } ";
-                continue;
-            }
-            if (ch.equals("[")) {
-                nuevaLinea += " [ ";
-                continue;
-            }
-            if (ch.equals("]")) {
-                nuevaLinea += " ] ";
-                continue;
-            }
-            if (ch.equals("<")) {
-                nuevaLinea += " < ";
-                continue;
-            }
-            if (ch.equals(">")) {
-                nuevaLinea += " > ";
-                continue;
-            }
-            if (ch.equals(".")) {
-                nuevaLinea += " . ";
-                continue;
-            }
-            if (ch.equals(",")) {
-                nuevaLinea += " , ";
-                continue;
-            }
-            if (ch.equals("!")) {
-                nuevaLinea += " ! ";
-                continue;
-            }
-            nuevaLinea += ch;
-            if (nuevaLinea.endsWith("--")) {
-                nuevaLinea = nuevaLinea.substring(0, nuevaLinea.length() - 2) + " -- ";
-                continue;
-            }
-            if (nuevaLinea.endsWith("++")) {
-                nuevaLinea = nuevaLinea.substring(0, nuevaLinea.length() - 2) + " ++ ";
-                // continue;
-            }
+
+            buffer.append(c);
         }
-        return nuevaLinea;
+
+        flushBuffer(buffer, lineNum);
+        tokens.add(new Token("\n", TokenType.EOF, lineNum));
     }
 
-    private void tokenizeLine(String line, boolean[] comentarioMultiLinea, int lineNum) {
-        if (line.isEmpty()) {
-            addToken(new Token("\n", TokenType.EOF, lineNum), false);
+    private void flushBuffer(StringBuilder buffer, int lineNum) {
+        if (buffer.length() > 0) {
+            toToken(buffer.toString(), lineNum);
+            buffer.setLength(0);
+        }
+    }
+
+    private void toToken(String buffer, int lineNum) {
+        if (CompilerConstants.RESERVED.contains(buffer)) {
+            tokens.add(new Token(buffer, TokenType.RESERVED, lineNum));
             return;
         }
 
-        var literal = "";
-        var semicolon = false;
-        for (String token : line.trim().split("\\s+")) {
-            if (token.trim().isEmpty()) {
-                continue;
-            }
-
-            // validadas anteriormente
-            if (comentarioMultiLinea[0]) {
-                if (token.endsWith("*/")) {
-                    comentarioMultiLinea[0] = false;
-                }
-                continue;
-            }
-
-            if (literal.length() > 0) {
-                literal += " " + token;
-                if (token.endsWith("\"")) {
-                    addToken(new Token(literal, TokenType.LITERAL, lineNum), semicolon);
-                    literal = "";
-                }
-                continue;
-            }
-
-            // validaciones
-            if (token.startsWith("//")) {
-                break;
-            }
-
-            if (token.startsWith("/*")) {
-                comentarioMultiLinea[0] = true;
-                break;
-            }
-
-            if (CompilerConstants.RESERVED.contains(token)) {
-                addToken(new Token(token, TokenType.RESERVED, lineNum), semicolon);
-                continue;
-            }
-
-            if (CompilerConstants.ASIGNATIONS.contains(token)) {
-                addToken(new Token(token, TokenType.ASSIGNATION, lineNum), semicolon);
-                continue;
-            }
-
-            if (CompilerConstants.OPERATORS.contains(token)) {
-                addToken(new Token(token, TokenType.OPERATOR, lineNum), semicolon);
-                continue;
-            }
-
-            if (CompilerConstants.TYPES.contains(token)) {
-                addToken(new Token(token, TokenType.TYPE, lineNum), semicolon);
-                continue;
-            }
-
-            if (CompilerConstants.SEPARATORS.contains(token)) {
-                addToken(new Token(token, TokenType.SEPARATOR, lineNum), semicolon);
-                continue;
-            }
-
-            if (token.startsWith("\"")) {
-                literal = "\"";
-                var ntoken = token.substring(1);
-                if (ntoken.endsWith("\"")) {
-                    addToken(new Token(literal + ntoken, TokenType.LITERAL, lineNum), semicolon);
-                    literal = "";
-                } else {
-                    literal += ntoken;
-                }
-                continue;
-            }
-
-            if (token.equals(".")) {
-                addToken(new Token(token, TokenType.SEPARATOR, lineNum), semicolon);
-                continue;
-            }
-
-            if (token.matches("[0-9]+\\.?[0.9]*")) {
-                addToken(new Token(token, TokenType.LITERAL, lineNum), semicolon);
-                continue;
-            }
-
-            if (token.matches("[a-zA-Z_$][a-zA-Z_$0-9]*")) {
-                addToken(new Token(token, TokenType.IDENTIFICATOR, lineNum), semicolon);
-                continue;
-            }
-
-            addToken(new Token(token, TokenType.UNKNOWN, lineNum), semicolon);
-
+        if (CompilerConstants.ASIGNATIONS.contains(buffer)) {
+            tokens.add(new Token(buffer, TokenType.ASSIGNATION, lineNum));
+            return;
         }
 
-        tokens.add(new Token("\n", TokenType.EOF, lineNum));
+        if (CompilerConstants.OPERATORS.contains(buffer)) {
+            tokens.add(new Token(buffer, TokenType.OPERATOR, lineNum));
+            return;
+        }
+
+        if (CompilerConstants.TYPES.contains(buffer)) {
+            tokens.add(new Token(buffer, TokenType.TYPE, lineNum));
+            return;
+        }
+
+        if (CompilerConstants.SEPARATORS.contains(buffer)) {
+            tokens.add(new Token(buffer, TokenType.SEPARATOR, lineNum));
+            return;
+        }
+
+        if (buffer.equals(".")) {
+            tokens.add(new Token(buffer, TokenType.SEPARATOR, lineNum));
+            return;
+        }
+
+        if (buffer.matches("\\d+(?:\\.\\d+)?|")) {
+            tokens.add(new Token(buffer, TokenType.LITERAL, lineNum));
+            return;
+        }
+
+        if (buffer.matches("[a-zA-Z_$][a-zA-Z_$0-9]*")) {
+            tokens.add(new Token(buffer, TokenType.IDENTIFICATOR, lineNum));
+            return;
+        }
+
+        tokens.add(new Token(buffer, TokenType.UNKNOWN, lineNum));
+
     }
 
     public ArrayList<Token> tokenize() throws FileNotFoundException {
         try (var scanner = new Scanner(file)) {
-            boolean[] comentarioMultiLinea = {false};
             int lineNum = 1;
             while (scanner.hasNext()) {
-                var linea = normalizeLine(scanner.nextLine().trim());
-                tokenizeLine(linea, comentarioMultiLinea, lineNum);
-                lineNum++;
+                tokenizeLine(scanner.nextLine().trim(), lineNum++);
             }
         }
         return tokens;
