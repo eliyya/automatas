@@ -1,4 +1,4 @@
-package com.compiler;
+package com.compiler.nodes;
 
 import java.util.HashMap;
 

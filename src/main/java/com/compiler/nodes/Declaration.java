@@ -1,7 +1,8 @@
-package com.compiler;
+package com.compiler.nodes;
 
 import java.util.HashMap;
 
+import com.compiler.Token;
 import com.google.gson.GsonBuilder;
 
 public class Declaration implements Node {
@@ -24,7 +25,7 @@ public class Declaration implements Node {
 
     @Override
     public String toString() {
-        return type.getValue() + " " + value.toString();
+        return type.value() + " " + value.toString();
     }
 
     @Override
@@ -40,7 +41,7 @@ public class Declaration implements Node {
     public HashMap<String, Object> toHashMap() {
         var hash = new HashMap<String, Object>();
         hash.put("op", "declaration");
-        hash.put("lhs", type.getValue());
+        hash.put("lhs", type.value());
         if (value.isExpression()) {
             hash.put("rhs", value.toHashMap());
         } else {

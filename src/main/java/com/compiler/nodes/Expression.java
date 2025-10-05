@@ -1,7 +1,8 @@
-package com.compiler;
+package com.compiler.nodes;
 
 import java.util.HashMap;
 
+import com.compiler.Token;
 import com.google.gson.GsonBuilder;
 
 public class Expression implements Node {
@@ -39,7 +40,7 @@ public class Expression implements Node {
 
     public String getValue() {
         if (this.operator == null) {
-            return this.value.getValue();
+            return this.value.value();
         }
         return this.toString();
     }
@@ -49,16 +50,16 @@ public class Expression implements Node {
         if (this.operator == null) {
             return this.lhs.getValue();
         }
-        return "(" + this.lhs.getValue() + " " + this.operator.getValue() + " " + this.rhs.getValue() + ")";
+        return "(" + this.lhs.getValue() + " " + this.operator.value() + " " + this.rhs.getValue() + ")";
     }
 
     @Override
     public HashMap<String, Object> toHashMap() {
         HashMap<String, Object> persona = new HashMap<>();
         if (this.operator == null) {
-            persona.put("", this.value.getValue());
+            persona.put("", this.value.value());
         } else {
-            persona.put("op", this.operator.getValue());
+            persona.put("op", this.operator.value());
             if (this.lhs.isExpression()) {
                 persona.put("lhs", this.lhs.toHashMap());
             } else {
@@ -80,10 +81,10 @@ public class Expression implements Node {
 
     public String toJSON(int indent) {
         if (this.rhs == null) {
-            return "\"" + this.value.getValue() + "\"";
+            return "\"" + this.value.value() + "\"";
         }
         var hash = new HashMap<String, Object>();
-        hash.put("op", this.operator.getValue());
+        hash.put("op", this.operator.value());
         if (this.lhs.isExpression()) {
             hash.put("lhs", this.lhs.toHashMap());
         } else {

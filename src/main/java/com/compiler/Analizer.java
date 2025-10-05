@@ -8,6 +8,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import com.compiler.nodes.Declaration;
+import com.compiler.nodes.Expression;
+import com.compiler.nodes.Instruction;
+import com.compiler.nodes.Node;
+import com.compiler.utils.BindingPower;
+import com.compiler.utils.CompilerConstants;
+import com.compiler.utils.SyntaxError;
+import com.compiler.utils.TokenType;
 import com.google.gson.GsonBuilder;
 
 public final class Analizer {
@@ -27,7 +35,7 @@ public final class Analizer {
     private void addToken(Token token, boolean semicolon) {
         tokens.add(token);
         if (semicolon) {
-            tokens.add(new Token(";", TokenType.SEPARATOR, token.getLine()));
+            tokens.add(new Token(";", TokenType.SEPARATOR, token.line()));
         }
     }
 
@@ -35,9 +43,9 @@ public final class Analizer {
         try (var log = new FileWriter("tokens.log")) {
             for (var token : this.tokens) {
                 log.write("Tipo: "
-                        + token.getType().name()
-                        + " ".repeat(15 - token.getType().name().length()) + "Valor: "
-                        + token.getValue() + "\n");
+                        + token.type().name()
+                        + " ".repeat(15 - token.type().name().length()) + "Valor: "
+                        + token.value() + "\n");
             }
             System.out.println("Tokens guardados en tokens.log");
         } catch (IOException e) {
@@ -171,27 +179,27 @@ public final class Analizer {
                 break;
             }
 
-            if (Token.reserved.contains(token)) {
+            if (CompilerConstants.RESERVED.contains(token)) {
                 addToken(new Token(token, TokenType.RESERVED, lineNum), semicolon);
                 continue;
             }
 
-            if (Token.asignations.contains(token)) {
+            if (CompilerConstants.ASIGNATIONS.contains(token)) {
                 addToken(new Token(token, TokenType.ASSIGNATION, lineNum), semicolon);
                 continue;
             }
 
-            if (Token.operators.contains(token)) {
+            if (CompilerConstants.OPERATORS.contains(token)) {
                 addToken(new Token(token, TokenType.OPERATOR, lineNum), semicolon);
                 continue;
             }
 
-            if (Token.types.contains(token)) {
+            if (CompilerConstants.TYPES.contains(token)) {
                 addToken(new Token(token, TokenType.TYPE, lineNum), semicolon);
                 continue;
             }
 
-            if (Token.separators.contains(token)) {
+            if (CompilerConstants.SEPARATORS.contains(token)) {
                 addToken(new Token(token, TokenType.SEPARATOR, lineNum), semicolon);
                 continue;
             }
@@ -250,14 +258,14 @@ public final class Analizer {
         if (ft == null) {
             throw new RuntimeException("Empty list");
         }
-        if (ft.getValue().equals("(")) {
+        if (ft.value().equals("(")) {
             lhs = parseExpression(tokens, 0);
-            if (!tokens.remove(0).getValue().equals(")")) {
-                throw new SyntaxError(")", tokens.remove(0).getValue(), ft.getLine());
+            if (!tokens.remove(0).value().equals(")")) {
+                throw new SyntaxError(")", tokens.remove(0).value(), ft.line());
             }
         } else {
-            if (!(ft.getType() == TokenType.LITERAL || ft.getType() == TokenType.IDENTIFICATOR)) {
-                throw new SyntaxError(TokenType.LITERAL.name(), ft.getType().name(), ft.getLine());
+            if (!(ft.type() == TokenType.LITERAL || ft.type() == TokenType.IDENTIFICATOR)) {
+                throw new SyntaxError(TokenType.LITERAL.name(), ft.type().name(), ft.line());
             }
         }
         if (lhs == null) {
@@ -269,14 +277,14 @@ public final class Analizer {
                 break;
             }
             var op = tokens.get(0);
-            if (op.getType() == TokenType.EOF || op.getValue().equals(";") || op.getValue().equals(")")) {
+            if (op.type() == TokenType.EOF || op.value().equals(";") || op.value().equals(")")) {
                 break;
             }
-            if (!(op.getType() == TokenType.OPERATOR || op.getValue().equals(",") || Token.asignations.contains(op.getValue()))) {
-                throw new SyntaxError(TokenType.OPERATOR.name(), op.getValue(), op.getLine());
+            if (!(op.type() == TokenType.OPERATOR || op.value().equals(",") || CompilerConstants.ASIGNATIONS.contains(op.value()))) {
+                throw new SyntaxError(TokenType.OPERATOR.name(), op.value(), op.line());
             }
             // right hand side
-            var bp = getBindingPower(op.getValue());
+            var bp = getBindingPower(op.value());
             if (bp.left() < minBp) {
                 break;
             }
@@ -308,7 +316,7 @@ public final class Analizer {
     }
 
     static String normalizeOperator(String op) {
-        if (Token.asignations.contains(op)) {
+        if (CompilerConstants.ASIGNATIONS.contains(op)) {
             return "op";
         }
         return op;
@@ -324,19 +332,19 @@ public final class Analizer {
 
     private Instruction parseInstruction() {
         Node lhs;
-        if (tokens.get(0).getType() == TokenType.TYPE || tokens.get(0).getType() == TokenType.IDENTIFICATOR) {
+        if (tokens.get(0).type() == TokenType.TYPE || tokens.get(0).type() == TokenType.IDENTIFICATOR) {
             lhs = parseDeclaration(tokens);
         } else {
             lhs = parseExpression(tokens, 0);
         }
         var semi = tokens.get(0);
-        if (semi.getValue().equals(";")) {
+        if (semi.value().equals(";")) {
             tokens.remove(0);
         } else {
-            throw new SyntaxError(";", semi.getValue(), semi.getLine());
+            throw new SyntaxError(";", semi.value(), semi.line());
         }
         var rhst = tokens.get(0);
-        if (rhst.getType() == TokenType.EOF) {
+        if (rhst.type() == TokenType.EOF) {
             return new Instruction(lhs, tokens.remove(0));
         } else {
             return new Instruction(lhs, parseInstruction());
@@ -345,8 +353,8 @@ public final class Analizer {
 
     private Declaration parseDeclaration(ArrayList<Token> tokens) {
         var type = tokens.remove(0);
-        if (!(type.getType() == TokenType.TYPE || type.getType() == TokenType.IDENTIFICATOR)) {
-            throw new SyntaxError(TokenType.TYPE.name(), type.getType().name(), type.getLine());
+        if (!(type.type() == TokenType.TYPE || type.type() == TokenType.IDENTIFICATOR)) {
+            throw new SyntaxError(TokenType.TYPE.name(), type.type().name(), type.line());
         }
         var expression = parseExpression(tokens, 0);
         return new Declaration(type, expression);

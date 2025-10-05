@@ -1,4 +1,4 @@
-package com.compiler;
+package com.compiler.utils;
 
 public class SyntaxError extends RuntimeException {
     private final String message;
