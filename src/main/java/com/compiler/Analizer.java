@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import com.compiler.nodes.Atom;
 import com.compiler.nodes.Declaration;
 import com.compiler.nodes.Expression;
 import com.compiler.nodes.Instruction;
@@ -251,8 +252,8 @@ public final class Analizer {
         return tokens;
     }
 
-    public static Expression parseExpression(ArrayList<Token> tokens, float minBp) {
-        Expression lhs = null;
+    public static Node parseExpression(ArrayList<Token> tokens, float minBp) {
+        Node lhs = null;
         // left hand side
         var ft = tokens.remove(0);
         if (ft == null) {
@@ -269,7 +270,7 @@ public final class Analizer {
             }
         }
         if (lhs == null) {
-            lhs = new Expression(ft);
+            lhs = new Atom(ft);
         }
         while (true) {
             // operator
@@ -324,8 +325,10 @@ public final class Analizer {
 
     public ArrayList<Node> analize() {
         while (!tokens.isEmpty()) {
-            var instruction = parseInstruction();
-            lines.add(instruction);
+            if (tokens.get(0).type() == TokenType.EOF) {
+                lines.add(new Atom(tokens.remove(0)));
+            }
+            lines.add(parseInstruction());
         }
         return lines;
     }
@@ -345,9 +348,9 @@ public final class Analizer {
         }
         var rhst = tokens.get(0);
         if (rhst.type() == TokenType.EOF) {
-            return new Instruction(lhs, tokens.remove(0));
+            return new Instruction(semi, lhs, new Atom(tokens.remove(0)));
         } else {
-            return new Instruction(lhs, parseInstruction());
+            return new Instruction(semi, lhs, parseInstruction());
         }
     }
 

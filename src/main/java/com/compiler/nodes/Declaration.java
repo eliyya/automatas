@@ -8,24 +8,24 @@ import com.google.gson.GsonBuilder;
 public class Declaration implements Node {
 
     private final Token type;
-    private final Expression value;
+    private final Node expression;
 
-    public Declaration(Token type, Expression value) {
+    public Declaration(Token type, Node expression) {
         this.type = type;
-        this.value = value;
+        this.expression = expression;
     }
 
     public Token getType() {
         return type;
     }
 
-    public Expression getValue() {
-        return value;
+    public Node getExpression() {
+        return expression;
     }
 
     @Override
     public String toString() {
-        return type.value() + " " + value.toString();
+        return type.value() + " " + expression.toString();
     }
 
     @Override
@@ -42,10 +42,10 @@ public class Declaration implements Node {
         var hash = new HashMap<String, Object>();
         hash.put("op", "declaration");
         hash.put("lhs", type.value());
-        if (value.isExpression()) {
-            hash.put("rhs", value.toHashMap());
-        } else {
-            hash.put("rhs", value.getValue());
+        if (expression instanceof Expression exp) {
+            hash.put("rhs", exp.toHashMap());            
+        } if (expression instanceof Atom atom) {
+            hash.put("rhs", atom.getToken().value());
         }
         return hash;
     }
