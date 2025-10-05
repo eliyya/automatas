@@ -1,5 +1,5 @@
 int a;
-int b = 5.5;
+int b = 5;
 int c = 10, d = 20;
 int e = a + b;
 
