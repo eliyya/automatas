@@ -107,55 +107,51 @@ public final class Analizer {
     }
 
     private void flushBuffer(StringBuilder buffer, int lineNum) {
-        if (buffer.length() > 0) {
-            toToken(buffer.toString(), lineNum);
-            buffer.setLength(0);
-        }
-    }
-
-    private void toToken(String buffer, int lineNum) {
-        if (CompilerConstants.RESERVED.contains(buffer)) {
-            tokens.add(new Token(buffer, TokenType.RESERVED, lineNum));
+        var text = buffer.toString();
+        buffer.setLength(0);
+        if (text.length() <= 0) return;
+        if (CompilerConstants.RESERVED.contains(text)) {
+            tokens.add(new Token(text, TokenType.RESERVED, lineNum));
             return;
         }
 
-        if (CompilerConstants.ASIGNATIONS.contains(buffer)) {
-            tokens.add(new Token(buffer, TokenType.ASSIGNATION, lineNum));
+        if (CompilerConstants.ASIGNATIONS.contains(text)) {
+            tokens.add(new Token(text, TokenType.ASSIGNATION, lineNum));
             return;
         }
 
-        if (CompilerConstants.OPERATORS.contains(buffer)) {
-            tokens.add(new Token(buffer, TokenType.OPERATOR, lineNum));
+        if (CompilerConstants.OPERATORS.contains(text)) {
+            tokens.add(new Token(text, TokenType.OPERATOR, lineNum));
             return;
         }
 
-        if (CompilerConstants.TYPES.contains(buffer)) {
-            tokens.add(new Token(buffer, TokenType.TYPE, lineNum));
+        if (CompilerConstants.TYPES.contains(text)) {
+            tokens.add(new Token(text, TokenType.TYPE, lineNum));
             return;
         }
 
-        if (CompilerConstants.SEPARATORS.contains(buffer)) {
-            tokens.add(new Token(buffer, TokenType.SEPARATOR, lineNum));
+        if (CompilerConstants.SEPARATORS.contains(text)) {
+            tokens.add(new Token(text, TokenType.SEPARATOR, lineNum));
             return;
         }
 
-        if (buffer.equals(".")) {
-            tokens.add(new Token(buffer, TokenType.SEPARATOR, lineNum));
+        if (text.equals(".")) {
+            tokens.add(new Token(text, TokenType.SEPARATOR, lineNum));
             return;
         }
 
-        if (buffer.matches("\\d+(?:\\.\\d+)?|")) {
-            tokens.add(new Token(buffer, TokenType.LITERAL, lineNum));
+        if (text.matches("\\d+(?:\\.\\d+)?|")) {
+            tokens.add(new Token(text, TokenType.LITERAL, lineNum));
             return;
         }
 
-        if (buffer.matches("[a-zA-Z_$][a-zA-Z_$0-9]*")) {
-            tokens.add(new Token(buffer, TokenType.IDENTIFICATOR, lineNum));
+        if (text.matches("[a-zA-Z_$][a-zA-Z_$0-9]*")) {
+            tokens.add(new Token(text, TokenType.IDENTIFICATOR, lineNum));
             return;
         }
 
-        tokens.add(new Token(buffer, TokenType.UNKNOWN, lineNum));
-
+        tokens.add(new Token(text, TokenType.UNKNOWN, lineNum));
+        System.out.println("Unknown token: " + text);
     }
 
     public ArrayList<Token> tokenize() throws FileNotFoundException {
