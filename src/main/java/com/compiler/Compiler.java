@@ -169,15 +169,18 @@ public class Compiler {
             if (!this.types.get(rhs.op().value()).equals(type)) {
                 throw new RuntimeException("Variable " + rhs.op().value() + " is not of type " + type);
             }
+            this.types.put(lhs.op().value(), type);
         } else if (rhs.op().type().equals(TokenType.LITERAL)) {
             if (!this.getType(rhs.op()).equals(type)) {
                 throw new RuntimeException("Literal " + rhs.op().value() + " is not of type " + type);
             }
+            this.types.put(lhs.op().value(), type);
         } else if (CompilerConstants.ARITHMETIC.contains(rhs.op().value())) {
             var elhs = rhs.lhs();
             checkArithmeticAssignment(elhs, type);
             var erhs = rhs.rhs();
             checkArithmeticAssignment(erhs, type);
+            this.types.put(lhs.op().value(), type);
         }
     }
 
