@@ -8,11 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import com.compiler.nodes.Atom;
-import com.compiler.nodes.Declaration;
-import com.compiler.nodes.Expression;
-import com.compiler.nodes.Instruction;
-import com.compiler.nodes.Node;
 import com.compiler.utils.BindingPower;
 import com.compiler.utils.CompilerConstants;
 import com.compiler.utils.SyntaxError;
@@ -103,7 +98,7 @@ public final class Analizer {
         }
 
         flushBuffer(buffer, lineNum);
-        tokens.add(new Token("\n", TokenType.EOF, lineNum));
+        tokens.add(new Token(CompilerConstants.EOF, TokenType.EOF, lineNum));
     }
 
     private void flushBuffer(StringBuilder buffer, int lineNum) {
@@ -182,7 +177,7 @@ public final class Analizer {
             }
         }
         if (lhs == null) {
-            lhs = new Atom(ft);
+            lhs = new Node(ft);
         }
         while (true) {
             // operator
@@ -203,7 +198,7 @@ public final class Analizer {
             }
             tokens.remove(0);
             var rhs = parseExpression(tokens, bp.right());
-            lhs = new Expression(op, lhs, rhs);
+            lhs = new Node(op, lhs, rhs);
         }
         return lhs;
     }
@@ -238,14 +233,14 @@ public final class Analizer {
     public ArrayList<Node> analize() {
         while (!tokens.isEmpty()) {
             if (tokens.get(0).type() == TokenType.EOF) {
-                lines.add(new Atom(tokens.remove(0)));
+                lines.add(new Node(tokens.remove(0)));
             }
             lines.add(parseInstruction());
         }
         return lines;
     }
 
-    private Instruction parseInstruction() {
+    private Node parseInstruction() {
         Node lhs;
         if (tokens.get(0).type() == TokenType.TYPE || tokens.get(0).type() == TokenType.IDENTIFICATOR) {
             lhs = parseDeclaration(tokens);
@@ -260,19 +255,19 @@ public final class Analizer {
         }
         var rhst = tokens.get(0);
         if (rhst.type() == TokenType.EOF) {
-            return new Instruction(semi, lhs, new Atom(tokens.remove(0)));
+            return new Node(semi, lhs, new Node(tokens.remove(0)));
         } else {
-            return new Instruction(semi, lhs, parseInstruction());
+            return new Node(semi, lhs, parseInstruction());
         }
     }
 
-    private Declaration parseDeclaration(ArrayList<Token> tokens) {
+    private Node parseDeclaration(ArrayList<Token> tokens) {
         var type = tokens.remove(0);
         if (!(type.type() == TokenType.TYPE || type.type() == TokenType.IDENTIFICATOR)) {
             throw new SyntaxError(TokenType.TYPE.name(), type.type().name(), type.line());
         }
         var expression = parseExpression(tokens, 0);
-        return new Declaration(type, expression);
+        return new Node(new Token(CompilerConstants.DECLARATION, TokenType.DECLARATION, type.line()), new Node(type), expression);
     }
 
     public void writeAsignationFile() {

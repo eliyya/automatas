@@ -2,11 +2,12 @@ package com.compiler.utils;
 
 public enum TokenType {
     IDENTIFICATOR,
-    UNKNOWN,
     ASSIGNATION,
-    RESERVED,
+    DECLARATION,
     SEPARATOR,
+    RESERVED,
     OPERATOR,
+    UNKNOWN,
     LITERAL,
     TYPE,
     EOF;
