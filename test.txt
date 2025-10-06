@@ -2,6 +2,6 @@ int a;
 int b = 5; int c = 10; 
 int d = 20, e = a;
 
-a = false;
+a = 1;
 int f = 1 + 2 * a;
 

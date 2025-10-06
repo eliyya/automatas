@@ -38,6 +38,7 @@ public class Compiler {
         for (var i = 0; i < this.lines.size(); i++) {
             this.check(this.lines.get(i), false);
         }
+        System.out.println("No errors found");
     }
 
     void check(Node node, boolean isDeclaration) {
