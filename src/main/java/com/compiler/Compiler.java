@@ -70,11 +70,48 @@ public class Compiler {
 
     void checkBinary(Node node) {
         var op = node.op();
-        if (!CompilerConstants.ARITHMETIC.contains(op.value())) {
+        if (!(CompilerConstants.ARITHMETIC.contains(op.value()) || CompilerConstants.ASIGNATIONS.contains(op.value()))) {
             throw new RuntimeException("Expected an arithmetic operator, found " + op.value());
         }
-        checkExpression(node.lhs());
-        checkExpression(node.rhs());
+        if (CompilerConstants.ASIGNATIONS.contains(op.value())) {
+            this.checkAssignation(node);
+        } else {
+            checkExpression(node.lhs());
+            checkExpression(node.rhs());
+        }
+    }
+
+    void checkAssignation(Node node) {
+        var op = node.op();
+        if (!CompilerConstants.ASIGNATIONS.contains(op.value())) {
+            throw new RuntimeException("Expected an assignation operator, found " + op.value());
+        }
+        var type = node.lhs().op().value();
+        if (!this.types.containsKey(type)) {
+            throw new RuntimeException("Variable " + type + " not declared");
+        }
+        checkExpressionType(node.rhs(), this.types.get(type));
+    }
+
+    void checkExpressionType(Node node, String type) {
+        if (node.isAtom()) {
+            var op = node.op();
+            if (op.type().equals(TokenType.IDENTIFICATOR)) {
+                if (!this.types.containsKey(op.value())) {
+                    throw new RuntimeException("Variable " + op.value() + " not declared");
+                }
+                if (!this.types.get(op.value()).equals(type)) {
+                    throw new RuntimeException("Variable " + op.value() + " is not of type " + type);
+                }
+            } else if (op.type().equals(TokenType.LITERAL) || op.value().equals("true") || op.value().equals("false")) {
+                if (!this.getType(op).equals(type)) {
+                    throw new RuntimeException("Literal " + op.value() + " is not of type " + type);
+                }
+            }
+        } else {
+            checkExpressionType(node.lhs(), type);
+            checkExpressionType(node.rhs(), type);
+        }
     }
 
     void checkInstruction(Node node) {
@@ -192,128 +229,6 @@ public class Compiler {
         }
     }
 
-    // public void check() {
-    //     // Hasmap<nombre, tipo>
-    //     // var types = new HashMap<String, String>();
-    //     for (var line : this.lines) {
-    //         switch (line) {
-    //             case Atom atom -> {
-    //                 if (atom.getToken().type() != TokenType.EOF) {
-    //                     throw new RuntimeException("Unexpected token: " + atom.getToken().value());
-    //                 }
-    //             }
-    //             case Instruction instruction -> {
-    //                 checkInstruction(instruction);
-    //             }
-    //             default ->
-    //                 throw new AssertionError();
-    //         }
-    //     }
-    // }
-    // private void checkInstruction(Instruction instruction) {
-    //     var lhs = instruction.getLhs();
-    //     var rhs = instruction.getRhs();
-    //     if (lhs instanceof Declaration declaration) {
-    //         checkDeclaration(declaration);
-    //     }
-    //     System.out.println("lhs: " + lhs);
-    //     System.out.println("rhs: " + rhs);
-    //     // if (rhs instanceof Expression expression) {
-    //     //     checkExpression(expression);
-    //     // }
-    // }
-    // private void checkDeclaration(Declaration declaration) {
-    //     var type = declaration.getType();
-    //     var rhs = declaration.getExpression();
-    //     switch (rhs) {
-    //         case Atom atom -> {
-    //             if (types.containsKey(atom.getToken().value())) {
-    //                 throw new RuntimeException("Variable " + atom.getToken().value() + " already declared");
-    //             } else {
-    //                 types.put(atom.getToken().value(), type.value());
-    //             }
-    //         }
-    //         case Expression exp -> {
-    //             var op = exp.getOp();
-    //             if (op.value().equals("=")) {
-    //                 checkDeclarationAssignment(exp, type);
-    //             } else if (op.value().equals(",")) {
-    //                 var elhs = exp.getLhs();
-    //                 var erhs = exp.getRhs();
-    //                 checkDeclarationAssignment(elhs, type);
-    //                 checkDeclarationAssignment(erhs, type);
-    //             }
-    //         }
-    //         default -> {
-    //         }
-    //     }
-    //     System.out.println("type: " + type.value());
-    //     System.out.println("expression: " + rhs);
-    // }
-    // private void checkDeclarationAssignment(Node e, Token type) {
-    //     if (e instanceof Expression expression) {
-    //         if (expression.getOp().value().equals(",")) {
-    //             var elhs = expression.getLhs();
-    //             var erhs = expression.getRhs();
-    //             checkDeclarationAssignment(elhs, type);
-    //             checkDeclarationAssignment(erhs, type);
-    //             return;
-    //         }
-    //         var op = expression.getOp();
-    //         if (!op.value().equals("=")) {
-    //             throw new RuntimeException("1: Expected =, found " + op.value());
-    //         }
-    //         var lhs = expression.getLhs();
-    //         if (lhs instanceof Atom atom) {
-    //             if (atom.getToken().type() != TokenType.IDENTIFICATOR) {
-    //                 throw new SyntaxError(TokenType.IDENTIFICATOR.name(), atom.getToken().value(), atom.getToken().line());
-    //             }
-    //             if (types.containsKey(atom.getToken().value())) {
-    //                 throw new RuntimeException("Variable " + atom.getToken().value() + " already declared");
-    //             }
-    //             types.put(atom.getToken().value(), type.value());
-    //         } else {
-    //             throw new SyntaxError(TokenType.IDENTIFICATOR.name(), lhs.toString(), op.line());
-    //         }
-    //         var rhs = expression.getRhs();
-    //         switch (rhs) {
-    //             case Atom rAtom -> {
-    //                 if (!(rAtom.getToken().type() == TokenType.IDENTIFICATOR || rAtom.getToken().type() == TokenType.LITERAL)) {
-    //                     throw new SyntaxError(TokenType.IDENTIFICATOR.name(), rAtom.getToken().value(), rAtom.getToken().line());
-    //                 }
-    //                 if (null == rAtom.getToken().type()) {
-    //                     throw new RuntimeException("Expected variable or literal, found " + rAtom.getToken().value());
-    //                 } else {
-    //                     switch (rAtom.getToken().type()) {
-    //                         case IDENTIFICATOR -> {
-    //                             if (!types.containsKey(rAtom.getToken().value())) {
-    //                                 throw new RuntimeException("Variable " + rAtom.getToken().value() + " not declared");
-    //                             }
-    //                             if (!types.get(rAtom.getToken().value()).equals(type.value())) {
-    //                                 throw new RuntimeException("Variable " + rAtom.getToken().value() + " is not of type " + type.value());
-    //                             }
-    //                         }
-    //                         case LITERAL -> {
-    //                             var literalType = checkType(rAtom.getToken());
-    //                             if (!literalType.equals(type.value())) {
-    //                                 throw new RuntimeException("Literal " + rAtom.getToken().value() + " is not of type " + type.value());
-    //                             }
-    //                         }
-    //                         default ->
-    //                             throw new RuntimeException("Expected variable or literal, found " + rAtom.getToken().value());
-    //                     }
-    //                 }
-    //                 types.put(rAtom.getToken().value(), type.value());
-    //             }
-    //             case Expression rExp ->
-    //                 checkDeclarationAssignment(rExp, type);
-    //             default -> {
-    //             }
-    //         }
-    //     } else {
-    //         throw new RuntimeException("Expected expression, found " + e.toString());
-    //     }
-    // }
     private String getType(Token token) {
         var value = token.value();
         if (value.matches("^[0-9]+$")) {

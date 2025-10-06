@@ -178,7 +178,7 @@ public final class Analizer {
                 throw new SyntaxError(")", tokens.remove(0).value(), ft.line());
             }
         } else {
-            if (!(ft.type() == TokenType.LITERAL || ft.type() == TokenType.IDENTIFICATOR || ft.type() == TokenType.OPERATOR || ft.type() == TokenType.ASSIGNATION)) {
+            if (!(ft.type() == TokenType.LITERAL || ft.value().equals("true") || ft.value().equals("false") || ft.type() == TokenType.IDENTIFICATOR || ft.type() == TokenType.OPERATOR || ft.type() == TokenType.ASSIGNATION)) {
                 throw new SyntaxError(TokenType.LITERAL.name(), ft.type().name(), ft.line());
             }
         }
