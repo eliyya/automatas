@@ -21,6 +21,10 @@ public final class CompilerConstants {
         "=", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "<<=", ">>="
     );
 
+    public static final Set<String> ARITHMETIC = Set.of(
+        "+", "-", "*", "/", "%"
+    );
+
     public static final Set<String> ASIGNATIONS = Set.of(
         "=", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "<<=", ">>="
     );

@@ -48,7 +48,7 @@ public final class Analizer {
         int length = input.length();
         for (int i = 0; i < length; i++) {
             char c = input.charAt(i);
-            
+
             if (Character.isWhitespace(c)) {
                 flushBuffer(buffer, lineNum);
                 continue;
@@ -78,6 +78,10 @@ public final class Analizer {
                 continue;
             }
 
+            if (c == '/' && input.charAt(i + 1) == '/' && buffer.toString().isEmpty()) {
+                return;
+            }
+
             if (i + 1 < length) {
                 String two = "" + c + input.charAt(i + 1);
                 if (two.matches("==|!=|<=|>=|\\+\\+|--|\\+=|-=|\\*=|/=")) {
@@ -104,7 +108,9 @@ public final class Analizer {
     private void flushBuffer(StringBuilder buffer, int lineNum) {
         var text = buffer.toString();
         buffer.setLength(0);
-        if (text.length() <= 0) return;
+        if (text.length() <= 0) {
+            return;
+        }
         if (CompilerConstants.RESERVED.contains(text)) {
             tokens.add(new Token(text, TokenType.RESERVED, lineNum));
             return;
@@ -172,7 +178,7 @@ public final class Analizer {
                 throw new SyntaxError(")", tokens.remove(0).value(), ft.line());
             }
         } else {
-            if (!(ft.type() == TokenType.LITERAL || ft.type() == TokenType.IDENTIFICATOR)) {
+            if (!(ft.type() == TokenType.LITERAL || ft.type() == TokenType.IDENTIFICATOR || ft.type() == TokenType.OPERATOR || ft.type() == TokenType.ASSIGNATION)) {
                 throw new SyntaxError(TokenType.LITERAL.name(), ft.type().name(), ft.line());
             }
         }
@@ -242,7 +248,7 @@ public final class Analizer {
 
     private Node parseInstruction() {
         Node lhs;
-        if (tokens.get(0).type() == TokenType.TYPE || tokens.get(0).type() == TokenType.IDENTIFICATOR) {
+        if (tokens.get(0).type() == TokenType.TYPE) {
             lhs = parseDeclaration(tokens);
         } else {
             lhs = parseExpression(tokens, 0);
@@ -263,7 +269,7 @@ public final class Analizer {
 
     private Node parseDeclaration(ArrayList<Token> tokens) {
         var type = tokens.remove(0);
-        if (!(type.type() == TokenType.TYPE || type.type() == TokenType.IDENTIFICATOR)) {
+        if (!(type.type() == TokenType.TYPE)) {
             throw new SyntaxError(TokenType.TYPE.name(), type.type().name(), type.line());
         }
         var expression = parseExpression(tokens, 0);
