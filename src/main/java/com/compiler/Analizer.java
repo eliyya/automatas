@@ -94,7 +94,8 @@ public final class Analizer {
 
             if ("=+-*/;(),{}".indexOf(c) >= 0) {
                 flushBuffer(buffer, lineNum);
-                tokens.add(new Token("" + c, TokenType.OPERATOR, lineNum));
+                buffer.append(c);
+                flushBuffer(buffer, lineNum);
                 continue;
             }
 
@@ -148,6 +149,11 @@ public final class Analizer {
 
         if (text.matches("[a-zA-Z_$][a-zA-Z_$0-9]*")) {
             tokens.add(new Token(text, TokenType.IDENTIFICATOR, lineNum));
+            return;
+        }
+
+        if (text.matches("^\".*\"$")) {
+            tokens.add(new Token(text, TokenType.LITERAL, lineNum));
             return;
         }
 
