@@ -19,11 +19,18 @@ public class Laberinto extends JPanel {
     static final String SALIDA = "s";
 
     public static void main(String[] args) {
+        if (args.length == 0) {
+            System.out.println("No se proporcionó ningún archivo. especifique la ruta del archivo como argumento.");
+            System.out.println("especifique la ruta del archivo como argumento. Ejemplo:");
+        System.out.println("\tjava -jar laberinto.jar laberinto.txt");
+            return;
+        }
+        
         var lineas = new ArrayList<String>();
 
         try {
             // leo un archivo y agrego las lineas al ArrayList
-            try (var file = new Scanner(new File("./laberinto1.txt"))) {
+            try (var file = new Scanner(new File(args[0]))) {
                 while (file.hasNext()) {
                     lineas.add(file.nextLine());
                 }
