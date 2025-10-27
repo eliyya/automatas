@@ -9,6 +9,13 @@
             "name": "Laberinto",
             "request": "launch",
             "mainClass": "com.laberinto.Laberinto",
+            "projectName": "automatas"
+        },
+        {
+            "type": "java",
+            "name": "Laberinto",
+            "request": "launch",
+            "mainClass": "com.laberinto.Laberinto",
             "projectName": "oraciones"
         },
         {
