@@ -23,7 +23,8 @@
             "name": "Launch with Arguments Prompt",
             "request": "launch",
             "mainClass": "com.compiler.App",
-            "args": "test.txt"
+            "args": "test.txt",
+            "vmArgs": "--enable-preview"
         }
     ]
 }

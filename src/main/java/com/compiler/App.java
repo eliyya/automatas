@@ -13,8 +13,8 @@ public class App {
             System.out.println("No se proporcionó ningún archivo. especifique la ruta del archivo como argumento.");
             return;
         }
-        
-        var compiler = new Compiler(new File(args[0]));
-        compiler.compile();
+        var tokenizer = Tokenizer.tokenize(new File(args[0]));
+        var analizer = new Analizer(tokenizer);
+        analizer.analize();
     }
 }
