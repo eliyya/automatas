@@ -19,10 +19,21 @@ public class Analizer {
         ArrayList<Token> tokens = (ArrayList<Token>) new ArrayList<Token>(tokenizer.tokens);
         while (!tokens.isEmpty()) {
             var line = nextLine(tokens);
-            var firstToken = line.get(0);
-            if (Tokenizer.TYPES.contains(firstToken.value())) {
-                analizeDeclaration(line, line.remove(0).value());
-            } 
+            while (!line.isEmpty()) {
+                if (line.get(0).type() == TokenType.EOF) {
+                    break;
+                }
+                analizeFragment(line);
+            }
+        }
+    }
+
+    private void analizeFragment(ArrayList<Token> line) {
+        var firstToken = line.get(0);
+        if (Tokenizer.TYPES.contains(firstToken.value())) {
+            analizeDeclaration(line, line.remove(0).value());
+        }else {
+            line.remove(0);
         }
     }
 
@@ -89,9 +100,9 @@ public class Analizer {
 class SyntaxError extends RuntimeException {
     public SyntaxError(String expected, Token token) {
         var message = "Expected " + expected + ", found \"" + token.value() + "\" at line " + token.line() + " column " + token.column();
-        super(message);
         System.out.println(token.original());
         System.out.println(" ".repeat(token.column()) + "^");
-        System.out.println(" ".repeat(token.column()) + message);
+        System.out.print(" ".repeat(token.column()));
+        super(message);
     }
 }
