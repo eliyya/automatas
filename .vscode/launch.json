@@ -9,7 +9,8 @@
             "name": "Laberinto",
             "request": "launch",
             "mainClass": "com.laberinto.Laberinto",
-            "projectName": "automatas"
+            "projectName": "automatas",
+            "args": "./laberinto4.txt"
         },
         {
             "type": "java",

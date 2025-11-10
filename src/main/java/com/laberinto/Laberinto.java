@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 
 public class Laberinto extends JPanel {
 
-    static final int PIXEL_SIZE = 50;
+    static final int PIXEL_SIZE = 10;
     static final String PARED = "p";
     static final String CAMINO = "c";
     static final String ENTRADA = "e";
@@ -61,7 +61,7 @@ public class Laberinto extends JPanel {
         var salida = false;
         for (var linea : lineas) {
             var entradas = linea.length() - linea.replace(ENTRADA, "").length();
-            if (entradas > 1) {
+            if (entradas > 0) {
                 if (entrada) {
                     System.out.println("Error: hay mas de una entrada.");
                     return;
