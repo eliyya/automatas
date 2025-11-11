@@ -12,21 +12,21 @@ import javax.swing.JPanel;
 
 public class Laberinto extends JPanel {
 
-    static final int PIXEL_SIZE = 10;
+    static int PIXEL_SIZE = 30;
     static final String PARED = "p";
     static final String CAMINO = "c";
     static final String ENTRADA = "e";
     static final String SALIDA = "s";
-    static final int DELAY = 200;
+    static int DELAY = 200;
 
     public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("No se proporcionó ningún archivo. especifique la ruta del archivo como argumento.");
             System.out.println("especifique la ruta del archivo como argumento. Ejemplo:");
-        System.out.println("\tjava -jar laberinto.jar laberinto.txt");
+            System.out.println("\tjava -jar laberinto.jar laberinto.txt");
             return;
         }
-        
+
         var lineas = new ArrayList<String>();
 
         try {
@@ -38,6 +38,11 @@ public class Laberinto extends JPanel {
             }
         } catch (FileNotFoundException e) {
             System.out.println("No se encontró el archivo.");
+            JOptionPane.showMessageDialog(
+                    null,
+                    "No se encontró el archivo.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -64,11 +69,21 @@ public class Laberinto extends JPanel {
             if (entradas > 0) {
                 if (entrada) {
                     System.out.println("Error: hay mas de una entrada.");
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Error: hay mas de una entrada.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 entrada = true;
                 if (entradas > 2) {
                     System.out.println("Error: hay mas de una entrada.");
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Error: hay mas de una entrada.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
                     return;
                 }
             }
@@ -78,6 +93,11 @@ public class Laberinto extends JPanel {
         }
         if (!entrada || !salida) {
             System.out.println("Error: no hay entrada o salida.");
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Error: no hay entrada o salida.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -101,13 +121,19 @@ public class Laberinto extends JPanel {
             }
             matriz.add(vector);
         }
+        if (Math.max(matriz.size(), matriz.get(0).size()) > 50) {
+            PIXEL_SIZE = 10;
+            DELAY = 10;
+        }
 
         // creo canvas
         var canvas = new Laberinto(matriz);
         // abro la interfaz
         var frame = new JFrame("Laberinto");
         frame.add(canvas); // llama automacticamennte a paint()
-        frame.setSize((matriz.get(0).size() + 1) * PIXEL_SIZE, (matriz.size() + 1) * PIXEL_SIZE);
+        var w = matriz.get(0).size();
+        var h = matriz.size();
+        frame.setSize(w * PIXEL_SIZE + w / 2, h * PIXEL_SIZE + h / 2 + PIXEL_SIZE);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         canvas.resolve();
@@ -219,15 +245,13 @@ public class Laberinto extends JPanel {
                     null,
                     "Laberinto resuelto con éxito.",
                     "Resultado",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
+                    JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(
                     null,
                     "No se encontro solucion",
                     "Resultado",
-                    JOptionPane.ERROR_MESSAGE
-            );
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 }
@@ -284,7 +308,7 @@ class Path extends Cell {
             }
             // si no ha sido visitada, la visita
             if (!path.visited) {
-                var resolved =path.resolve(laberinto);
+                var resolved = path.resolve(laberinto);
                 if (resolved) {
                     return true;
                 }

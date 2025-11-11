@@ -9,15 +9,16 @@
             "name": "Laberinto",
             "request": "launch",
             "mainClass": "com.laberinto.Laberinto",
-            "projectName": "automatas",
-            "args": "./laberinto4.txt"
+            "projectName": "oraciones",
+            "args": "./laberinto1.txt"
         },
         {
             "type": "java",
             "name": "Laberinto",
             "request": "launch",
             "mainClass": "com.laberinto.Laberinto",
-            "projectName": "oraciones"
+            "projectName": "automatas",
+            "args": "./laberinto4.txt"
         },
         {
             "type": "java",
