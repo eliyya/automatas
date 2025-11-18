@@ -5,8 +5,8 @@ import com.compiler.lexer.Token;
 
 public class BinaryExpression implements Expression {
     Expression left;
-    Expression right;
     Token operator;
+    Expression right;
 
     public BinaryExpression(Expression left, Token operator, Expression right) {
         this.left = left;

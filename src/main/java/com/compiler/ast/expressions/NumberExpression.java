@@ -10,6 +10,11 @@ public class NumberExpression implements Expression {
     }
 
     @Override
+    public String toString() {
+        return "NumberExpression{" + "value=" + value + '}';
+    }
+
+    @Override
     public void expression() {
         throw new UnsupportedOperationException("Unimplemented method 'expression'");
     }

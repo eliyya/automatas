@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.compiler.ast.Expression;
-import com.compiler.ast.Statment;
 import com.compiler.ast.expressions.NumberExpression;
 import com.compiler.ast.expressions.StringExpression;
 import com.compiler.ast.expressions.BinaryExpression;
@@ -81,26 +80,37 @@ public class PrattRegistry {
     public static Expression parseBinaryExpression(Parser parser, Expression left, BindingPower bp) {
         var operator = parser.advance();
         var right = PrattRegistry.parseExpression(parser, bp);
+        System.out.println("BinaryExpression : " + left + " " + operator.value() + " " + right);
         return new BinaryExpression(left, operator, right);
     }
 
     public static Expression parseExpression(Parser parser, BindingPower bp) {
-        var tokenKind = parser.currentTokenKind();
-        var nud = nudLU.get(tokenKind);
-        if (nud == null) {
-            throw new RuntimeException("nud handler expected for token : " + tokenKind);
-        }
-        var left = nud.handle(parser);
-        var ckb = parser.currentTokenKind();
-        var obp = bpLU.get(ckb);
-        while (obp != null && obp.ordinal() > bp.ordinal()) {
-            tokenKind = parser.currentTokenKind();
-            var led = ledLU.get(tokenKind);
-            if (led == null) {
-                throw new RuntimeException("led handler expected for token : " + tokenKind);
-            }
-            left = led.handle(parser, left, bp);
-        }
-        return left;
+    var tokenKind = parser.currentTokenKind();
+    var nud = nudLU.get(tokenKind);
+    if (nud == null) {
+        throw new RuntimeException("nud handler expected for token : " + tokenKind);
     }
+    var left = nud.handle(parser);
+    
+    while (true) {
+        var opkb = parser.currentTokenKind();
+        // Stop if we've reached the end of the expression
+        if (opkb == TokenKind.SEMI || opkb == TokenKind.EOF) {
+            break;
+        }
+        
+        var opbp = bpLU.get(opkb);
+        // Stop if the next operator doesn't have higher precedence
+        if (opbp == null || opbp.ordinal() <= bp.ordinal()) {
+            break;
+        }
+        
+        var led = ledLU.get(opkb);
+        if (led == null) {
+            throw new RuntimeException("led handler expected for token : " + opkb);
+        }
+        left = led.handle(parser, left, opbp);  // Use opbp instead of bp for the right binding power
+    }
+    return left;
+}
 }
