@@ -48,7 +48,7 @@ public enum TokenKind {
 
 	// Symbols
 	DOT("."),
-	SEMI_COLON(";"),
+	SEMI(";"),
 	COLON(":"),
 	QUESTION("?"),
 	COMMA(","),
@@ -64,7 +64,7 @@ public enum TokenKind {
 
 	// Maths
 	PLUS("+"),
-	DASH("-"),
+	MINUS("-"),
 	SLASH("/"),
 	STAR("*"),
 	PERCENT("%"),
