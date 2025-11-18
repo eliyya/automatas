@@ -1,11 +1,14 @@
 package com.compiler;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 
-/**
- * este es un comentario de varias lineas
- */
+import com.compiler.lexer.Lexer;
+import com.compiler.lexer.Token;
+import com.compiler.lexer.TokenKind;
+
 public class App {
 
     public static void main(String[] args) throws IOException {
@@ -13,8 +16,21 @@ public class App {
             System.out.println("No se proporcionó ningún archivo. especifique la ruta del archivo como argumento.");
             return;
         }
-        var tokenizer = Tokenizer.tokenize(new File(args[0]));
-        var analizer = new Analizer(tokenizer);
-        analizer.analize();
+        var source = Files.readString(Path.of(args[0]));
+        var tokens = Lexer.tokenize(source);
+        printTokens(tokens);
+    }
+
+    private static void printTokens(List<Token> tokens) {
+        for (var token : tokens) {
+            if (token.kind() == TokenKind.STRING
+                    || token.kind() == TokenKind.NUMBER
+                    || token.kind() == TokenKind.CHAR
+                    || token.kind() == TokenKind.IDENTIFIER) {
+                System.out.println(token.kind().toString() + " (" + token.value() + ")");
+            } else {
+                System.out.println(token.kind().toString());
+            }
+        }
     }
 }
