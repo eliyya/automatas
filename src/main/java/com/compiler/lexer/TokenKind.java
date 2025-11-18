@@ -10,8 +10,6 @@ public enum TokenKind {
 	FALSE("false"),
 	NUMBER("number"),
 	STRING("string"),
-	CHAR("char"),
-	BOOLEAN("boolean"),
 	IDENTIFIER("identifier"),
 	// types
 	VOID("void"),
@@ -21,6 +19,8 @@ public enum TokenKind {
 	DOUBLE("double"),
 	BYTE("byte"),
 	INT("int"),
+	CHAR("char"),
+	BOOLEAN("boolean"),
 
 	// Grouping & Braces
 	OPEN_BRACKET("["),
@@ -105,5 +105,36 @@ public enum TokenKind {
 
 	public static TokenKind fromText(String text) {
 		return lookup.get(text);
+	}
+
+	public static boolean isReservedKeyword(String text) {
+		TokenKind kind = fromText(text);
+		return kind != null && isReservedKeyword(kind);
+	}
+
+	public static boolean isReservedKeyword(TokenKind kind) {
+		return kind == TokenKind.VAR
+			|| kind == TokenKind.CLASS
+			|| kind == TokenKind.NEW
+			|| kind == TokenKind.IMPORT
+			|| kind == TokenKind.PACKAGE
+			|| kind == TokenKind.IF
+			|| kind == TokenKind.ELSE
+			|| kind == TokenKind.WHILE
+			|| kind == TokenKind.FOR
+			|| kind == TokenKind.DO
+			|| kind == TokenKind.INSTANCEOF
+			|| kind == TokenKind.VOID
+			|| kind == TokenKind.SHORT
+			|| kind == TokenKind.LONG
+			|| kind == TokenKind.FLOAT
+			|| kind == TokenKind.DOUBLE
+			|| kind == TokenKind.BYTE
+			|| kind == TokenKind.INT
+			|| kind == TokenKind.CHAR
+			|| kind == TokenKind.BOOLEAN
+			|| kind == TokenKind.NULL
+			|| kind == TokenKind.TRUE
+			|| kind == TokenKind.FALSE;
 	}
 }

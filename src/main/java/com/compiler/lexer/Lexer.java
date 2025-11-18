@@ -130,11 +130,11 @@ public class Lexer {
         return (lexer, regex) -> {
             var match = regex.matcher(lexer.reminder());
             if (match.find() && match.start() == 0) {
-                var kind = TokenKind.fromText(match.group());
-                if (kind != null) {
-                    lexer.push(new Token(kind, kind.text()));
+                var value = match.group();
+                if (TokenKind.isReservedKeyword(value)) {
+                    lexer.push(new Token(TokenKind.fromText(value), value));
                 } else {
-                    lexer.push(new Token(TokenKind.IDENTIFIER, match.group()));
+                    lexer.push(new Token(TokenKind.IDENTIFIER, value));
                 }
                 lexer.advanceN(match.end());
             }
