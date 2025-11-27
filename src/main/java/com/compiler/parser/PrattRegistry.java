@@ -7,6 +7,7 @@ import com.compiler.ast.Expression;
 import com.compiler.ast.expressions.NumberExpression;
 import com.compiler.ast.expressions.StringExpression;
 import com.compiler.ast.expressions.BinaryExpression;
+import com.compiler.ast.expressions.CharExpression;
 import com.compiler.ast.expressions.IdentifierExpression;
 import com.compiler.lexer.TokenKind;
 import com.compiler.parser.handlers.LedHandler;
@@ -38,13 +39,14 @@ public class PrattRegistry {
         // multiplicative
         PrattRegistry.led(TokenKind.STAR, BindingPower.MULTIPLICATIVE, PrattRegistry::parseBinaryExpression);
         PrattRegistry.led(TokenKind.SLASH, BindingPower.MULTIPLICATIVE, PrattRegistry::parseBinaryExpression);
-        PrattRegistry.led(TokenKind.PERCENT, BindingPower.MULTIPLICATIVE, PrattRegistry::parseBinaryExpression); 
+        PrattRegistry.led(TokenKind.PERCENT, BindingPower.MULTIPLICATIVE, PrattRegistry::parseBinaryExpression);
 
         // literals
         PrattRegistry.nud(TokenKind.NUMBER, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
         PrattRegistry.nud(TokenKind.STRING, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
         PrattRegistry.nud(TokenKind.TRUE, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
         PrattRegistry.nud(TokenKind.FALSE, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
+        PrattRegistry.nud(TokenKind.CHAR, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
         PrattRegistry.nud(TokenKind.IDENTIFIER, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
     }
 
@@ -64,13 +66,17 @@ public class PrattRegistry {
     }
 
     public static Expression parsePrimaryExpression(Parser parser) {
-        switch (parser.currentTokenKind()) {
+        var tokenKind = parser.currentTokenKind();
+        switch (tokenKind) {
             case NUMBER:
                 var number = Float.parseFloat(parser.advance().value());
                 return new NumberExpression(number);
             case STRING:
                 var string = parser.advance().value();
                 return new StringExpression(string);
+            case CHAR:
+                var ch = parser.advance().value();
+                return new CharExpression(ch.charAt(0));
             case TRUE:
             case FALSE:
                 var bool = parser.advance().value();
@@ -82,7 +88,7 @@ public class PrattRegistry {
                 throw new RuntimeException("Cannot parse primary expression from token : " + parser.currentTokenKind());
         }
     }
-    
+
     public static Expression parseBinaryExpression(Parser parser, Expression left, BindingPower bp) {
         var operator = parser.advance();
         var right = PrattRegistry.parseExpression(parser, bp);
@@ -90,32 +96,32 @@ public class PrattRegistry {
     }
 
     public static Expression parseExpression(Parser parser, BindingPower bp) {
-    var tokenKind = parser.currentTokenKind();
-    var nud = nudLU.get(tokenKind);
-    if (nud == null) {
-        throw new RuntimeException("nud handler expected for token : " + tokenKind);
+        var tokenKind = parser.currentTokenKind();
+        var nud = nudLU.get(tokenKind);
+        if (nud == null) {
+            throw new RuntimeException("nud handler expected for token : " + tokenKind);
+        }
+        var left = nud.handle(parser);
+
+        while (true) {
+            var opkb = parser.currentTokenKind();
+            // Stop if we've reached the end of the expression
+            if (opkb == TokenKind.SEMI || opkb == TokenKind.EOF) {
+                break;
+            }
+
+            var opbp = bpLU.get(opkb);
+            // Stop if the next operator doesn't have higher precedence
+            if (opbp == null || opbp.ordinal() <= bp.ordinal()) {
+                break;
+            }
+
+            var led = ledLU.get(opkb);
+            if (led == null) {
+                throw new RuntimeException("led handler expected for token : " + opkb);
+            }
+            left = led.handle(parser, left, opbp); // Use opbp instead of bp for the right binding power
+        }
+        return left;
     }
-    var left = nud.handle(parser);
-    
-    while (true) {
-        var opkb = parser.currentTokenKind();
-        // Stop if we've reached the end of the expression
-        if (opkb == TokenKind.SEMI || opkb == TokenKind.EOF) {
-            break;
-        }
-        
-        var opbp = bpLU.get(opkb);
-        // Stop if the next operator doesn't have higher precedence
-        if (opbp == null || opbp.ordinal() <= bp.ordinal()) {
-            break;
-        }
-        
-        var led = ledLU.get(opkb);
-        if (led == null) {
-            throw new RuntimeException("led handler expected for token : " + opkb);
-        }
-        left = led.handle(parser, left, opbp);  // Use opbp instead of bp for the right binding power
-    }
-    return left;
-}
 }
