@@ -1,6 +1,5 @@
 package com.compiler;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -15,7 +14,7 @@ import com.google.gson.GsonBuilder;
 
 public class App {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         if (args.length == 0) {
             System.out.println("No se proporcionó ningún archivo. especifique la ruta del archivo como argumento.");
             return;

@@ -8,11 +8,12 @@ import com.compiler.ast.statments.AssignmentStatment;
 import com.compiler.ast.statments.BlockStatment;
 import com.compiler.ast.statments.DeclarationStatment;
 import com.compiler.ast.statments.ExpressionStatment;
+import com.compiler.errors.ExpectedError;
 import com.compiler.lexer.Token;
 import com.compiler.lexer.TokenKind;
 
 public class Parser {
-    List<String> lines;
+    public List<String> lines;
     List<Token> tokens;
     int position;
 
@@ -22,7 +23,7 @@ public class Parser {
         this.position = 0;
     }
 
-    public static BlockStatment parse(List<Token> tokens, List<String> lines) {
+    public static BlockStatment parse(List<Token> tokens, List<String> lines) throws ExpectedError {
         var body = new ArrayList<Statment>();
         var parser = new Parser(tokens, lines);
 
@@ -40,7 +41,7 @@ public class Parser {
                     var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
                     var semi = parser.advance();
                     if (semi.kind() != TokenKind.SEMI) {
-                        parser.throwsExpectedError(";", semi);
+                        throw new ExpectedError(parser, ";", semi);
                     }
                     body.add(new ExpressionStatment(expression));
                 }
@@ -48,7 +49,7 @@ public class Parser {
                 var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
                 var semi = parser.advance();
                 if (semi.kind() != TokenKind.SEMI) {
-                    parser.throwsExpectedError(";", semi);
+                    throw new ExpectedError(parser, ";", semi);
                 }
                 body.add(new ExpressionStatment(expression));
             }
@@ -82,16 +83,16 @@ public class Parser {
     // --------------
     // parse statment
     // --------------
-    private static List<DeclarationStatment> parseStatment(Parser parser) {
+    private static List<DeclarationStatment> parseStatment(Parser parser) throws ExpectedError {
         var declarations = new ArrayList<DeclarationStatment>();
         var tokenKind = parser.advance();
         if (!TokenKind.isPrimitiveType(tokenKind)) {
-            parser.throwsExpectedError("primitive type", tokenKind);
+            throw new ExpectedError(parser, "primitive type", tokenKind);
         }
         while (true) {
             var identifier = parser.advance();
             if (identifier.kind() != TokenKind.IDENTIFIER) {
-                parser.throwsExpectedError("identifier", identifier);
+                throw new ExpectedError(parser, "identifier", identifier);
             }
             var equal = parser.advance();
             if (equal.kind() == TokenKind.SEMI) {
@@ -99,7 +100,7 @@ public class Parser {
                 return declarations;
             }
             if (!(equal.kind() == TokenKind.ASSIGNMENT || equal.kind() == TokenKind.COMMA)) {
-                parser.throwsExpectedError(";", equal);
+                throw new ExpectedError(parser, ";", equal);
             }
             if (equal.kind() == TokenKind.COMMA) {
                 declarations.add(new DeclarationStatment(tokenKind, identifier, null));
@@ -112,46 +113,30 @@ public class Parser {
                 continue;
             }
             if (semi.kind() != TokenKind.SEMI) {
-                parser.throwsExpectedError(";", semi);
+                throw new ExpectedError(parser, ";", semi);
             }
             return declarations;
         }
     }
 
-    private static AssignmentStatment parseAssignment(Parser parser) {
+    private static AssignmentStatment parseAssignment(Parser parser) throws ExpectedError {
         var identifier = parser.advance();
         if (identifier.kind() != TokenKind.IDENTIFIER) {
-            parser.throwsExpectedError("identifier", identifier);
+            throw new ExpectedError(parser, "identifier", identifier);
         }
         var equal = parser.advance();
         System.out.println(identifier);
         System.out.println(equal);
         System.out.println(equal.kind());
         if (!TokenKind.isAssignment(equal)) {
-            parser.throwsExpectedError("=", equal);
+            throw new ExpectedError(parser, "=", equal);
         }
         var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
         var semi = parser.advance();
         if (semi.kind() != TokenKind.SEMI) {
-            parser.throwsExpectedError(";", semi);
+            throw new ExpectedError(parser, ";", semi);
         }
         return new AssignmentStatment(identifier, equal, expression);
-    }
-
-    private static String getLine(Parser parser, int lineNumber) {
-        if (lineNumber < 1 || lineNumber > parser.lines.size()) {
-            return null;
-        }
-        return parser.lines.get(lineNumber - 1);
-    }
-
-    private void throwsExpectedError(String expected, Token found) {
-        System.out.println("");
-        var line = getLine(this, found.line());
-        System.out.println(line);
-        System.out.println(" ".repeat(found.column()) + "^");
-        throw new RuntimeException("\u001B[31mParser:Error ->\u001B[0m Expected `\u001B[32m" + expected + "\u001B[0m` but found `\u001B[32m" + found.value() + "\u001B[0m` at \u001B[34mline "
-                + found.line() + "\u001B[0m and \u001B[34mcolumn " + found.column()+"\u001B[0m");
     }
 
 }

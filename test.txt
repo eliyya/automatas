@@ -13,6 +13,7 @@ int e = 30, f = 40;
   
 a = b + 1;
 a += 1;
+a++;
 int g = 1 + 2 * a;
 int h=1+2*a;
 char i='a';
