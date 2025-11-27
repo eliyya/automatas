@@ -4,9 +4,9 @@ import com.compiler.ast.Expression;
 
 public class CharExpression implements Expression {
     final String _c = "CharExpression";
-    char value;
+    String value;
 
-    public CharExpression(char value) {
+    public CharExpression(String value) {
         this.value = value;
     }
 

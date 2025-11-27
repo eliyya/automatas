@@ -21,5 +21,10 @@ public class DeclarationStatment implements Statment {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'statment'");
     }
+
+    @Override
+    public String toString() {
+        return "DeclarationStatment [type=" + type.value() + ", identifier=" + identifier.value() + ", expression=" + expression + "]";
+    }
     
 }

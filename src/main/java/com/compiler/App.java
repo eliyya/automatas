@@ -30,8 +30,8 @@ public class App {
 
     private static void printTokens(List<Token> tokens) {
         for (var token : tokens) {
-            if (token.kind() == TokenKind.STRING
-                    || token.kind() == TokenKind.NUMBER
+            if (token.kind() == TokenKind.STRING_EXPRESSION
+                    || token.kind() == TokenKind.NUMBER_EXPRESSION
                     || token.kind() == TokenKind.CHAR
                     || token.kind() == TokenKind.IDENTIFIER) {
                 System.out.println(token.kind().toString() + " (" + token.value() + ")");

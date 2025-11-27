@@ -8,8 +8,8 @@ public enum TokenKind {
 	NULL("null"),
 	TRUE("true"),
 	FALSE("false"),
-	NUMBER("number"),
-	STRING("string"),
+	NUMBER_EXPRESSION("number"),
+	STRING_EXPRESSION("string"),
 	IDENTIFIER("identifier"),
 	// types
 	VOID("void"),
@@ -21,6 +21,7 @@ public enum TokenKind {
 	INT("int"),
 	CHAR("char"),
 	BOOLEAN("boolean"),
+	STRING("String"),
 
 	// Grouping & Braces
 	OPEN_BRACKET("["),
@@ -130,7 +131,8 @@ public enum TokenKind {
 			|| kind == TokenKind.BOOLEAN
 			|| kind == TokenKind.NULL
 			|| kind == TokenKind.TRUE
-			|| kind == TokenKind.FALSE;
+			|| kind == TokenKind.FALSE
+			|| kind == TokenKind.STRING;
 	}
 
 	public static boolean isReservedKeyword(String text) {
@@ -151,7 +153,8 @@ public enum TokenKind {
 			|| kind == TokenKind.BYTE
 			|| kind == TokenKind.INT
 			|| kind == TokenKind.CHAR
-			|| kind == TokenKind.BOOLEAN;
+			|| kind == TokenKind.BOOLEAN
+			|| kind == TokenKind.STRING;
 	}
 
 	public static boolean isPrimitiveType(Token token) {

@@ -1,6 +1,8 @@
 float a = 45.2 + 5 * 4;
 int b = 5;
 int c;
+float x;
+int x;
 boolean d, e = true;
 true;
 
@@ -10,10 +12,12 @@ int c = 10; int d = 20;
 int e = 30, f = 40;
   
 a = b + 1;
+a += 1;
 int g = 1 + 2 * a;
 int h=1+2*a;
 char i='a';
+
+String j="hola mundo";
 double k = 1.0;
 float l = 1.0f;
 boolean m = true;
-String j="hola mundo";

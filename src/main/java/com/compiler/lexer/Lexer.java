@@ -12,8 +12,8 @@ public class Lexer {
     int col = 0;
     RegexPattern[] patterns = {
             new RegexPattern(Pattern.compile("[a-zA-Z_$][a-zA-Z0-9_$]*"), identifierHandler()),
-            new RegexPattern(Pattern.compile("([0-9]+(\\.[0-9]*)?|\\.[0-9]+)([eE][+-]?[0-9]+)?[fFdD]?|(0[xX][0-9a-fA-F]+|0[bB][01]+|[0-9]+)[lL]?"), literalHandler(TokenKind.NUMBER)),
-            new RegexPattern(Pattern.compile("\".*?\""), literalHandler(TokenKind.STRING)),
+            new RegexPattern(Pattern.compile("([0-9]+(\\.[0-9]*)?|\\.[0-9]+)([eE][+-]?[0-9]+)?[fFdD]?|(0[xX][0-9a-fA-F]+|0[bB][01]+|[0-9]+)[lL]?"), literalHandler(TokenKind.NUMBER_EXPRESSION)),
+            new RegexPattern(Pattern.compile("\".*?\""), literalHandler(TokenKind.STRING_EXPRESSION)),
             new RegexPattern(Pattern.compile("'.*?'"), literalHandler(TokenKind.CHAR)),
             new RegexPattern(Pattern.compile("\\s+"), skipHandler()),
             new RegexPattern(Pattern.compile("//.*"), skipHandler()),

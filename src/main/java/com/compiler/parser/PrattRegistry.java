@@ -7,6 +7,7 @@ import com.compiler.ast.Expression;
 import com.compiler.ast.expressions.NumberExpression;
 import com.compiler.ast.expressions.StringExpression;
 import com.compiler.ast.expressions.BinaryExpression;
+import com.compiler.ast.expressions.BooleanExpression;
 import com.compiler.ast.expressions.CharExpression;
 import com.compiler.ast.expressions.IdentifierExpression;
 import com.compiler.lexer.TokenKind;
@@ -42,8 +43,8 @@ public class PrattRegistry {
         PrattRegistry.led(TokenKind.PERCENT, BindingPower.MULTIPLICATIVE, PrattRegistry::parseBinaryExpression);
 
         // literals
-        PrattRegistry.nud(TokenKind.NUMBER, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
-        PrattRegistry.nud(TokenKind.STRING, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
+        PrattRegistry.nud(TokenKind.NUMBER_EXPRESSION, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
+        PrattRegistry.nud(TokenKind.STRING_EXPRESSION, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
         PrattRegistry.nud(TokenKind.TRUE, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
         PrattRegistry.nud(TokenKind.FALSE, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
         PrattRegistry.nud(TokenKind.CHAR, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
@@ -68,24 +69,27 @@ public class PrattRegistry {
     public static Expression parsePrimaryExpression(Parser parser) {
         var tokenKind = parser.currentTokenKind();
         switch (tokenKind) {
-            case NUMBER:
+            case NUMBER_EXPRESSION -> {
                 var number = Float.parseFloat(parser.advance().value());
                 return new NumberExpression(number);
-            case STRING:
+            }
+            case STRING_EXPRESSION -> {
                 var string = parser.advance().value();
                 return new StringExpression(string);
-            case CHAR:
-                var ch = parser.advance().value();
-                return new CharExpression(ch.charAt(0));
-            case TRUE:
-            case FALSE:
+            }
+            case CHAR -> {
+                var string = parser.advance().value();
+                return new CharExpression(string);
+            }
+            case TRUE, FALSE -> {
                 var bool = parser.advance().value();
-                return new IdentifierExpression(bool);
-            case IDENTIFIER:
+                return new BooleanExpression(bool);
+            }
+            case IDENTIFIER -> {
                 var identifier = parser.advance().value();
                 return new IdentifierExpression(identifier);
-            default:
-                throw new RuntimeException("Cannot parse primary expression from token : " + parser.currentTokenKind());
+            }
+            default -> throw new RuntimeException("Cannot parse primary expression from token : " + parser.currentTokenKind());
         }
     }
 
@@ -97,6 +101,7 @@ public class PrattRegistry {
 
     public static Expression parseExpression(Parser parser, BindingPower bp) {
         var tokenKind = parser.currentTokenKind();
+        var tokenValue = parser.currentToken().value();
         var nud = nudLU.get(tokenKind);
         if (nud == null) {
             throw new RuntimeException("nud handler expected for token : " + tokenKind);

@@ -29,11 +29,12 @@ public class Parser {
         while (parser.hasTokens()) {
             var currentToken = parser.currentToken();
             if (TokenKind.isPrimitiveType(currentToken)) {
-                for (var statment : parseStatment(parser))
+                for (var statment : parseStatment(parser)) {
                     body.add(statment);
+                }
             } else if (currentToken.kind() == TokenKind.IDENTIFIER) {
                 var nextToken = parser.nextToken();
-                if (nextToken.kind() == TokenKind.ASSIGNMENT) {
+                if (TokenKind.isAssignment(nextToken.kind())) {
                     body.add(parseAssignment(parser));
                 } else {
                     var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
@@ -56,7 +57,7 @@ public class Parser {
         return new BlockStatment(body);
     }
 
-    private Token currentToken() {
+    public Token currentToken() {
         return tokens.get(position);
     }
 
@@ -123,6 +124,9 @@ public class Parser {
             parser.throwsExpectedError("identifier", identifier);
         }
         var equal = parser.advance();
+        System.out.println(identifier);
+        System.out.println(equal);
+        System.out.println(equal.kind());
         if (!TokenKind.isAssignment(equal)) {
             parser.throwsExpectedError("=", equal);
         }
