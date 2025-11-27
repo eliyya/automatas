@@ -11,17 +11,19 @@ import com.compiler.lexer.Token;
 import com.compiler.lexer.TokenKind;
 
 public class Parser {
+    List<String> lines;
     List<Token> tokens;
     int position;
 
-    private Parser(List<Token> tokens) {
+    private Parser(List<Token> tokens, List<String> lines) {
         this.tokens = tokens;
+        this.lines = lines;
         this.position = 0;
     }
 
-    public static BlockStatment parse(List<Token> tokens) {
+    public static BlockStatment parse(List<Token> tokens, List<String> lines) {
         var body = new ArrayList<Statment>();
-        var parser = new Parser(tokens);
+        var parser = new Parser(tokens, lines);
 
         while (parser.hasTokens()) {
             var currentTokenn = parser.currentToken();
@@ -32,7 +34,7 @@ public class Parser {
                 var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
                 var semi = parser.advance();
                 if (semi.kind() != TokenKind.SEMI) {
-                    throw new RuntimeException("Expected semicolon but found " + semi.kind());
+                    parser.throwsExpectedError(";", semi);
                 }
                 body.add(new ExpressionStatment(expression));
             }
@@ -66,12 +68,12 @@ public class Parser {
         var declarations = new ArrayList<DeclarationStatment>();
         var tokenKind = parser.advance();
         if (!TokenKind.isPrimitiveType(tokenKind)) {
-            throw new RuntimeException("Expected primitive type but found " + tokenKind);
+            parser.throwsExpectedError("primitive type", tokenKind);
         }
         while (true) {
             var identifier = parser.advance();
             if (identifier.kind() != TokenKind.IDENTIFIER) {
-                throw new RuntimeException("Expected identifier but found " + identifier.kind());
+                parser.throwsExpectedError("identifier", identifier);
             }
             var equal = parser.advance();
             if (equal.kind() == TokenKind.SEMI) {
@@ -79,7 +81,7 @@ public class Parser {
                 return declarations;
             }
             if (!(equal.kind() == TokenKind.ASSIGNMENT || equal.kind() == TokenKind.COMMA)) {
-                throw new RuntimeException("Expected semicolon but found " + equal.kind());
+                parser.throwsExpectedError(";", equal);
             }
             if (equal.kind() == TokenKind.COMMA) {
                 declarations.add(new DeclarationStatment(tokenKind, identifier, null));
@@ -92,9 +94,26 @@ public class Parser {
                 continue;
             }
             if (semi.kind() != TokenKind.SEMI) {
-                throw new RuntimeException("Expected semicolon but found " + semi.kind());
+                parser.throwsExpectedError(";", semi);
             }
             return declarations;
         }
     }
+
+    private static String getLine(Parser parser, int lineNumber) {
+        if (lineNumber < 1 || lineNumber > parser.lines.size()) {
+            return null;
+        }
+        return parser.lines.get(lineNumber - 1);
+    }
+
+    private void throwsExpectedError(String expected, Token found) {
+        System.out.println("");
+        var line = getLine(this, found.line());
+        System.out.println(line);
+        System.out.println(" ".repeat(found.column()) + "^");
+        throw new RuntimeException("\u001B[31mParser:Error ->\u001B[0m Expected `\u001B[32m" + expected + "\u001B[0m` but found `\u001B[32m" + found.value() + "\u001B[0m` at \u001B[34mline "
+                + found.line() + "\u001B[0m and \u001B[34mcolumn " + found.column()+"\u001B[0m");
+    }
+
 }

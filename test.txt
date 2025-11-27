@@ -1,4 +1,4 @@
-float a = 45.2 + 5 * 4;
+float a = 45.2 + 5 * 4#;
 int b = 5;
 int c;
 boolean d, e = true;
@@ -9,3 +9,4 @@ int b = 5;
 int c = 10; int d = 20;
 int e = 30, f = 40;
   
+a = b + 1;

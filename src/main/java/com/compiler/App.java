@@ -22,8 +22,9 @@ public class App {
         }
         var source = Files.readString(Path.of(args[0]));
         var tokens = Lexer.tokenize(source);
+        var lines = source.lines().toList();
         printTokens(tokens);
-        var ast = Parser.parse(tokens);
+        var ast = Parser.parse(tokens, lines);
         printAST(ast);
     }
 
