@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.compiler.ast.Statment;
+import com.compiler.ast.statments.AssignmentStatment;
 import com.compiler.ast.statments.BlockStatment;
 import com.compiler.ast.statments.DeclarationStatment;
 import com.compiler.ast.statments.ExpressionStatment;
@@ -26,10 +27,22 @@ public class Parser {
         var parser = new Parser(tokens, lines);
 
         while (parser.hasTokens()) {
-            var currentTokenn = parser.currentToken();
-            if (TokenKind.isPrimitiveType(currentTokenn)) {
+            var currentToken = parser.currentToken();
+            if (TokenKind.isPrimitiveType(currentToken)) {
                 for (var statment : parseStatment(parser))
                     body.add(statment);
+            } else if (currentToken.kind() == TokenKind.IDENTIFIER) {
+                var nextToken = parser.nextToken();
+                if (nextToken.kind() == TokenKind.ASSIGNMENT) {
+                    body.add(parseAssignment(parser));
+                } else {
+                    var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
+                    var semi = parser.advance();
+                    if (semi.kind() != TokenKind.SEMI) {
+                        parser.throwsExpectedError(";", semi);
+                    }
+                    body.add(new ExpressionStatment(expression));
+                }
             } else {
                 var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
                 var semi = parser.advance();
@@ -44,7 +57,11 @@ public class Parser {
     }
 
     private Token currentToken() {
-        return this.tokens.get(this.position);
+        return tokens.get(position);
+    }
+
+    private Token nextToken() {
+        return tokens.get(position + 1);
     }
 
     Token advance() {
@@ -98,6 +115,23 @@ public class Parser {
             }
             return declarations;
         }
+    }
+
+    private static AssignmentStatment parseAssignment(Parser parser) {
+        var identifier = parser.advance();
+        if (identifier.kind() != TokenKind.IDENTIFIER) {
+            parser.throwsExpectedError("identifier", identifier);
+        }
+        var equal = parser.advance();
+        if (!TokenKind.isAssignment(equal)) {
+            parser.throwsExpectedError("=", equal);
+        }
+        var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
+        var semi = parser.advance();
+        if (semi.kind() != TokenKind.SEMI) {
+            parser.throwsExpectedError(";", semi);
+        }
+        return new AssignmentStatment(identifier, equal, expression);
     }
 
     private static String getLine(Parser parser, int lineNumber) {

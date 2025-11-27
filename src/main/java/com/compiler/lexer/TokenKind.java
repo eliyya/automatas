@@ -56,11 +56,11 @@ public enum TokenKind {
 	// Shorthand
 	PLUS_PLUS("++"),
 	MINUS_MINUS("--"),
-	PLUS_EQUALS("+="),
-	MINUS_EQUALS("-="),
-	STAR_EQUALS("*="),
-	SLASH_EQUALS("/="),
-	PERCENT_EQUALS("%="),
+	PLUS_ASSIGNMENT("+="),
+	MINUS_ASSIGNMENT("-="),
+	STAR_ASSIGNMENT("*="),
+	SLASH_ASSIGNMENT("/="),
+	PERCENT_ASSIGNMENT("%="),
 
 	// Maths
 	PLUS("+"),
@@ -160,5 +160,22 @@ public enum TokenKind {
 
 	public static boolean isPrimitiveType(String text) {
 		return isPrimitiveType(fromText(text));
+	}
+
+	public static boolean isAssignment(TokenKind kind) {
+		return kind == TokenKind.ASSIGNMENT
+			|| kind == TokenKind.PLUS_ASSIGNMENT
+			|| kind == TokenKind.MINUS_ASSIGNMENT
+			|| kind == TokenKind.STAR_ASSIGNMENT
+			|| kind == TokenKind.SLASH_ASSIGNMENT
+			|| kind == TokenKind.PERCENT_ASSIGNMENT;
+	}
+
+	public static boolean isAssignment(Token token) {
+		return isAssignment(token.kind());
+	}
+
+	public static boolean isAssignment(String text) {
+		return isAssignment(fromText(text));
 	}
 }
