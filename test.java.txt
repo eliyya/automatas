@@ -13,7 +13,7 @@ int e = 30, f = 40;
   
 a = b + 1;
 a += 1;
-a++;
+// a++; // TODO: implementar
 int g = 1 + 2 * a;
 int h=1+2*a;
 char i='a';
@@ -22,3 +22,13 @@ String j="hola mundo";
 double k = 1.0;
 float l = 1.0f;
 boolean m = true;
+
+int i = 0;
+while (i a 10) {
+    i++;
+    
+}
+
+// main() {
+//     var n = false;
+// }

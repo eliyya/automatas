@@ -18,7 +18,6 @@ public class DeclarationStatment implements Statment {
 
     @Override
     public void statment() {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'statment'");
     }
 

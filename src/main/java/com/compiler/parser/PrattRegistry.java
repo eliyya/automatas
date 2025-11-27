@@ -67,8 +67,7 @@ public class PrattRegistry {
     }
 
     public static Expression parsePrimaryExpression(Parser parser) {
-        var tokenKind = parser.currentTokenKind();
-        switch (tokenKind) {
+        switch (parser.currentTokenKind()) {
             case NUMBER_EXPRESSION -> {
                 var number = Float.parseFloat(parser.advance().value());
                 return new NumberExpression(number);
@@ -101,7 +100,6 @@ public class PrattRegistry {
 
     public static Expression parseExpression(Parser parser, BindingPower bp) {
         var tokenKind = parser.currentTokenKind();
-        var tokenValue = parser.currentToken().value();
         var nud = nudLU.get(tokenKind);
         if (nud == null) {
             throw new RuntimeException("nud handler expected for token : " + tokenKind);

@@ -181,4 +181,31 @@ public enum TokenKind {
 	public static boolean isAssignment(String text) {
 		return isAssignment(fromText(text));
 	}
+
+	public static boolean isUnaryOperation(TokenKind kind) {
+		return kind == TokenKind.PLUS_PLUS
+			|| kind == TokenKind.MINUS_MINUS;
+	}
+
+	public static boolean isUnaryOperation(Token token) {
+		return isUnaryOperation(token.kind());
+	}
+
+	public static boolean isUnaryOperation(String text) {
+		return isUnaryOperation(fromText(text));
+	}
+
+	public static boolean isCiclic(TokenKind kind) {
+		return kind == TokenKind.WHILE
+			|| kind == TokenKind.FOR
+			|| kind == TokenKind.DO;
+	}
+
+	public static boolean isCiclic(String text) {
+		return isCiclic(fromText(text));
+	}
+
+	public static boolean isCiclic(Token token) {
+		return isCiclic(token.kind());
+	}
 }
