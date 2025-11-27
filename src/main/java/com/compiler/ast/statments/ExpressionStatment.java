@@ -4,6 +4,7 @@ import com.compiler.ast.Expression;
 import com.compiler.ast.Statment;
 
 public class ExpressionStatment implements Statment {
+    final String _c = "ExpressionStatment";
     Expression expression;
 
     public ExpressionStatment(Expression expression) {

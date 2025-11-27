@@ -3,6 +3,7 @@ package com.compiler.ast.expressions;
 import com.compiler.ast.Expression;
 
 public class IdentifierExpression implements Expression {
+    final String _c = "IdentifierExpression";
     String value;
 
     public IdentifierExpression(String value) {

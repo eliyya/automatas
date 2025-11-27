@@ -43,6 +43,8 @@ public class PrattRegistry {
         // literals
         PrattRegistry.nud(TokenKind.NUMBER, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
         PrattRegistry.nud(TokenKind.STRING, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
+        PrattRegistry.nud(TokenKind.TRUE, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
+        PrattRegistry.nud(TokenKind.FALSE, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
         PrattRegistry.nud(TokenKind.IDENTIFIER, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
     }
 
@@ -69,6 +71,10 @@ public class PrattRegistry {
             case STRING:
                 var string = parser.advance().value();
                 return new StringExpression(string);
+            case TRUE:
+            case FALSE:
+                var bool = parser.advance().value();
+                return new IdentifierExpression(bool);
             case IDENTIFIER:
                 var identifier = parser.advance().value();
                 return new IdentifierExpression(identifier);
@@ -80,7 +86,6 @@ public class PrattRegistry {
     public static Expression parseBinaryExpression(Parser parser, Expression left, BindingPower bp) {
         var operator = parser.advance();
         var right = PrattRegistry.parseExpression(parser, bp);
-        System.out.println("BinaryExpression : " + left + " " + operator.value() + " " + right);
         return new BinaryExpression(left, operator, right);
     }
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.compiler.ast.Statment;
 import com.compiler.ast.statments.BlockStatment;
+import com.compiler.ast.statments.DeclarationStatment;
 import com.compiler.ast.statments.ExpressionStatment;
 import com.compiler.lexer.Token;
 import com.compiler.lexer.TokenKind;
@@ -23,7 +24,18 @@ public class Parser {
         var parser = new Parser(tokens);
 
         while (parser.hasTokens()) {
-            body.add(Parser.parseStatment(parser));
+            var currentTokenn = parser.currentToken();
+            if (TokenKind.isPrimitiveType(currentTokenn)) {
+                for (var statment : parseStatment(parser))
+                    body.add(statment);
+            } else {
+                var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
+                var semi = parser.advance();
+                if (semi.kind() != TokenKind.SEMI) {
+                    throw new RuntimeException("Expected semicolon but found " + semi.kind());
+                }
+                body.add(new ExpressionStatment(expression));
+            }
         }
 
         return new BlockStatment(body);
@@ -50,31 +62,39 @@ public class Parser {
     // --------------
     // parse statment
     // --------------
-    private static Statment parseStatment(Parser parser) {
-        var tokenKind = parser.currentTokenKind();
-        var handler = PrattRegistry.stmtLU.get(tokenKind);
-        if (handler != null) {
-            return handler.handle(parser);
+    private static List<DeclarationStatment> parseStatment(Parser parser) {
+        var declarations = new ArrayList<DeclarationStatment>();
+        var tokenKind = parser.advance();
+        if (!TokenKind.isPrimitiveType(tokenKind)) {
+            throw new RuntimeException("Expected primitive type but found " + tokenKind);
         }
-        var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
-        parser.expect(TokenKind.SEMI);
-        return new ExpressionStatment(expression);
-    }
-
-    private Token expectError(TokenKind expectedKind) {
-        return this.expectError(expectedKind, "Expected " + expectedKind + " but found " + this.currentToken().kind());
-    }
-
-    private Token expectError(TokenKind expectedKind, String err) {
-        var token = this.currentToken();
-        var kind = token.kind();
-        if (kind != expectedKind) {
-            throw new RuntimeException(err);
+        while (true) {
+            var identifier = parser.advance();
+            if (identifier.kind() != TokenKind.IDENTIFIER) {
+                throw new RuntimeException("Expected identifier but found " + identifier.kind());
+            }
+            var equal = parser.advance();
+            if (equal.kind() == TokenKind.SEMI) {
+                declarations.add(new DeclarationStatment(tokenKind, identifier, null));
+                return declarations;
+            }
+            if (!(equal.kind() == TokenKind.ASSIGNMENT || equal.kind() == TokenKind.COMMA)) {
+                throw new RuntimeException("Expected semicolon but found " + equal.kind());
+            }
+            if (equal.kind() == TokenKind.COMMA) {
+                declarations.add(new DeclarationStatment(tokenKind, identifier, null));
+                continue;
+            }
+            var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
+            declarations.add(new DeclarationStatment(tokenKind, identifier, expression));
+            var semi = parser.advance();
+            if (semi.kind() == TokenKind.COMMA) {
+                continue;
+            }
+            if (semi.kind() != TokenKind.SEMI) {
+                throw new RuntimeException("Expected semicolon but found " + semi.kind());
+            }
+            return declarations;
         }
-        return this.advance();
-    }
-
-    private Token expect(TokenKind expectKind) {
-        return this.expectError(expectKind);
     }
 }

@@ -2,11 +2,11 @@ package com.compiler.ast.expressions;
 
 import com.compiler.ast.Expression;
 
-public class StringExpression implements Expression {
-    final String _c = "StringExpression";
+public class BooleanExpression implements Expression {
+    final String _c = "BooleanExpression";
     String value;
 
-    public StringExpression(String value) {
+    public BooleanExpression(String value) {
         this.value = value;
     }
 
@@ -14,4 +14,5 @@ public class StringExpression implements Expression {
     public void expression() {
         throw new UnsupportedOperationException("Unimplemented method 'expression'");
     }
+    
 }

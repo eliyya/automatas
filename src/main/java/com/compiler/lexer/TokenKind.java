@@ -107,11 +107,6 @@ public enum TokenKind {
 		return lookup.get(text);
 	}
 
-	public static boolean isReservedKeyword(String text) {
-		TokenKind kind = fromText(text);
-		return kind != null && isReservedKeyword(kind);
-	}
-
 	public static boolean isReservedKeyword(TokenKind kind) {
 		return kind == TokenKind.VAR
 			|| kind == TokenKind.CLASS
@@ -136,5 +131,34 @@ public enum TokenKind {
 			|| kind == TokenKind.NULL
 			|| kind == TokenKind.TRUE
 			|| kind == TokenKind.FALSE;
+	}
+
+	public static boolean isReservedKeyword(String text) {
+		TokenKind kind = fromText(text);
+		return kind != null && isReservedKeyword(kind);
+	}
+
+	public static boolean isReservedKeyword(Token token) {
+		return isReservedKeyword(token.kind());
+	}
+
+	public static boolean isPrimitiveType(TokenKind kind) {
+		return kind == TokenKind.VOID
+			|| kind == TokenKind.SHORT
+			|| kind == TokenKind.LONG
+			|| kind == TokenKind.FLOAT
+			|| kind == TokenKind.DOUBLE
+			|| kind == TokenKind.BYTE
+			|| kind == TokenKind.INT
+			|| kind == TokenKind.CHAR
+			|| kind == TokenKind.BOOLEAN;
+	}
+
+	public static boolean isPrimitiveType(Token token) {
+		return isPrimitiveType(token.kind());
+	}
+
+	public static boolean isPrimitiveType(String text) {
+		return isPrimitiveType(fromText(text));
 	}
 }

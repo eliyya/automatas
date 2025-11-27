@@ -5,6 +5,7 @@ import java.util.List;
 import com.compiler.ast.Statment;
 
 public class BlockStatment implements Statment {
+    final String _c = "BlockStatmennt";
     List<Statment> body;
 
     public BlockStatment(List<Statment> body) {

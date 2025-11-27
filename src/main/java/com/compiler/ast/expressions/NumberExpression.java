@@ -3,6 +3,7 @@ package com.compiler.ast.expressions;
 import com.compiler.ast.Expression;
 
 public class NumberExpression implements Expression {
+    final String _c = "NumberExpression";
     float value;
 
     public NumberExpression(float value) {

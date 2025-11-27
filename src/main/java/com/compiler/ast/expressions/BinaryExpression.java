@@ -4,6 +4,7 @@ import com.compiler.ast.Expression;
 import com.compiler.lexer.Token;
 
 public class BinaryExpression implements Expression {
+    final String _c = "BinaryExpression";
     Expression left;
     Token operator;
     Expression right;
