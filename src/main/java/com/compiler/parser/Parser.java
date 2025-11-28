@@ -77,10 +77,11 @@ public class Parser {
             } else if (TokenKind.isControlFlow(currentToken.kind())) {
                 body.add(parseControlFlowStatment(parser));
             } else {
-                // var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
+                // var expression = PrattRegistry.parseExpression(parser,
+                // BindingPower.DEFAULT_BP);
                 // var semi = parser.advance();
                 // if (semi.kind() != TokenKind.SEMI) {
-                //     throw new ExpectedError(parser, ";", semi);
+                // throw new ExpectedError(parser, ";", semi);
                 // }
                 // body.add(new ExpressionStatment(expression));
                 throw new ExpectedError(parser, "statment", currentToken);
@@ -92,6 +93,10 @@ public class Parser {
 
     public Token currentToken() {
         return tokens.get(position);
+    }
+
+    public Token getToken(int n) {
+        return tokens.get(position + n);
     }
 
     private Token nextToken() {
@@ -299,13 +304,10 @@ public class Parser {
     private static ForStatment parseForStatment(Parser parser) {
         parser.expect(TokenKind.FOR);
         parser.expect(TokenKind.OPEN_PAREN);
-        var stat = parseUniqueVariableStatment(parser);
-        var semiOrColon = parser.advance();
-        if (semiOrColon.kind() != TokenKind.SEMI && semiOrColon.kind() != TokenKind.COLON) {
-            throw new ExpectedError(parser, ";", semiOrColon);
-        }
         // foreach
-        if (semiOrColon.kind() == TokenKind.COLON) {
+        if (parser.getToken(2).kind() == TokenKind.COLON) {
+            var stat = List.of(parseUniqueVariableStatment(parser));
+            parser.expect(TokenKind.COLON);
             var collection = parser.expect(TokenKind.IDENTIFIER);
             parser.expect(TokenKind.CLOSE_PAREN);
             parser.expect(TokenKind.OPEN_CURLY);
@@ -314,13 +316,14 @@ public class Parser {
             return new ForStatment(stat, collection, body);
         }
         // for
-        var conditionn = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
+        var stat = parseVariableStatment(parser);
+        var condition = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
         parser.expect(TokenKind.SEMI);
         var increment = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
         parser.expect(TokenKind.CLOSE_PAREN);
         parser.expect(TokenKind.OPEN_CURLY);
         var body = parse(parser);
         parser.expect(TokenKind.CLOSE_CURLY);
-        return new ForStatment(stat, conditionn, increment, body);
+        return new ForStatment(stat, condition, increment, body);
     }
 }
