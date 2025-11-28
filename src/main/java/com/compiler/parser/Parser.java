@@ -3,7 +3,14 @@ package com.compiler.parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.compiler.ast.Expression;
 import com.compiler.ast.Statment;
+import com.compiler.ast.expressions.BinaryExpression;
+import com.compiler.ast.expressions.BooleanExpression;
+import com.compiler.ast.expressions.CharExpression;
+import com.compiler.ast.expressions.IdentifierExpression;
+import com.compiler.ast.expressions.NumberExpression;
+import com.compiler.ast.expressions.StringExpression;
 import com.compiler.ast.expressions.UnaryOperationExpression;
 import com.compiler.ast.statments.AssignmentStatment;
 import com.compiler.ast.statments.BlockStatment;
@@ -63,7 +70,7 @@ public class Parser {
                     // TODO: implementar
                     // body.add(parseFunctionStatment(parser));
                 } else {
-                    var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
+                    var expression = parseExpression(parser, BindingPower.DEFAULT_BP);
                     var semi = parser.advance();
                     if (semi.kind() != TokenKind.SEMI) {
                         throw new ExpectedError(parser, ";", semi);
@@ -77,7 +84,7 @@ public class Parser {
             } else if (TokenKind.isControlFlow(currentToken.kind())) {
                 body.add(parseControlFlowStatment(parser));
             } else {
-                // var expression = PrattRegistry.parseExpression(parser,
+                // var expression = parseExpression(parser,
                 // BindingPower.DEFAULT_BP);
                 // var semi = parser.advance();
                 // if (semi.kind() != TokenKind.SEMI) {
@@ -129,6 +136,66 @@ public class Parser {
         return this.expect(kind, kind.text());
     }
 
+    public static Expression parsePrimaryExpression(Parser parser) {
+        switch (parser.currentTokenKind()) {
+            case NUMBER_EXPRESSION -> {
+                var number = Float.parseFloat(parser.advance().value());
+                return new NumberExpression(number);
+            }
+            case STRING_EXPRESSION -> {
+                var string = parser.advance().value();
+                return new StringExpression(string);
+            }
+            case CHAR -> {
+                var string = parser.advance().value();
+                return new CharExpression(string);
+            }
+            case TRUE, FALSE -> {
+                var bool = parser.advance().value();
+                return new BooleanExpression(bool);
+            }
+            case IDENTIFIER -> {
+                var identifier = parser.advance().value();
+                return new IdentifierExpression(identifier);
+            }
+            default -> throw new RuntimeException("Cannot parse primary expression from token : " + parser.currentTokenKind());
+        }
+    }
+
+    public static Expression parseBinaryExpression(Parser parser, Expression left, BindingPower bp) {
+        var operator = parser.advance();
+        var right = parseExpression(parser, bp);
+        return new BinaryExpression(left, operator, right);
+    }
+
+    public static Expression parseExpression(Parser parser, BindingPower bp) {
+        var tokenKind = parser.currentTokenKind();
+        var nud = PrattRegistry.nudLU.get(tokenKind);
+        if (nud == null) {
+            throw new RuntimeException("nud handler expected for token : " + tokenKind);
+        }
+        var left = nud.handle(parser);
+
+        while (true) {
+            var opkb = parser.currentTokenKind();
+            if (opkb == TokenKind.SEMI || opkb == TokenKind.EOF) {
+                break;
+            }
+
+            var opbp = PrattRegistry.bpLU.get(opkb);
+            if (opbp == null || opbp.ordinal() <= bp.ordinal()) {
+                break;
+            }
+
+            var led = PrattRegistry.ledLU.get(opkb);
+            if (led == null) {
+                throw new RuntimeException("led handler expected for token : " + opkb);
+            }
+            left = led.handle(parser, left, opbp);
+        }
+        return left;
+    }
+
     // --------------
     // parse statment
     // --------------
@@ -152,7 +219,7 @@ public class Parser {
                 declarations.add(new DeclarationStatment(tokenKind, identifier, null));
                 continue;
             }
-            var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
+            var expression = parseExpression(parser, BindingPower.DEFAULT_BP);
             declarations.add(new DeclarationStatment(tokenKind, identifier, expression));
             var semi = parser.advance();
             if (semi.kind() == TokenKind.COMMA) {
@@ -186,7 +253,7 @@ public class Parser {
         if (!TokenKind.isAssignment(equal)) {
             throw new ExpectedError(parser, "=", equal);
         }
-        var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
+        var expression = parseExpression(parser, BindingPower.DEFAULT_BP);
         parser.expect(TokenKind.SEMI);
         return new AssignmentStatment(identifier, equal, expression);
     }
@@ -267,7 +334,7 @@ public class Parser {
     private static WhileStatment parseWhileStatment(Parser parser) {
         parser.expect(TokenKind.WHILE);
         parser.expect(TokenKind.OPEN_PAREN);
-        var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
+        var expression = parseExpression(parser, BindingPower.DEFAULT_BP);
         parser.expect(TokenKind.CLOSE_PAREN);
         parser.expect(TokenKind.OPEN_CURLY);
         var body = parse(parser);
@@ -279,7 +346,7 @@ public class Parser {
         // if
         parser.expect(TokenKind.IF);
         parser.expect(TokenKind.OPEN_PAREN);
-        var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
+        var expression = parseExpression(parser, BindingPower.DEFAULT_BP);
         parser.expect(TokenKind.CLOSE_PAREN);
         parser.expect(TokenKind.OPEN_CURLY);
         var body = parse(parser);
@@ -317,9 +384,9 @@ public class Parser {
         }
         // for
         var stat = parseVariableStatment(parser);
-        var condition = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
+        var condition = parseExpression(parser, BindingPower.DEFAULT_BP);
         parser.expect(TokenKind.SEMI);
-        var increment = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
+        var increment = parseExpression(parser, BindingPower.DEFAULT_BP);
         parser.expect(TokenKind.CLOSE_PAREN);
         parser.expect(TokenKind.OPEN_CURLY);
         var body = parse(parser);

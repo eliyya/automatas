@@ -3,13 +3,6 @@ package com.compiler.parser;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.compiler.ast.Expression;
-import com.compiler.ast.expressions.NumberExpression;
-import com.compiler.ast.expressions.StringExpression;
-import com.compiler.ast.expressions.BinaryExpression;
-import com.compiler.ast.expressions.BooleanExpression;
-import com.compiler.ast.expressions.CharExpression;
-import com.compiler.ast.expressions.IdentifierExpression;
 import com.compiler.lexer.TokenKind;
 import com.compiler.parser.handlers.LedHandler;
 import com.compiler.parser.handlers.NudHandler;
@@ -22,33 +15,33 @@ public class PrattRegistry {
     public static final Map<TokenKind, BindingPower> bpLU = new HashMap<>();
     static {
         // logical
-        PrattRegistry.led(TokenKind.AND, BindingPower.LOGICAL, PrattRegistry::parseBinaryExpression);
-        PrattRegistry.led(TokenKind.OR, BindingPower.LOGICAL, PrattRegistry::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.AND, BindingPower.LOGICAL, Parser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.OR, BindingPower.LOGICAL, Parser::parseBinaryExpression);
 
         // relationals
-        PrattRegistry.led(TokenKind.LESS, BindingPower.RELATIONAL, PrattRegistry::parseBinaryExpression);
-        PrattRegistry.led(TokenKind.LESS_EQUALS, BindingPower.RELATIONAL, PrattRegistry::parseBinaryExpression);
-        PrattRegistry.led(TokenKind.GREATER, BindingPower.RELATIONAL, PrattRegistry::parseBinaryExpression);
-        PrattRegistry.led(TokenKind.GREATER_EQUALS, BindingPower.RELATIONAL, PrattRegistry::parseBinaryExpression);
-        PrattRegistry.led(TokenKind.EQUALS, BindingPower.RELATIONAL, PrattRegistry::parseBinaryExpression);
-        PrattRegistry.led(TokenKind.NOT_EQUALS, BindingPower.RELATIONAL, PrattRegistry::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.LESS, BindingPower.RELATIONAL, Parser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.LESS_EQUALS, BindingPower.RELATIONAL, Parser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.GREATER, BindingPower.RELATIONAL, Parser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.GREATER_EQUALS, BindingPower.RELATIONAL, Parser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.EQUALS, BindingPower.RELATIONAL, Parser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.NOT_EQUALS, BindingPower.RELATIONAL, Parser::parseBinaryExpression);
 
         // additive
-        PrattRegistry.led(TokenKind.PLUS, BindingPower.ADDITIVE, PrattRegistry::parseBinaryExpression);
-        PrattRegistry.led(TokenKind.MINUS, BindingPower.ADDITIVE, PrattRegistry::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.PLUS, BindingPower.ADDITIVE, Parser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.MINUS, BindingPower.ADDITIVE, Parser::parseBinaryExpression);
 
         // multiplicative
-        PrattRegistry.led(TokenKind.STAR, BindingPower.MULTIPLICATIVE, PrattRegistry::parseBinaryExpression);
-        PrattRegistry.led(TokenKind.SLASH, BindingPower.MULTIPLICATIVE, PrattRegistry::parseBinaryExpression);
-        PrattRegistry.led(TokenKind.PERCENT, BindingPower.MULTIPLICATIVE, PrattRegistry::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.STAR, BindingPower.MULTIPLICATIVE, Parser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.SLASH, BindingPower.MULTIPLICATIVE, Parser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.PERCENT, BindingPower.MULTIPLICATIVE, Parser::parseBinaryExpression);
 
         // literals
-        PrattRegistry.nud(TokenKind.NUMBER_EXPRESSION, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
-        PrattRegistry.nud(TokenKind.STRING_EXPRESSION, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
-        PrattRegistry.nud(TokenKind.TRUE, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
-        PrattRegistry.nud(TokenKind.FALSE, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
-        PrattRegistry.nud(TokenKind.CHAR, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
-        PrattRegistry.nud(TokenKind.IDENTIFIER, BindingPower.PRIMARY, PrattRegistry::parsePrimaryExpression);
+        PrattRegistry.nud(TokenKind.NUMBER_EXPRESSION, BindingPower.PRIMARY, Parser::parsePrimaryExpression);
+        PrattRegistry.nud(TokenKind.STRING_EXPRESSION, BindingPower.PRIMARY, Parser::parsePrimaryExpression);
+        PrattRegistry.nud(TokenKind.TRUE, BindingPower.PRIMARY, Parser::parsePrimaryExpression);
+        PrattRegistry.nud(TokenKind.FALSE, BindingPower.PRIMARY, Parser::parsePrimaryExpression);
+        PrattRegistry.nud(TokenKind.CHAR, BindingPower.PRIMARY, Parser::parsePrimaryExpression);
+        PrattRegistry.nud(TokenKind.IDENTIFIER, BindingPower.PRIMARY, Parser::parsePrimaryExpression);
     }
 
     public static void led(TokenKind kind, BindingPower bp, LedHandler fn) {
@@ -64,67 +57,5 @@ public class PrattRegistry {
     public static void stmt(TokenKind kind, StatmentHandler fn) {
         bpLU.put(kind, BindingPower.DEFAULT_BP);
         stmtLU.put(kind, fn);
-    }
-
-    public static Expression parsePrimaryExpression(Parser parser) {
-        switch (parser.currentTokenKind()) {
-            case NUMBER_EXPRESSION -> {
-                var number = Float.parseFloat(parser.advance().value());
-                return new NumberExpression(number);
-            }
-            case STRING_EXPRESSION -> {
-                var string = parser.advance().value();
-                return new StringExpression(string);
-            }
-            case CHAR -> {
-                var string = parser.advance().value();
-                return new CharExpression(string);
-            }
-            case TRUE, FALSE -> {
-                var bool = parser.advance().value();
-                return new BooleanExpression(bool);
-            }
-            case IDENTIFIER -> {
-                var identifier = parser.advance().value();
-                return new IdentifierExpression(identifier);
-            }
-            default -> throw new RuntimeException("Cannot parse primary expression from token : " + parser.currentTokenKind());
-        }
-    }
-
-    public static Expression parseBinaryExpression(Parser parser, Expression left, BindingPower bp) {
-        var operator = parser.advance();
-        var right = PrattRegistry.parseExpression(parser, bp);
-        return new BinaryExpression(left, operator, right);
-    }
-
-    public static Expression parseExpression(Parser parser, BindingPower bp) {
-        var tokenKind = parser.currentTokenKind();
-        var nud = nudLU.get(tokenKind);
-        if (nud == null) {
-            throw new RuntimeException("nud handler expected for token : " + tokenKind);
-        }
-        var left = nud.handle(parser);
-
-        while (true) {
-            var opkb = parser.currentTokenKind();
-            // Stop if we've reached the end of the expression
-            if (opkb == TokenKind.SEMI || opkb == TokenKind.EOF) {
-                break;
-            }
-
-            var opbp = bpLU.get(opkb);
-            // Stop if the next operator doesn't have higher precedence
-            if (opbp == null || opbp.ordinal() <= bp.ordinal()) {
-                break;
-            }
-
-            var led = ledLU.get(opkb);
-            if (led == null) {
-                throw new RuntimeException("led handler expected for token : " + opkb);
-            }
-            left = led.handle(parser, left, opbp); // Use opbp instead of bp for the right binding power
-        }
-        return left;
     }
 }
