@@ -9,7 +9,10 @@ import com.compiler.ast.statments.AssignmentStatment;
 import com.compiler.ast.statments.BlockStatment;
 import com.compiler.ast.statments.DeclarationStatment;
 import com.compiler.ast.statments.ExpressionStatment;
-import com.compiler.ast.statments.WhileStatment;
+import com.compiler.ast.statments.ContolFlowStatment;
+import com.compiler.ast.statments.control_flow.ForStatment;
+import com.compiler.ast.statments.control_flow.IfStatment;
+import com.compiler.ast.statments.control_flow.WhileStatment;
 import com.compiler.errors.ExpectedError;
 import com.compiler.lexer.Token;
 import com.compiler.lexer.TokenKind;
@@ -30,15 +33,20 @@ public class Parser {
         return parse(false, parser);
     }
 
-    public static BlockStatment parse(boolean inner, Parser parser) throws ExpectedError {
+    public static BlockStatment parse(Parser parser) {
+        return parse(true, parser);
+    }
+
+    private static BlockStatment parse(boolean inner, Parser parser) throws ExpectedError {
         var body = new ArrayList<Statment>();
 
         while (parser.hasTokens()) {
-            if (inner && parser.currentTokenKind() == TokenKind.CLOSE_CURLY) break;
+            if (inner && parser.currentTokenKind() == TokenKind.CLOSE_CURLY)
+                break;
             var currentToken = parser.currentToken();
             // start with type
             if (TokenKind.isPrimitiveType(currentToken)) {
-                for (var statment : parseStatment(parser)) {
+                for (var statment : parseVariableStatment(parser)) {
                     body.add(statment);
                 }
                 // start with identifier
@@ -65,8 +73,9 @@ public class Parser {
                 // start with unary operation
             } else if (TokenKind.isUnaryOperation(currentToken.kind())) {
                 body.add(parseUnaryOperation(parser));
-            } else if (TokenKind.isCiclic(currentToken.kind())) {
-                body.add(parseCiclStatment(parser));
+                // start with control flow
+            } else if (TokenKind.isControlFlow(currentToken.kind())) {
+                body.add(parseControlFlowStatment(parser));
             } else {
                 var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
                 var semi = parser.advance();
@@ -117,7 +126,7 @@ public class Parser {
     // --------------
     // parse statment
     // --------------
-    private static List<DeclarationStatment> parseStatment(Parser parser) throws ExpectedError {
+    private static List<DeclarationStatment> parseVariableStatment(Parser parser) throws ExpectedError {
         var declarations = new ArrayList<DeclarationStatment>();
         var tokenKind = parser.advance();
         if (!TokenKind.isPrimitiveType(tokenKind)) {
@@ -148,6 +157,15 @@ public class Parser {
             }
             return declarations;
         }
+    }
+
+    private static DeclarationStatment parseUniqueVariableStatment(Parser parser) throws ExpectedError {
+        var tokenKind = parser.advance();
+        if (!TokenKind.isPrimitiveType(tokenKind)) {
+            throw new ExpectedError(parser, "primitive type", tokenKind);
+        }
+        var identifier = parser.expect(TokenKind.IDENTIFIER);
+        return new DeclarationStatment(tokenKind, identifier, null);
     }
 
     private static AssignmentStatment parseAssignment(Parser parser) throws ExpectedError {
@@ -216,12 +234,18 @@ public class Parser {
     // return new ExpressionStatment(new FunctionExpression(identifier));
     // }
 
-    private static Statment parseCiclStatment(Parser parser) {
+    private static ContolFlowStatment parseControlFlowStatment(Parser parser) {
         var token = parser.currentToken();
         if (token.kind() == TokenKind.WHILE) {
             return parseWhileStatment(parser);
+        } else if (token.kind() == TokenKind.IF) {
+            return parseIfStatment(parser);
+        } else if (token.kind() == TokenKind.ELSE) {
+            parser.expect(TokenKind.IF);
+            return null;
+        } else if (token.kind() == TokenKind.FOR) {
+            return parseForStatment(parser);
         }
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'parseReservedKeyword'");
     }
 
@@ -231,8 +255,66 @@ public class Parser {
         var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
         parser.expect(TokenKind.CLOSE_PAREN);
         parser.expect(TokenKind.OPEN_CURLY);
-        var body = parse(true, parser);
+        var body = parse(parser);
         parser.expect(TokenKind.CLOSE_CURLY);
         return new WhileStatment(expression, body);
+    }
+
+    private static IfStatment parseIfStatment(Parser parser) {
+        // if
+        parser.expect(TokenKind.IF);
+        parser.expect(TokenKind.OPEN_PAREN);
+        var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
+        parser.expect(TokenKind.CLOSE_PAREN);
+        parser.expect(TokenKind.OPEN_CURLY);
+        var body = parse(parser);
+        parser.expect(TokenKind.CLOSE_CURLY);
+        if (parser.currentTokenKind() != TokenKind.ELSE) {
+            return new IfStatment(expression, body);
+        }
+        // else
+        parser.advance();
+        // if again
+        if (parser.currentTokenKind() == TokenKind.IF) {
+            var elseIfBody = parseIfStatment(parser);
+            var elseBody = new BlockStatment(List.of(elseIfBody));
+            return new IfStatment(expression, body, elseBody);
+        }
+        parser.expect(TokenKind.OPEN_CURLY);
+        var elseBody = parse(parser);
+        parser.expect(TokenKind.CLOSE_CURLY);
+        return new IfStatment(expression, body, elseBody);
+    }
+
+    private static ForStatment parseForStatment(Parser parser) {
+        parser.expect(TokenKind.FOR);
+        parser.expect(TokenKind.OPEN_PAREN);
+        var type = parser.advance();
+        if (!TokenKind.isPrimitiveType(type)) {
+            throw new ExpectedError(parser, "type", type);
+        }
+        var stat = parseUniqueVariableStatment(parser);
+        var semiOrColon = parser.advance();
+        if (semiOrColon.kind() != TokenKind.SEMI && semiOrColon.kind() != TokenKind.COLON) {
+            throw new ExpectedError(parser, ";", semiOrColon);
+        }
+        // foreach
+        if (semiOrColon.kind() == TokenKind.COLON) {
+            var collection = parser.expect(TokenKind.IDENTIFIER);
+            parser.expect(TokenKind.CLOSE_PAREN);
+            parser.expect(TokenKind.OPEN_CURLY);
+            var body = parse(parser);
+            parser.expect(TokenKind.CLOSE_CURLY);
+            return new ForStatment(stat, collection, body);
+        }
+        // for
+        var conditionn = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
+        parser.expect(TokenKind.SEMI);
+        var increment = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
+        parser.expect(TokenKind.CLOSE_PAREN);
+        parser.expect(TokenKind.OPEN_CURLY);
+        var body = parse(parser);
+        parser.expect(TokenKind.CLOSE_CURLY);
+        return new ForStatment(stat, conditionn, increment, body);
     }
 }

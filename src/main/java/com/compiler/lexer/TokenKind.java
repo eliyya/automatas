@@ -70,17 +70,20 @@ public enum TokenKind {
 	STAR("*"),
 	PERCENT("%"),
 
+	// control flow
+	IF("if"),
+	ELSE("else"),
+	WHILE("while"),
+	FOR("for"),
+	DO("do"),
+	SWITCH("switch"),
+
 	// Reserved Keywords
 	VAR("var"),
 	CLASS("class"),
 	NEW("new"),
 	IMPORT("import"),
 	PACKAGE("package"),
-	IF("if"),
-	ELSE("else"),
-	WHILE("while"),
-	FOR("for"),
-	DO("do"),
 	INSTANCEOF("instanceof"),
 
 	// misc
@@ -195,17 +198,20 @@ public enum TokenKind {
 		return isUnaryOperation(fromText(text));
 	}
 
-	public static boolean isCiclic(TokenKind kind) {
+	public static boolean isControlFlow(TokenKind kind) {
 		return kind == TokenKind.WHILE
 			|| kind == TokenKind.FOR
-			|| kind == TokenKind.DO;
+			|| kind == TokenKind.DO
+			|| kind == TokenKind.IF
+			|| kind == TokenKind.SWITCH
+			|| kind == TokenKind.ELSE;
 	}
 
-	public static boolean isCiclic(String text) {
-		return isCiclic(fromText(text));
+	public static boolean isControlFlow(String text) {
+		return isControlFlow(fromText(text));
 	}
 
 	public static boolean isCiclic(Token token) {
-		return isCiclic(token.kind());
+		return isControlFlow(token.kind());
 	}
 }
