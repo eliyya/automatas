@@ -4,7 +4,6 @@ int c;
 float x;
 int x;
 boolean d, e = true;
-true;
 
 int a;
 int b = 5; 
@@ -13,10 +12,11 @@ int e = 30, f = 40;
   
 a = b + 1;
 a += 1;
-// a++; // TODO: implementar
+a++;
+++a;
 int g = 1 + 2 * a;
 int h=1+2*a;
-char i='a';
+char n='a';
 
 String j="hola mundo";
 double k = 1.0;
@@ -24,9 +24,24 @@ float l = 1.0f;
 boolean m = true;
 
 int i = 0;
-while (i a 10) {
-    i++;
-    
+while (i < 10) {
+    if (i == 2) {
+        // do things
+    } else if (i ==3) {
+        i+=2;
+    } else {
+        i++;
+    }
+}
+
+for (int i = 0; i < 10; i++) {
+    if (i == 2) {
+        // do things
+    } else if (i ==3) {
+        i+=2;
+    } else {
+        i++;
+    }
 }
 
 // main() {

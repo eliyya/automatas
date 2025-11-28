@@ -77,12 +77,13 @@ public class Parser {
             } else if (TokenKind.isControlFlow(currentToken.kind())) {
                 body.add(parseControlFlowStatment(parser));
             } else {
-                var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
-                var semi = parser.advance();
-                if (semi.kind() != TokenKind.SEMI) {
-                    throw new ExpectedError(parser, ";", semi);
-                }
-                body.add(new ExpressionStatment(expression));
+                // var expression = PrattRegistry.parseExpression(parser, BindingPower.DEFAULT_BP);
+                // var semi = parser.advance();
+                // if (semi.kind() != TokenKind.SEMI) {
+                //     throw new ExpectedError(parser, ";", semi);
+                // }
+                // body.add(new ExpressionStatment(expression));
+                throw new ExpectedError(parser, "statment", currentToken);
             }
         }
 
@@ -168,6 +169,9 @@ public class Parser {
         return new DeclarationStatment(tokenKind, identifier, null);
     }
 
+    // --------------
+    // parse assignment
+    // --------------
     private static AssignmentStatment parseAssignment(Parser parser) throws ExpectedError {
         var identifier = parser.advance();
         if (identifier.kind() != TokenKind.IDENTIFIER) {
@@ -182,6 +186,9 @@ public class Parser {
         return new AssignmentStatment(identifier, equal, expression);
     }
 
+    // --------------
+    // parse unary operation
+    // --------------
     private static ExpressionStatment parseUnaryOperation(Parser parser) throws ExpectedError {
         var first = parser.currentToken();
         if (TokenKind.isUnaryOperation(first)) {
@@ -234,6 +241,9 @@ public class Parser {
     // return new ExpressionStatment(new FunctionExpression(identifier));
     // }
 
+    // --------------
+    // parse control flow
+    // --------------
     private static ContolFlowStatment parseControlFlowStatment(Parser parser) {
         var token = parser.currentToken();
         if (token.kind() == TokenKind.WHILE) {
@@ -289,10 +299,6 @@ public class Parser {
     private static ForStatment parseForStatment(Parser parser) {
         parser.expect(TokenKind.FOR);
         parser.expect(TokenKind.OPEN_PAREN);
-        var type = parser.advance();
-        if (!TokenKind.isPrimitiveType(type)) {
-            throw new ExpectedError(parser, "type", type);
-        }
         var stat = parseUniqueVariableStatment(parser);
         var semiOrColon = parser.advance();
         if (semiOrColon.kind() != TokenKind.SEMI && semiOrColon.kind() != TokenKind.COLON) {
