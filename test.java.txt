@@ -24,6 +24,7 @@ float l = 1.0f;
 boolean m = true;
 
 int i = 0;
+
 while (i < 10) {
     if (i == 2) {
         // do things
@@ -43,6 +44,14 @@ for (int i = 0; i < 10; i++) {
         i++;
     }
 }
+
+for (String c : j) {
+    // do things
+}
+
+do {
+    // do things
+} while (i < 10);
 
 // main() {
 //     var n = false;

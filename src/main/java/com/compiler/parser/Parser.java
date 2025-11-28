@@ -17,6 +17,7 @@ import com.compiler.ast.statments.BlockStatment;
 import com.compiler.ast.statments.DeclarationStatment;
 import com.compiler.ast.statments.ExpressionStatment;
 import com.compiler.ast.statments.ContolFlowStatment;
+import com.compiler.ast.statments.control_flow.DoStatment;
 import com.compiler.ast.statments.control_flow.ForStatment;
 import com.compiler.ast.statments.control_flow.IfStatment;
 import com.compiler.ast.statments.control_flow.WhileStatment;
@@ -70,7 +71,7 @@ public class Parser {
                     // TODO: implementar
                     // body.add(parseFunctionStatment(parser));
                 } else {
-                    var expression = parseExpression(parser, BindingPower.DEFAULT_BP);
+                    var expression = parseExpression(parser);
                     var semi = parser.advance();
                     if (semi.kind() != TokenKind.SEMI) {
                         throw new ExpectedError(parser, ";", semi);
@@ -155,8 +156,14 @@ public class Parser {
                 return new BooleanExpression(bool);
             }
             case IDENTIFIER -> {
-                var identifier = parser.advance().value();
-                return new IdentifierExpression(identifier);
+                var identifier = parser.advance();
+                var pp = parser.currentToken();
+                if (pp.kind() == TokenKind.PLUS_PLUS) {
+                    parser.advance();
+                    return new UnaryOperationExpression(identifier, pp, false);
+                } else {
+                    return new IdentifierExpression(identifier.value());
+                }
             }
             default -> throw new RuntimeException("Cannot parse primary expression from token : " + parser.currentTokenKind());
         }
@@ -166,6 +173,10 @@ public class Parser {
         var operator = parser.advance();
         var right = parseExpression(parser, bp);
         return new BinaryExpression(left, operator, right);
+    }
+
+    public static Expression parseExpression(Parser parser) {
+        return parseExpression(parser, BindingPower.DEFAULT_BP);
     }
 
     public static Expression parseExpression(Parser parser, BindingPower bp) {
@@ -219,7 +230,7 @@ public class Parser {
                 declarations.add(new DeclarationStatment(tokenKind, identifier, null));
                 continue;
             }
-            var expression = parseExpression(parser, BindingPower.DEFAULT_BP);
+            var expression = parseExpression(parser);
             declarations.add(new DeclarationStatment(tokenKind, identifier, expression));
             var semi = parser.advance();
             if (semi.kind() == TokenKind.COMMA) {
@@ -253,7 +264,7 @@ public class Parser {
         if (!TokenKind.isAssignment(equal)) {
             throw new ExpectedError(parser, "=", equal);
         }
-        var expression = parseExpression(parser, BindingPower.DEFAULT_BP);
+        var expression = parseExpression(parser);
         parser.expect(TokenKind.SEMI);
         return new AssignmentStatment(identifier, equal, expression);
     }
@@ -318,23 +329,33 @@ public class Parser {
     // --------------
     private static ContolFlowStatment parseControlFlowStatment(Parser parser) {
         var token = parser.currentToken();
-        if (token.kind() == TokenKind.WHILE) {
-            return parseWhileStatment(parser);
-        } else if (token.kind() == TokenKind.IF) {
-            return parseIfStatment(parser);
-        } else if (token.kind() == TokenKind.ELSE) {
-            parser.expect(TokenKind.IF);
-            return null;
-        } else if (token.kind() == TokenKind.FOR) {
-            return parseForStatment(parser);
+        switch (token.kind()) {
+            case WHILE -> {
+                return parseWhileStatment(parser);
+            }
+            case IF -> {
+                return parseIfStatment(parser);
+            }
+            case ELSE -> {
+                parser.expect(TokenKind.IF);
+                return null;
+            }
+            case FOR -> {
+                return parseForStatment(parser);
+            }
+            case DO -> {
+                return parseDoStatment(parser);
+            }
+            default -> {
+                throw new UnsupportedOperationException("Unimplemented method 'parseControlFlowStatment'");
+            }
         }
-        throw new UnsupportedOperationException("Unimplemented method 'parseReservedKeyword'");
     }
 
     private static WhileStatment parseWhileStatment(Parser parser) {
         parser.expect(TokenKind.WHILE);
         parser.expect(TokenKind.OPEN_PAREN);
-        var expression = parseExpression(parser, BindingPower.DEFAULT_BP);
+        var expression = parseExpression(parser);
         parser.expect(TokenKind.CLOSE_PAREN);
         parser.expect(TokenKind.OPEN_CURLY);
         var body = parse(parser);
@@ -346,7 +367,7 @@ public class Parser {
         // if
         parser.expect(TokenKind.IF);
         parser.expect(TokenKind.OPEN_PAREN);
-        var expression = parseExpression(parser, BindingPower.DEFAULT_BP);
+        var expression = parseExpression(parser);
         parser.expect(TokenKind.CLOSE_PAREN);
         parser.expect(TokenKind.OPEN_CURLY);
         var body = parse(parser);
@@ -384,13 +405,26 @@ public class Parser {
         }
         // for
         var stat = parseVariableStatment(parser);
-        var condition = parseExpression(parser, BindingPower.DEFAULT_BP);
+        var condition = parseExpression(parser);
         parser.expect(TokenKind.SEMI);
-        var increment = parseExpression(parser, BindingPower.DEFAULT_BP);
+        var increment = parseExpression(parser);
         parser.expect(TokenKind.CLOSE_PAREN);
         parser.expect(TokenKind.OPEN_CURLY);
         var body = parse(parser);
         parser.expect(TokenKind.CLOSE_CURLY);
         return new ForStatment(stat, condition, increment, body);
+    }
+
+    private static DoStatment parseDoStatment(Parser parser) {
+        parser.expect(TokenKind.DO);
+        parser.expect(TokenKind.OPEN_CURLY);
+        var body = parse(parser);
+        parser.expect(TokenKind.CLOSE_CURLY);
+        parser.expect(TokenKind.WHILE);
+        parser.expect(TokenKind.OPEN_PAREN);
+        var expression = parseExpression(parser);
+        parser.expect(TokenKind.CLOSE_PAREN);
+        parser.expect(TokenKind.SEMI);
+        return new DoStatment(body, expression);
     }
 }
