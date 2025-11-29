@@ -1,5 +1,5 @@
 float a = 45.2 + 5 * 4;
-int b = (45.2 + 5) * 4;
+int b = (45.2 + 5()) * 4;
 int c;
 float x;
 int x;
