@@ -41,8 +41,8 @@ public class App {
         // ----------------
         // print - printing
         // ----------------
-        // printTokens(tokens);
-        // printAST(ast);
+        printTokens(tokens);
+        printAST(ast);
         // ----------------
         // write - writing
         // ----------------

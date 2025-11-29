@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.compiler.ast.Expression;
 import com.compiler.ast.expressions.BinaryExpression;
-import com.compiler.ast.expressions.FunctionExpression;
+import com.compiler.ast.expressions.FunctionCallExpression;
 import com.compiler.ast.expressions.IdentifierExpression;
 import com.compiler.ast.expressions.PrimaryExpression;
 import com.compiler.ast.expressions.UnaryOperationExpression;
@@ -47,10 +47,6 @@ public class ExpressionParser {
         }
         return left;
     }
-
-    public static Expression parseExpression(Parser parser) {
-        return parseExpression(parser, BindingPower.DEFAULT_BP);
-    }
     
     public static BinaryExpression parseBinaryExpression(Parser parser, Expression left, BindingPower bp) {
         var operator = parser.advance();
@@ -58,12 +54,12 @@ public class ExpressionParser {
         return new BinaryExpression(left, operator, right);
     }
 
-    public static FunctionExpression parseFunctionExpression(Parser parser) throws ExpectedError {
+    public static FunctionCallExpression parseFunctionExpression(Parser parser) throws ExpectedError {
         var identifier = parser.expect(TokenKind.IDENTIFIER);
         parser.expect(TokenKind.OPEN_PAREN);
         var parameters = new ArrayList<Expression>();
         while (parser.currentTokenKind() != TokenKind.CLOSE_PAREN) {
-            parameters.add(parseExpression(parser));
+            parameters.add(Parser.parseExpression(parser));
             if (parser.currentTokenKind() == TokenKind.COMMA) {
                 parser.advance();
                 continue;
@@ -71,7 +67,7 @@ public class ExpressionParser {
             break;
         }
         parser.expect(TokenKind.CLOSE_PAREN);
-        return new FunctionExpression(identifier, parameters);
+        return new FunctionCallExpression(identifier, parameters);
     }
 
     public static Expression parseIdentifierExpression(Parser parser) {
@@ -95,7 +91,7 @@ public class ExpressionParser {
 
     public static Expression parseParenthesizedExpression(Parser parser) {
         parser.expect(TokenKind.OPEN_PAREN);
-        var expression = parseExpression(parser);
+        var expression = Parser.parseExpression(parser);
         parser.expect(TokenKind.CLOSE_PAREN);
         return expression;
     }

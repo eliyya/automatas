@@ -2,6 +2,7 @@ package com.compiler.parser;
 
 import java.util.List;
 
+import com.compiler.ast.Expression;
 import com.compiler.ast.statments.BlockStatment;
 import com.compiler.errors.ExpectedError;
 import com.compiler.lexer.Token;
@@ -21,6 +22,10 @@ public class Parser {
     public static BlockStatment parse(List<Token> tokens, List<String> lines) {
         var parser = new Parser(tokens, lines);
         return StatmentParser.parseBlockStatment(false, parser);
+    }
+
+    public static Expression parseExpression(Parser parser) {
+        return ExpressionParser.parseExpression(parser, BindingPower.DEFAULT_BP);
     }
 
     public Token currentToken() {

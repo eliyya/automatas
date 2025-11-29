@@ -3,7 +3,7 @@ package com.compiler.ast.statments.control_flow;
 import com.compiler.ast.Expression;
 import com.compiler.ast.statments.BlockStatment;
 import com.compiler.ast.statments.ContolFlowStatment;
-import com.compiler.ast.statments.DeclarationStatment;
+import com.compiler.ast.statments.declaration.DeclarationVariableStatment;
 import com.compiler.lexer.Token;
 
 enum ForType {
@@ -14,20 +14,20 @@ enum ForType {
 public class ForStatment implements ContolFlowStatment {
     String _c = "ForStatment";
     ForType type;
-    DeclarationStatment statment;
+    DeclarationVariableStatment statment;
     Token collection;
     Expression condition;
     Expression increment;
     BlockStatment body;
     
-    public ForStatment(DeclarationStatment statment, Token collection, BlockStatment body) {
+    public ForStatment(DeclarationVariableStatment statment, Token collection, BlockStatment body) {
         this.statment = statment;
         this.collection = collection;
         this.body = body;
         this.type = ForType.FOREACH;
     }
 
-    public ForStatment(DeclarationStatment statment, Expression condition, Expression increment, BlockStatment body) {
+    public ForStatment(DeclarationVariableStatment statment, Expression condition, Expression increment, BlockStatment body) {
         this.statment = statment;
         this.condition = condition;
         this.increment = increment;
@@ -45,7 +45,6 @@ public class ForStatment implements ContolFlowStatment {
 
     @Override
     public void statment() {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'statment'");
     }
     

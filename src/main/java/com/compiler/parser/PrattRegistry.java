@@ -47,20 +47,31 @@ public class PrattRegistry {
         PrattRegistry.nud(TokenKind.IDENTIFIER, BindingPower.PRIMARY, ExpressionParser::parseIdentifierExpression);
 
         // declaration
-        PrattRegistry.stmt(TokenKind.FLOAT, StatmentParser::parseTypedVarStatment);
-        PrattRegistry.stmt(TokenKind.INT, StatmentParser::parseTypedVarStatment);
-        PrattRegistry.stmt(TokenKind.BOOLEAN, StatmentParser::parseTypedVarStatment);
-        PrattRegistry.stmt(TokenKind.DOUBLE, StatmentParser::parseTypedVarStatment);
-        PrattRegistry.stmt(TokenKind.SHORT, StatmentParser::parseTypedVarStatment);
-        PrattRegistry.stmt(TokenKind.LONG, StatmentParser::parseTypedVarStatment);
-        PrattRegistry.stmt(TokenKind.BYTE, StatmentParser::parseTypedVarStatment);
-        PrattRegistry.stmt(TokenKind.STRING, StatmentParser::parseTypedVarStatment);
-        PrattRegistry.stmt(TokenKind.CHAR, StatmentParser::parseTypedVarStatment);
+        PrattRegistry.stmt(TokenKind.FLOAT, StatmentParser::parseDeclaratioStatment);
+        PrattRegistry.stmt(TokenKind.INT, StatmentParser::parseDeclaratioStatment);
+        PrattRegistry.stmt(TokenKind.BOOLEAN, StatmentParser::parseDeclaratioStatment);
+        PrattRegistry.stmt(TokenKind.DOUBLE, StatmentParser::parseDeclaratioStatment);
+        PrattRegistry.stmt(TokenKind.SHORT, StatmentParser::parseDeclaratioStatment);
+        PrattRegistry.stmt(TokenKind.LONG, StatmentParser::parseDeclaratioStatment);
+        PrattRegistry.stmt(TokenKind.BYTE, StatmentParser::parseDeclaratioStatment);
+        PrattRegistry.stmt(TokenKind.STRING, StatmentParser::parseDeclaratioStatment);
+        PrattRegistry.stmt(TokenKind.CHAR, StatmentParser::parseDeclaratioStatment);
+        PrattRegistry.stmt(TokenKind.VOID, StatmentParser::parseDeclaratioStatment);
+        PrattRegistry.stmt(TokenKind.VAR, StatmentParser::parseDeclaratioStatment);
 
         // identifier
         PrattRegistry.stmt(TokenKind.IDENTIFIER, StatmentParser::parseIdentifierStatment);
+
+        // unary
         PrattRegistry.stmt(TokenKind.PLUS_PLUS, StatmentParser::parseUaryOperationStatment);
         PrattRegistry.stmt(TokenKind.MINUS_MINUS, StatmentParser::parseUaryOperationStatment);
+
+        // contol flow
+        PrattRegistry.stmt(TokenKind.WHILE, StatmentParser::parseControlFlowStatment);
+        PrattRegistry.stmt(TokenKind.IF, StatmentParser::parseControlFlowStatment);
+        PrattRegistry.stmt(TokenKind.FOR, StatmentParser::parseControlFlowStatment);
+        PrattRegistry.stmt(TokenKind.DO, StatmentParser::parseControlFlowStatment);
+        PrattRegistry.stmt(TokenKind.OPEN_CURLY, StatmentParser::parseBlockStatment);
     }
 
     public static void led(TokenKind kind, BindingPower bp, LedHandler fn) {

@@ -42,6 +42,7 @@ void main(String args) {
     var n = false;
 }
 
+
 {
     int z = 0;
 }

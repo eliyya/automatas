@@ -5,12 +5,12 @@ import java.util.List;
 import com.compiler.ast.Expression;
 import com.compiler.lexer.Token;
 
-public class FunctionExpression implements Expression {
-    String _class = "FunctionExpression";
+public class FunctionCallExpression implements Expression {
+    String _class = "FunctionCallExpression";
     Token name;
     List<Expression> parameters;
 
-    public FunctionExpression(Token name, List<Expression> parameters) {
+    public FunctionCallExpression(Token name, List<Expression> parameters) {
         this.name = name;
         this.parameters = parameters;
     }
