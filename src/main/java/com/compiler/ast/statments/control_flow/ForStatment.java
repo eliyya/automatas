@@ -16,20 +16,20 @@ enum ForType {
 public class ForStatment implements ContolFlowStatment {
     String _c = "ForStatment";
     ForType type;
-    List<DeclarationStatment> statment;
+    DeclarationStatment statment;
     Token collection;
     Expression condition;
     Expression increment;
     BlockStatment body;
     
-    public ForStatment(List<DeclarationStatment> statment, Token collection, BlockStatment body) {
+    public ForStatment(DeclarationStatment statment, Token collection, BlockStatment body) {
         this.statment = statment;
         this.collection = collection;
         this.body = body;
         this.type = ForType.FOREACH;
     }
 
-    public ForStatment(List<DeclarationStatment> statment, Expression condition,Expression increment, BlockStatment body) {
+    public ForStatment(DeclarationStatment statment, Expression condition, Expression increment, BlockStatment body) {
         this.statment = statment;
         this.condition = condition;
         this.increment = increment;

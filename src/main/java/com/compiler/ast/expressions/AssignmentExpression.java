@@ -1,16 +1,15 @@
-package com.compiler.ast.statments;
+package com.compiler.ast.expressions;
 
 import com.compiler.ast.Expression;
-import com.compiler.ast.Statment;
 import com.compiler.lexer.Token;
 
-public class AssignmentStatment implements Statment {
+public class AssignmentExpression implements Expression {
     final String _c = "AssignmentStatment";
     Token identifier;
     Token operator;
     Expression expression;
 
-    public AssignmentStatment(Token identifier, Token operator, Expression expression) {
+    public AssignmentExpression(Token identifier, Token operator, Expression expression) {
         this.identifier = identifier;
         this.operator = operator;
         this.expression = expression;
@@ -22,8 +21,8 @@ public class AssignmentStatment implements Statment {
     }
 
     @Override
-    public void statment() {
-        throw new UnsupportedOperationException("Unimplemented method 'statment'");
+    public void expression() {
+        throw new UnsupportedOperationException("Unimplemented method 'expression'");
     }
     
 }

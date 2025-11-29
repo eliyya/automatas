@@ -15,36 +15,46 @@ public class PrattRegistry {
     public static final Map<TokenKind, BindingPower> bpLU = new HashMap<>();
     static {
         // logical
-        PrattRegistry.led(TokenKind.AND, BindingPower.LOGICAL, Parser::parseBinaryExpression);
-        PrattRegistry.led(TokenKind.OR, BindingPower.LOGICAL, Parser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.AND, BindingPower.LOGICAL, ExpressionParser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.OR, BindingPower.LOGICAL, ExpressionParser::parseBinaryExpression);
 
         // relationals
-        PrattRegistry.led(TokenKind.LESS, BindingPower.RELATIONAL, Parser::parseBinaryExpression);
-        PrattRegistry.led(TokenKind.LESS_EQUALS, BindingPower.RELATIONAL, Parser::parseBinaryExpression);
-        PrattRegistry.led(TokenKind.GREATER, BindingPower.RELATIONAL, Parser::parseBinaryExpression);
-        PrattRegistry.led(TokenKind.GREATER_EQUALS, BindingPower.RELATIONAL, Parser::parseBinaryExpression);
-        PrattRegistry.led(TokenKind.EQUALS, BindingPower.RELATIONAL, Parser::parseBinaryExpression);
-        PrattRegistry.led(TokenKind.NOT_EQUALS, BindingPower.RELATIONAL, Parser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.LESS, BindingPower.RELATIONAL, ExpressionParser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.LESS_EQUALS, BindingPower.RELATIONAL, ExpressionParser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.GREATER, BindingPower.RELATIONAL, ExpressionParser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.GREATER_EQUALS, BindingPower.RELATIONAL, ExpressionParser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.EQUALS, BindingPower.RELATIONAL, ExpressionParser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.NOT_EQUALS, BindingPower.RELATIONAL, ExpressionParser::parseBinaryExpression);
 
         // additive
-        PrattRegistry.led(TokenKind.PLUS, BindingPower.ADDITIVE, Parser::parseBinaryExpression);
-        PrattRegistry.led(TokenKind.MINUS, BindingPower.ADDITIVE, Parser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.PLUS, BindingPower.ADDITIVE, ExpressionParser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.MINUS, BindingPower.ADDITIVE, ExpressionParser::parseBinaryExpression);
 
         // multiplicative
-        PrattRegistry.led(TokenKind.STAR, BindingPower.MULTIPLICATIVE, Parser::parseBinaryExpression);
-        PrattRegistry.led(TokenKind.SLASH, BindingPower.MULTIPLICATIVE, Parser::parseBinaryExpression);
-        PrattRegistry.led(TokenKind.PERCENT, BindingPower.MULTIPLICATIVE, Parser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.STAR, BindingPower.MULTIPLICATIVE, ExpressionParser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.SLASH, BindingPower.MULTIPLICATIVE, ExpressionParser::parseBinaryExpression);
+        PrattRegistry.led(TokenKind.PERCENT, BindingPower.MULTIPLICATIVE, ExpressionParser::parseBinaryExpression);
 
         // literals
-        PrattRegistry.nud(TokenKind.NUMBER_EXPRESSION, BindingPower.PRIMARY, Parser::parsePrimaryExpression);
-        PrattRegistry.nud(TokenKind.STRING_EXPRESSION, BindingPower.PRIMARY, Parser::parsePrimaryExpression);
-        PrattRegistry.nud(TokenKind.TRUE, BindingPower.PRIMARY, Parser::parsePrimaryExpression);
-        PrattRegistry.nud(TokenKind.FALSE, BindingPower.PRIMARY, Parser::parsePrimaryExpression);
-        PrattRegistry.nud(TokenKind.CHAR, BindingPower.PRIMARY, Parser::parsePrimaryExpression);
-        PrattRegistry.nud(TokenKind.OPEN_PAREN, BindingPower.PRIMARY, Parser::parseParenthesizedExpression);
+        PrattRegistry.nud(TokenKind.NUMBER_EXPRESSION, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);
+        PrattRegistry.nud(TokenKind.STRING_EXPRESSION, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);
+        PrattRegistry.nud(TokenKind.TRUE, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);
+        PrattRegistry.nud(TokenKind.FALSE, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);
+        PrattRegistry.nud(TokenKind.CHAR, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);
+        PrattRegistry.nud(TokenKind.OPEN_PAREN, BindingPower.PRIMARY, ExpressionParser::parseParenthesizedExpression);
 
         // identifiers
-        PrattRegistry.nud(TokenKind.IDENTIFIER, BindingPower.PRIMARY, Parser::parseIdentifierExpression);
+        PrattRegistry.nud(TokenKind.IDENTIFIER, BindingPower.PRIMARY, ExpressionParser::parseIdentifierExpression);
+
+        // declaration
+        PrattRegistry.stmt(TokenKind.FLOAT, StatmentParser::parseTypedVarStatment);
+        PrattRegistry.stmt(TokenKind.INT, StatmentParser::parseTypedVarStatment);
+        PrattRegistry.stmt(TokenKind.BOOLEAN, StatmentParser::parseTypedVarStatment);
+        PrattRegistry.stmt(TokenKind.DOUBLE, StatmentParser::parseTypedVarStatment);
+        PrattRegistry.stmt(TokenKind.SHORT, StatmentParser::parseTypedVarStatment);
+        PrattRegistry.stmt(TokenKind.LONG, StatmentParser::parseTypedVarStatment);
+        PrattRegistry.stmt(TokenKind.BYTE, StatmentParser::parseTypedVarStatment);
+        PrattRegistry.stmt(TokenKind.STRING, StatmentParser::parseTypedVarStatment);
     }
 
     public static void led(TokenKind kind, BindingPower bp, LedHandler fn) {
