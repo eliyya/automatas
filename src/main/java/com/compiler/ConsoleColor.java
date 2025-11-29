@@ -87,4 +87,8 @@ public enum ConsoleColor {
     public String toString() {
         return code;
     }
+
+    public static String format(String text, ConsoleColor color) {
+        return color + text + ConsoleColor.RESET;
+    }
 }

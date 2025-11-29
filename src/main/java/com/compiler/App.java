@@ -154,6 +154,6 @@ public class App {
     }
 
     private static String format(String text, ConsoleColor color) {
-        return color + text + ConsoleColor.RESET;
+        return ConsoleColor.format(text, color);
     }
 }

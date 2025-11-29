@@ -55,6 +55,12 @@ public class PrattRegistry {
         PrattRegistry.stmt(TokenKind.LONG, StatmentParser::parseTypedVarStatment);
         PrattRegistry.stmt(TokenKind.BYTE, StatmentParser::parseTypedVarStatment);
         PrattRegistry.stmt(TokenKind.STRING, StatmentParser::parseTypedVarStatment);
+        PrattRegistry.stmt(TokenKind.CHAR, StatmentParser::parseTypedVarStatment);
+
+        // identifier
+        PrattRegistry.stmt(TokenKind.IDENTIFIER, StatmentParser::parseIdentifierStatment);
+        PrattRegistry.stmt(TokenKind.PLUS_PLUS, StatmentParser::parseUaryOperationStatment);
+        PrattRegistry.stmt(TokenKind.MINUS_MINUS, StatmentParser::parseUaryOperationStatment);
     }
 
     public static void led(TokenKind kind, BindingPower bp, LedHandler fn) {

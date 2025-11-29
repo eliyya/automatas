@@ -1,30 +1,15 @@
-float a = 45.2 + 5 * 4;
-int b = (45.2 + 5) * 4;
-int c;
-float x;
-int x;
-boolean d, e = true;
-
-int a;
-int b = 5; 
-int c = 10; int d = 20;
-int e = 30, f = 40;
-  
-a = b + 1;
-a += 1;
-a++;
-++a;
-int g = 1 + 2 * a;
-int h=1+2*a;
-char n='a';
-
+float a = 3f + (45.2 + 5) * 4;
+int b;
+byte c = 1;
+short d = 256;
+long e = 12342123123;
+boolean f, g = true;
+int h = 10; int i = 20;
 String j="hola mundo";
-double k = 1.0;
-float l = 1.0f;
-boolean m = true;
-
-int i = 0;
-
+char k = 'a';
+i++;
+++i;
+b = 2;
 while (i < 10) {
     if (i == 2) {
         // do things
