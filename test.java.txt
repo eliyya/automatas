@@ -58,3 +58,7 @@ void main(String args) {
 }
 
 main();
+
+{
+    int z = 0;
+}

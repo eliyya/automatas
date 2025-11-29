@@ -41,14 +41,14 @@ public class Parser {
 
     public static BlockStatment parse(List<Token> tokens, List<String> lines) {
         var parser = new Parser(tokens, lines);
-        return parse(false, parser);
+        return parseBlockStatment(false, parser);
     }
 
-    public static BlockStatment parse(Parser parser) {
-        return parse(true, parser);
+    public static BlockStatment parseBlockStatment(Parser parser) {
+        return parseBlockStatment(true, parser);
     }
 
-    private static BlockStatment parse(boolean inner, Parser parser) throws ExpectedError {
+    private static BlockStatment parseBlockStatment(boolean inner, Parser parser) throws ExpectedError {
         var body = new ArrayList<Statment>();
 
         while (parser.hasTokens()) {
@@ -76,7 +76,6 @@ public class Parser {
                     body.add(parseUnaryOperation(parser));
                 } else if (nextToken.kind() == TokenKind.OPEN_PAREN) {
                     // continue with function call
-                    // TODO: implementar
                     body.add(parseFunctionCallStatment(parser));
                 } else {
                     var expression = parseExpression(parser);
@@ -94,6 +93,8 @@ public class Parser {
                 body.add(parseControlFlowStatment(parser));
             } else if (currentToken.kind() == TokenKind.VAR) {
                 body.add(parseVarStatment(parser));
+            } else if (currentToken.kind() == TokenKind.OPEN_CURLY) {
+                body.add(parseBlockStatment(parser));
             } else {
                 // var expression = parseExpression(parser,
                 // BindingPower.DEFAULT_BP);
@@ -239,7 +240,7 @@ public class Parser {
         }
         parser.expect(TokenKind.CLOSE_PAREN);
         parser.expect(TokenKind.OPEN_CURLY);
-        var body = parse(parser);
+        var body = parseBlockStatment(parser);
         parser.expect(TokenKind.CLOSE_CURLY);
         return new FunctionStatment(type, identifier, parameters, body);
     }
@@ -426,7 +427,7 @@ public class Parser {
         var expression = parseExpression(parser);
         parser.expect(TokenKind.CLOSE_PAREN);
         parser.expect(TokenKind.OPEN_CURLY);
-        var body = parse(parser);
+        var body = parseBlockStatment(parser);
         parser.expect(TokenKind.CLOSE_CURLY);
         return new WhileStatment(expression, body);
     }
@@ -438,7 +439,7 @@ public class Parser {
         var expression = parseExpression(parser);
         parser.expect(TokenKind.CLOSE_PAREN);
         parser.expect(TokenKind.OPEN_CURLY);
-        var body = parse(parser);
+        var body = parseBlockStatment(parser);
         parser.expect(TokenKind.CLOSE_CURLY);
         if (parser.currentTokenKind() != TokenKind.ELSE) {
             return new IfStatment(expression, body);
@@ -452,7 +453,7 @@ public class Parser {
             return new IfStatment(expression, body, elseBody);
         }
         parser.expect(TokenKind.OPEN_CURLY);
-        var elseBody = parse(parser);
+        var elseBody = parseBlockStatment(parser);
         parser.expect(TokenKind.CLOSE_CURLY);
         return new IfStatment(expression, body, elseBody);
     }
@@ -467,7 +468,7 @@ public class Parser {
             var collection = parser.expect(TokenKind.IDENTIFIER);
             parser.expect(TokenKind.CLOSE_PAREN);
             parser.expect(TokenKind.OPEN_CURLY);
-            var body = parse(parser);
+            var body = parseBlockStatment(parser);
             parser.expect(TokenKind.CLOSE_CURLY);
             return new ForStatment(stat, collection, body);
         }
@@ -478,7 +479,7 @@ public class Parser {
         var increment = parseExpression(parser);
         parser.expect(TokenKind.CLOSE_PAREN);
         parser.expect(TokenKind.OPEN_CURLY);
-        var body = parse(parser);
+        var body = parseBlockStatment(parser);
         parser.expect(TokenKind.CLOSE_CURLY);
         return new ForStatment(stat, condition, increment, body);
     }
@@ -486,7 +487,7 @@ public class Parser {
     private static DoWhileStatment parseDoStatment(Parser parser) {
         parser.expect(TokenKind.DO);
         parser.expect(TokenKind.OPEN_CURLY);
-        var body = parse(parser);
+        var body = parseBlockStatment(parser);
         parser.expect(TokenKind.CLOSE_CURLY);
         parser.expect(TokenKind.WHILE);
         parser.expect(TokenKind.OPEN_PAREN);
