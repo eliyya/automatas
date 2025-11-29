@@ -25,7 +25,8 @@
             "name": "Launch with Arguments Prompt",
             "request": "launch",
             "mainClass": "com.compiler.App",
-            "args": "test.txt"
+            "args": "test.java.txt",
+            "vmArgs": "--enable-preview"
         }
     ]
 }

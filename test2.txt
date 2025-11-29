@@ -1,0 +1,25 @@
+int a;
+int b = 5; 
+int c = 10; int d = 20;
+int e = 30, f = 40;
+  
+a = b + 1;
+int g = 1 + 2 * a;
+int h=1+2*a;
+char i='a';
+String j="hola mundo";
+double k = 1.0;
+float l = 1.0f;
+boolean m = true;
+
+main() {
+    var n = false;
+}
+
+log(String a) {
+    var b = a;
+}
+
+add(int a, int b) {
+    var c = a + b;
+}
