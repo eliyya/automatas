@@ -6,18 +6,19 @@ import java.util.List;
 import com.compiler.ast.Expression;
 import com.compiler.ast.Statment;
 import com.compiler.ast.expressions.BinaryExpression;
-import com.compiler.ast.expressions.BooleanExpression;
-import com.compiler.ast.expressions.CharExpression;
+import com.compiler.ast.expressions.FunctionExpression;
 import com.compiler.ast.expressions.IdentifierExpression;
-import com.compiler.ast.expressions.NumberExpression;
-import com.compiler.ast.expressions.StringExpression;
+import com.compiler.ast.expressions.PrimaryExpression;
 import com.compiler.ast.expressions.UnaryOperationExpression;
+import com.compiler.ast.expressions.primary.BooleanExpression;
+import com.compiler.ast.expressions.primary.CharExpression;
+import com.compiler.ast.expressions.primary.NumberExpression;
+import com.compiler.ast.expressions.primary.StringExpression;
 import com.compiler.ast.statments.AssignmentStatment;
 import com.compiler.ast.statments.BlockStatment;
 import com.compiler.ast.statments.DeclarationStatment;
 import com.compiler.ast.statments.ExpressionStatment;
 import com.compiler.ast.statments.ContolFlowStatment;
-import com.compiler.ast.statments.FunctionCallStatment;
 import com.compiler.ast.statments.FunctionStatment;
 import com.compiler.ast.statments.ParameterStatment;
 import com.compiler.ast.statments.control_flow.DoWhileStatment;
@@ -142,7 +143,33 @@ public class Parser {
         return this.expect(kind, kind.text());
     }
 
-    public static Expression parsePrimaryExpression(Parser parser) {
+    public static Expression parseIdentifierExpression(Parser parser) {
+        var identifier = parser.currentToken();
+        var pp = parser.nextToken();
+        switch (pp.kind()) {
+            case PLUS_PLUS, MINUS_MINUS -> {
+                parser.advance();
+                parser.advance();
+                return new UnaryOperationExpression(identifier, pp, false);
+            }
+            case OPEN_PAREN -> {
+                return parseFunctionExpression(parser);
+            }
+            default -> {
+                parser.advance();
+                return new IdentifierExpression(identifier);
+            }
+        }
+    }
+
+    public static Expression parseParenthesizedExpression(Parser parser) {
+        parser.expect(TokenKind.OPEN_PAREN);
+        var expression = parseExpression(parser);
+        parser.expect(TokenKind.CLOSE_PAREN);
+        return expression;
+    }
+
+    public static PrimaryExpression parsePrimaryExpression(Parser parser) {
         switch (parser.currentTokenKind()) {
             case NUMBER_EXPRESSION -> {
                 var number = parser.advance();
@@ -160,22 +187,12 @@ public class Parser {
                 var bool = parser.advance();
                 return new BooleanExpression(bool);
             }
-            case IDENTIFIER -> {
-                var identifier = parser.advance();
-                var pp = parser.currentToken();
-                if (pp.kind() == TokenKind.PLUS_PLUS) {
-                    parser.advance();
-                    return new UnaryOperationExpression(identifier, pp, false);
-                } else {
-                    return new IdentifierExpression(identifier);
-                }
-            }
             default ->
                 throw new RuntimeException("Cannot parse primary expression from token : " + parser.currentTokenKind());
         }
     }
 
-    public static Expression parseBinaryExpression(Parser parser, Expression left, BindingPower bp) {
+    public static BinaryExpression parseBinaryExpression(Parser parser, Expression left, BindingPower bp) {
         var operator = parser.advance();
         var right = parseExpression(parser, bp);
         return new BinaryExpression(left, operator, right);
@@ -213,6 +230,22 @@ public class Parser {
         return left;
     }
 
+    private static FunctionExpression parseFunctionExpression(Parser parser) throws ExpectedError {
+        var identifier = parser.expect(TokenKind.IDENTIFIER);
+        parser.expect(TokenKind.OPEN_PAREN);
+        var parameters = new ArrayList<Expression>();
+        while (parser.currentTokenKind() != TokenKind.CLOSE_PAREN) {
+            parameters.add(parseExpression(parser));
+            if (parser.currentTokenKind() == TokenKind.COMMA) {
+                parser.advance();
+                continue;
+            }
+            break;
+        }
+        parser.expect(TokenKind.CLOSE_PAREN);
+        return new FunctionExpression(identifier, parameters);
+    }
+
     // -----------------------
     // parse function statment
     // -----------------------
@@ -239,12 +272,10 @@ public class Parser {
         return new FunctionStatment(type, identifier, parameters, body);
     }
 
-    private static FunctionCallStatment parseFunctionCallStatment(Parser parser) throws ExpectedError {
-        var identifier = parser.expect(TokenKind.IDENTIFIER);
-        parser.expect(TokenKind.OPEN_PAREN);
-        parser.expect(TokenKind.CLOSE_PAREN);
+    private static ExpressionStatment parseFunctionCallStatment(Parser parser) throws ExpectedError {
+        var functionCall = parseFunctionExpression(parser);
         parser.expect(TokenKind.SEMI);
-        return new FunctionCallStatment(identifier);
+        return new ExpressionStatment(functionCall);
     }
 
     private static ParameterStatment parseParameterStatment(Parser parser) throws ExpectedError {
@@ -267,7 +298,7 @@ public class Parser {
         parser.expect(TokenKind.SEMI);
         return new DeclarationStatment(type, identifier, value);
     }
-    
+
     private static List<DeclarationStatment> parseVariableStatment(Parser parser) throws ExpectedError {
         var declarations = new ArrayList<DeclarationStatment>();
 

@@ -1,9 +1,9 @@
-package com.compiler.ast.expressions;
+package com.compiler.ast.expressions.primary;
 
-import com.compiler.ast.Expression;
+import com.compiler.ast.expressions.PrimaryExpression;
 import com.compiler.lexer.Token;
 
-public class CharExpression implements Expression {
+public class CharExpression implements PrimaryExpression {
     final String _c = "CharExpression";
     Token value;
 

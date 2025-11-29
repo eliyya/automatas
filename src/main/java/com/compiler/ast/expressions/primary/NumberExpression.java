@@ -1,13 +1,13 @@
-package com.compiler.ast.expressions;
+package com.compiler.ast.expressions.primary;
 
-import com.compiler.ast.Expression;
+import com.compiler.ast.expressions.PrimaryExpression;
 import com.compiler.lexer.Token;
 
-public class BooleanExpression implements Expression {
-    final String _c = "BooleanExpression";
+public class NumberExpression implements PrimaryExpression {
+    final String _c = "NumberExpression";
     Token value;
 
-    public BooleanExpression(Token value) {
+    public NumberExpression(Token value) {
         this.value = value;
     }
 

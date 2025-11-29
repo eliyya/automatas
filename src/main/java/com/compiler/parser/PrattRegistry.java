@@ -41,7 +41,10 @@ public class PrattRegistry {
         PrattRegistry.nud(TokenKind.TRUE, BindingPower.PRIMARY, Parser::parsePrimaryExpression);
         PrattRegistry.nud(TokenKind.FALSE, BindingPower.PRIMARY, Parser::parsePrimaryExpression);
         PrattRegistry.nud(TokenKind.CHAR, BindingPower.PRIMARY, Parser::parsePrimaryExpression);
-        PrattRegistry.nud(TokenKind.IDENTIFIER, BindingPower.PRIMARY, Parser::parsePrimaryExpression);
+        PrattRegistry.nud(TokenKind.OPEN_PAREN, BindingPower.PRIMARY, Parser::parseParenthesizedExpression);
+
+        // identifiers
+        PrattRegistry.nud(TokenKind.IDENTIFIER, BindingPower.PRIMARY, Parser::parseIdentifierExpression);
     }
 
     public static void led(TokenKind kind, BindingPower bp, LedHandler fn) {

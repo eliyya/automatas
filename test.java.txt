@@ -1,5 +1,5 @@
 float a = 45.2 + 5 * 4;
-int b = 5;
+int b = (45.2 + 5) * 4;
 int c;
 float x;
 int x;
@@ -57,8 +57,8 @@ void main(String args) {
     var n = false;
 }
 
-main();
-
 {
     int z = 0;
 }
+
+main(1, "s", true, 1.0, 'a', 1.0f, a);
