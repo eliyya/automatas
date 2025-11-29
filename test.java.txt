@@ -53,6 +53,6 @@ do {
     // do things
 } while (i < 10);
 
-// main() {
-//     var n = false;
-// }
+main() {
+    var n = false;
+}
