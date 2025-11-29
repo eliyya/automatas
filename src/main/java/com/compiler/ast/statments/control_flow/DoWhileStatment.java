@@ -4,13 +4,18 @@ import com.compiler.ast.Expression;
 import com.compiler.ast.statments.BlockStatment;
 import com.compiler.ast.statments.ContolFlowStatment;
 
-public class DoStatment implements ContolFlowStatment {
+public class DoWhileStatment implements ContolFlowStatment {
     BlockStatment body;
     Expression condition;
 
-    public DoStatment(BlockStatment body, Expression condition) {
+    public DoWhileStatment(BlockStatment body, Expression condition) {
         this.body = body;
         this.condition = condition;
+    }
+
+    @Override
+    public String toString() {
+        return "do " + body + " while (" + condition + ");";
     }
 
     @Override

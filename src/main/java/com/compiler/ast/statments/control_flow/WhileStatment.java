@@ -15,6 +15,11 @@ public class WhileStatment implements ContolFlowStatment {
     }
 
     @Override
+    public String toString() {
+        return "while (" + condition + ") " + body;
+    }
+
+    @Override
     public void statment() {
         throw new UnsupportedOperationException("Not supported yet.");
     }

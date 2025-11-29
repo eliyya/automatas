@@ -6,13 +6,19 @@ import com.compiler.lexer.Token;
 public class UnaryOperationExpression implements Expression {
     final String _c = "UnaryOperationExpression";
     Token identifier;
-    Token operation;
+    Token operator;
     boolean prefix;
 
     public UnaryOperationExpression(Token identifier, Token operation, boolean prefix) {
         this.identifier = identifier;
-        this.operation = operation;
+        this.operator = operation;
         this.prefix = prefix;
+    }
+
+    @Override
+    public String toString() {
+        if (prefix) return operator.value() + identifier.value();
+        else return identifier.value() + operator.value();
     }
 
     @Override

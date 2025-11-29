@@ -11,6 +11,11 @@ public class StringExpression implements Expression {
     }
 
     @Override
+    public String toString() {
+        return "\"" + value + "\"";
+    }
+
+    @Override
     public void expression() {
         throw new UnsupportedOperationException("Unimplemented method 'expression'");
     }

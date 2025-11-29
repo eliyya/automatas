@@ -12,6 +12,11 @@ public class ExpressionStatment implements Statment {
     }
     
     @Override
+    public String toString() {
+        return expression + ";";
+    }
+    
+    @Override
     public void statment() {
         throw new UnsupportedOperationException("Unimplemented method 'statment'");
     }

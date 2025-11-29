@@ -4,10 +4,15 @@ import com.compiler.ast.Expression;
 
 public class BooleanExpression implements Expression {
     final String _c = "BooleanExpression";
-    String value;
+    boolean value;
 
-    public BooleanExpression(String value) {
+    public BooleanExpression(boolean  value) {
         this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return "" + value;
     }
 
     @Override

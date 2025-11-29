@@ -17,7 +17,7 @@ import com.compiler.ast.statments.BlockStatment;
 import com.compiler.ast.statments.DeclarationStatment;
 import com.compiler.ast.statments.ExpressionStatment;
 import com.compiler.ast.statments.ContolFlowStatment;
-import com.compiler.ast.statments.control_flow.DoStatment;
+import com.compiler.ast.statments.control_flow.DoWhileStatment;
 import com.compiler.ast.statments.control_flow.ForStatment;
 import com.compiler.ast.statments.control_flow.IfStatment;
 import com.compiler.ast.statments.control_flow.WhileStatment;
@@ -152,7 +152,7 @@ public class Parser {
                 return new CharExpression(string);
             }
             case TRUE, FALSE -> {
-                var bool = parser.advance().value();
+                var bool = "true".equals(parser.advance().value());
                 return new BooleanExpression(bool);
             }
             case IDENTIFIER -> {
@@ -415,7 +415,7 @@ public class Parser {
         return new ForStatment(stat, condition, increment, body);
     }
 
-    private static DoStatment parseDoStatment(Parser parser) {
+    private static DoWhileStatment parseDoStatment(Parser parser) {
         parser.expect(TokenKind.DO);
         parser.expect(TokenKind.OPEN_CURLY);
         var body = parse(parser);
@@ -425,6 +425,6 @@ public class Parser {
         var expression = parseExpression(parser);
         parser.expect(TokenKind.CLOSE_PAREN);
         parser.expect(TokenKind.SEMI);
-        return new DoStatment(body, expression);
+        return new DoWhileStatment(body, expression);
     }
 }

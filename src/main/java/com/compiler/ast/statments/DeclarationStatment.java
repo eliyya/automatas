@@ -23,7 +23,10 @@ public class DeclarationStatment implements Statment {
 
     @Override
     public String toString() {
-        return "DeclarationStatment [type=" + type.value() + ", identifier=" + identifier.value() + ", expression=" + expression + "]";
+        if (expression == null) {
+            return type.value() + " " + identifier.value() + ";";
+        }
+        return type.value() + " " + identifier.value() + " = " + expression + ";";
     }
     
 }

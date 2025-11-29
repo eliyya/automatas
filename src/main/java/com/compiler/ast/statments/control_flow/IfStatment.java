@@ -22,6 +22,14 @@ public class IfStatment implements ContolFlowStatment {
     }
 
     @Override
+    public String toString() {
+        if (elseBody == null) {
+            return "if (" + condition + ") " + body;
+        }
+        return "if (" + condition + ") " + body + " else " + elseBody;
+    }
+
+    @Override
     public void statment() {
         throw new UnsupportedOperationException("Not supported yet.");
     }

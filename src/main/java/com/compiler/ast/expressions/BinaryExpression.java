@@ -16,6 +16,11 @@ public class BinaryExpression implements Expression {
     }
 
     @Override
+    public String toString() {
+        return left.toString() + " " + operator.value() + " " + right.toString();
+    }
+    
+    @Override
     public void expression() {
         throw new UnsupportedOperationException("Unimplemented method 'expression'");
     }

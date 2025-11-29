@@ -12,7 +12,7 @@ public class NumberExpression implements Expression {
 
     @Override
     public String toString() {
-        return "NumberExpression{" + "value=" + value + '}';
+        return "" + value;
     }
 
     @Override

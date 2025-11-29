@@ -38,6 +38,14 @@ public class ForStatment implements ContolFlowStatment {
     }
 
     @Override
+    public String toString() {
+        if (type == ForType.FOREACH) {
+            return "for (" + statment + " : " + collection.value() + ") " + body;
+        }
+        return "for (" + statment + "; " + condition + "; " + increment + ") " + body;
+    }
+
+    @Override
     public void statment() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'statment'");

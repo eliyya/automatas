@@ -17,6 +17,11 @@ public class AssignmentStatment implements Statment {
     }
 
     @Override
+    public String toString() {
+        return identifier.value() + " " + operator.value() + " " + expression + ";";
+    }
+
+    @Override
     public void statment() {
         throw new UnsupportedOperationException("Unimplemented method 'statment'");
     }
