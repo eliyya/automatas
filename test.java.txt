@@ -53,6 +53,8 @@ do {
     // do things
 } while (i < 10);
 
-void main() {
+void main(String args) {
     var n = false;
 }
+
+main();

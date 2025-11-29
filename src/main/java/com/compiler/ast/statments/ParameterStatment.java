@@ -3,12 +3,19 @@ package com.compiler.ast.statments;
 import com.compiler.ast.Statment;
 import com.compiler.lexer.Token;
 
-public class FunctionCallStatment implements Statment {
-    String _class = "FunctionCallStatment";
+public class ParameterStatment implements Statment {
+    String _class = "ParameterStatment";
+    Token type;
     Token name;
 
-    public FunctionCallStatment(Token name) {
+    public ParameterStatment(Token type, Token name) {
+        this.type = type;
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return type.value() + " " + name;
     }
 
     @Override

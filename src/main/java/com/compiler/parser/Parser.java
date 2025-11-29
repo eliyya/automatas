@@ -19,6 +19,7 @@ import com.compiler.ast.statments.ExpressionStatment;
 import com.compiler.ast.statments.ContolFlowStatment;
 import com.compiler.ast.statments.FunctionCallStatment;
 import com.compiler.ast.statments.FunctionStatment;
+import com.compiler.ast.statments.ParameterStatment;
 import com.compiler.ast.statments.control_flow.DoWhileStatment;
 import com.compiler.ast.statments.control_flow.ForStatment;
 import com.compiler.ast.statments.control_flow.IfStatment;
@@ -227,11 +228,20 @@ public class Parser {
         }
         var identifier = parser.expect(TokenKind.IDENTIFIER);
         parser.expect(TokenKind.OPEN_PAREN);
+        var parameters = new ArrayList<ParameterStatment>();
+        while (parser.currentTokenKind() != TokenKind.CLOSE_PAREN) {
+            parameters.add(parseParameterStatment(parser));
+            if (parser.currentTokenKind() == TokenKind.COMMA) {
+                parser.advance();
+                continue;
+            }
+            break;
+        }
         parser.expect(TokenKind.CLOSE_PAREN);
         parser.expect(TokenKind.OPEN_CURLY);
         var body = parse(parser);
         parser.expect(TokenKind.CLOSE_CURLY);
-        return new FunctionStatment(type, identifier.value(), body);
+        return new FunctionStatment(type, identifier, parameters, body);
     }
 
     private static FunctionCallStatment parseFunctionCallStatment(Parser parser) throws ExpectedError {
@@ -239,7 +249,16 @@ public class Parser {
         parser.expect(TokenKind.OPEN_PAREN);
         parser.expect(TokenKind.CLOSE_PAREN);
         parser.expect(TokenKind.SEMI);
-        return new FunctionCallStatment(identifier.value());
+        return new FunctionCallStatment(identifier);
+    }
+
+    private static ParameterStatment parseParameterStatment(Parser parser) throws ExpectedError {
+        var type = parser.advance();
+        if (!TokenKind.isPrimitiveType(type)) {
+            throw new ExpectedError(parser, "type", type);
+        }
+        var identifier = parser.expect(TokenKind.IDENTIFIER);
+        return new ParameterStatment(type, identifier);
     }
 
     // -----------------------

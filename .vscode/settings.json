@@ -10,6 +10,6 @@
     "java.compile.nullAnalysis.mode": "automatic",
     "java.jdt.ls.vmargs": "--enable-preview",
     "files.associations": {
-        "*.java.txt": "java",
+        "*.java.txt": "go",
     }
 }
