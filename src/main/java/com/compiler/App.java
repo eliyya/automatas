@@ -1,5 +1,7 @@
 package com.compiler;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -19,12 +21,21 @@ public class App {
             System.out.println("No se proporcionó ningún archivo. especifique la ruta del archivo como argumento.");
             return;
         }
+
         var source = Files.readString(Path.of(args[0]));
+        // --------------------
+        // lexer - tokenization
+        // --------------------
         var tokens = Lexer.tokenize(source);
         var lines = source.lines().toList();
         printTokens(tokens);
+        writeTokens(tokens);
+        // ----------------
+        // parser - parsing
+        // ----------------
         var ast = Parser.parse(tokens, lines);
         printAST(ast);
+        writeAST(ast);
     }
 
     private static void printTokens(List<Token> tokens) {
@@ -45,5 +56,37 @@ public class App {
                 .setPrettyPrinting()
                 .create();
         System.out.println(gson.toJson(ast));
+    }
+
+    private static void writeTokens(List<Token> tokens) {
+        try (var writer = new FileWriter("tokens.log")) {
+            for (var token : tokens) {
+                if (token.kind() == TokenKind.STRING_EXPRESSION
+                        || token.kind() == TokenKind.NUMBER_EXPRESSION
+                        || token.kind() == TokenKind.CHAR
+                        || token.kind() == TokenKind.IDENTIFIER) {
+                    writer.write(token.kind().toString() + " (" + token.value() + ")\n");
+                } else {
+                    writer.write(token.kind().toString() + "\n");
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("");
+            System.out.println("Error al escribir tokens");
+            System.out.println("");
+        }
+    }
+
+    private static void writeAST(Statment ast) {
+        try (var writer = new FileWriter("ast.json")) {
+            Gson gson = new GsonBuilder()
+                    .setPrettyPrinting()
+                    .create();
+            writer.write(gson.toJson(ast));
+        } catch (IOException e) {
+            System.out.println("");
+            System.out.println("Error al escribir AST");
+            System.out.println("");
+        }
     }
 }

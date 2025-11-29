@@ -52,7 +52,6 @@ public class Parser {
         var body = new ArrayList<Statment>();
 
         while (parser.hasTokens()) {
-            System.out.println(parser.currentToken());
             if (inner && parser.currentTokenKind() == TokenKind.CLOSE_CURLY)
                 break;
             var currentToken = parser.currentToken();
@@ -94,15 +93,10 @@ public class Parser {
             } else if (currentToken.kind() == TokenKind.VAR) {
                 body.add(parseVarStatment(parser));
             } else if (currentToken.kind() == TokenKind.OPEN_CURLY) {
+                parser.expect(TokenKind.OPEN_CURLY);
                 body.add(parseBlockStatment(parser));
+                parser.expect(TokenKind.CLOSE_CURLY);
             } else {
-                // var expression = parseExpression(parser,
-                // BindingPower.DEFAULT_BP);
-                // var semi = parser.advance();
-                // if (semi.kind() != TokenKind.SEMI) {
-                // throw new ExpectedError(parser, ";", semi);
-                // }
-                // body.add(new ExpressionStatment(expression));
                 throw new ExpectedError(parser, "statment", currentToken);
             }
         }
@@ -151,19 +145,19 @@ public class Parser {
     public static Expression parsePrimaryExpression(Parser parser) {
         switch (parser.currentTokenKind()) {
             case NUMBER_EXPRESSION -> {
-                var number = Float.parseFloat(parser.advance().value());
+                var number = parser.advance();
                 return new NumberExpression(number);
             }
             case STRING_EXPRESSION -> {
-                var string = parser.advance().value();
+                var string = parser.advance();
                 return new StringExpression(string);
             }
             case CHAR -> {
-                var string = parser.advance().value();
+                var string = parser.advance();
                 return new CharExpression(string);
             }
             case TRUE, FALSE -> {
-                var bool = "true".equals(parser.advance().value());
+                var bool = parser.advance();
                 return new BooleanExpression(bool);
             }
             case IDENTIFIER -> {
@@ -173,7 +167,7 @@ public class Parser {
                     parser.advance();
                     return new UnaryOperationExpression(identifier, pp, false);
                 } else {
-                    return new IdentifierExpression(identifier.value());
+                    return new IdentifierExpression(identifier);
                 }
             }
             default ->

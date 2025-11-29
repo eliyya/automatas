@@ -1,18 +1,19 @@
 package com.compiler.ast.expressions;
 
 import com.compiler.ast.Expression;
+import com.compiler.lexer.Token;
 
 public class CharExpression implements Expression {
     final String _c = "CharExpression";
-    String value;
+    Token value;
 
-    public CharExpression(String value) {
+    public CharExpression(Token value) {
         this.value = value;
     }
 
     @Override
     public String toString() {
-        return "'" + value + "'";
+        return "'" + value.value() + "'";
     }
 
     @Override
