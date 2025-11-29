@@ -53,6 +53,6 @@ do {
     // do things
 } while (i < 10);
 
-main() {
+void main() {
     var n = false;
 }

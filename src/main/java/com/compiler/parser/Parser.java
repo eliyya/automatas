@@ -91,6 +91,8 @@ public class Parser {
                 // start with control flow
             } else if (TokenKind.isControlFlow(currentToken.kind())) {
                 body.add(parseControlFlowStatment(parser));
+            } else if (currentToken.kind() == TokenKind.VAR) {
+                body.add(parseVarStatment(parser));
             } else {
                 // var expression = parseExpression(parser,
                 // BindingPower.DEFAULT_BP);
@@ -243,6 +245,15 @@ public class Parser {
     // -----------------------
     // parse variable statment
     // -----------------------
+    private static DeclarationStatment parseVarStatment(Parser parser) throws ExpectedError {
+        var type = parser.expect(TokenKind.VAR);
+        var identifier = parser.expect(TokenKind.IDENTIFIER);
+        parser.expect(TokenKind.ASSIGNMENT);
+        var value = parseExpression(parser);
+        parser.expect(TokenKind.SEMI);
+        return new DeclarationStatment(type, identifier, value);
+    }
+    
     private static List<DeclarationStatment> parseVariableStatment(Parser parser) throws ExpectedError {
         var declarations = new ArrayList<DeclarationStatment>();
 
