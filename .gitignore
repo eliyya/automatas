@@ -5,6 +5,7 @@
 *.log
 analized.json
 tree.json
+ast.json
 
 # Package Files
 *.jar
