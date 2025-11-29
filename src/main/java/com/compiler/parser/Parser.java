@@ -214,7 +214,7 @@ public class Parser {
         var declarations = new ArrayList<DeclarationStatment>();
         var tokenKind = parser.advance();
         if (!TokenKind.isPrimitiveType(tokenKind)) {
-            throw new ExpectedError(parser, "primitive type", tokenKind);
+            throw new ExpectedError(parser, "type", tokenKind);
         }
         while (true) {
             var identifier = parser.expect(TokenKind.IDENTIFIER);
@@ -246,7 +246,7 @@ public class Parser {
     private static DeclarationStatment parseUniqueVariableStatment(Parser parser) throws ExpectedError {
         var tokenKind = parser.advance();
         if (!TokenKind.isPrimitiveType(tokenKind)) {
-            throw new ExpectedError(parser, "primitive type", tokenKind);
+            throw new ExpectedError(parser, "type", tokenKind);
         }
         var identifier = parser.expect(TokenKind.IDENTIFIER);
         return new DeclarationStatment(tokenKind, identifier, null);
