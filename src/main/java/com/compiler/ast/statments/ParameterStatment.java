@@ -4,7 +4,7 @@ import com.compiler.ast.Statment;
 import com.compiler.lexer.Token;
 
 public class ParameterStatment implements Statment {
-    String _class = "ParameterStatment";
+    String _c = "ParameterStatment";
     Token type;
     Token name;
 

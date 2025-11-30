@@ -21,7 +21,7 @@ public class ExpressionParser {
         var tokenKind = parser.currentTokenKind();
         var nud = PrattRegistry.nudLU.get(tokenKind);
         if (nud == null) {
-            throw new RuntimeException("nud handler expected for token : " + tokenKind);
+            throw new RuntimeException("nud handler expected for token: " + tokenKind);
         }
         var left = nud.handle(parser);
 

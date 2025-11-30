@@ -136,7 +136,12 @@ public class Lexer {
                 int row = lexer.row;
                 int col = lexer.col;
                 lexer.advanceN(match.end());
-                lexer.push(new Token(kind, match.group(), row, col));
+                var value = switch (kind) {
+                    case STRING_EXPRESSION -> match.group().substring(1, match.group().length() - 1);
+                    case CHAR -> match.group().substring(1, match.group().length() - 1);
+                    default -> match.group();
+                };
+                lexer.push(new Token(kind, value, row, col));
             }
         };
     }

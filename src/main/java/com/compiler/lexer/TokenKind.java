@@ -114,24 +114,25 @@ public enum TokenKind {
 
 	public static boolean isReservedKeyword(TokenKind kind) {
 		return kind == TokenKind.VAR
-			|| kind == TokenKind.IF
-			|| kind == TokenKind.ELSE
-			|| kind == TokenKind.WHILE
-			|| kind == TokenKind.FOR
-			|| kind == TokenKind.DO
-			|| kind == TokenKind.SHORT
-			|| kind == TokenKind.LONG
-			|| kind == TokenKind.FLOAT
-			|| kind == TokenKind.DOUBLE
-			|| kind == TokenKind.BYTE
-			|| kind == TokenKind.INT
-			|| kind == TokenKind.CHAR
-			|| kind == TokenKind.BOOLEAN
-			|| kind == TokenKind.NULL
-			|| kind == TokenKind.TRUE
-			|| kind == TokenKind.FALSE
-			|| kind == TokenKind.STRING
-			|| kind == TokenKind.RETURN;
+				|| kind == TokenKind.IF
+				|| kind == TokenKind.ELSE
+				|| kind == TokenKind.WHILE
+				|| kind == TokenKind.FOR
+				|| kind == TokenKind.DO
+				|| kind == TokenKind.SHORT
+				|| kind == TokenKind.LONG
+				|| kind == TokenKind.FLOAT
+				|| kind == TokenKind.DOUBLE
+				|| kind == TokenKind.BYTE
+				|| kind == TokenKind.VOID
+				|| kind == TokenKind.INT
+				|| kind == TokenKind.CHAR
+				|| kind == TokenKind.BOOLEAN
+				|| kind == TokenKind.NULL
+				|| kind == TokenKind.TRUE
+				|| kind == TokenKind.FALSE
+				|| kind == TokenKind.STRING
+				|| kind == TokenKind.RETURN;
 	}
 
 	public static boolean isReservedKeyword(String text) {
@@ -145,15 +146,15 @@ public enum TokenKind {
 
 	public static boolean isPrimitiveType(TokenKind kind) {
 		return kind == TokenKind.VOID
-			|| kind == TokenKind.SHORT
-			|| kind == TokenKind.LONG
-			|| kind == TokenKind.FLOAT
-			|| kind == TokenKind.DOUBLE
-			|| kind == TokenKind.BYTE
-			|| kind == TokenKind.INT
-			|| kind == TokenKind.CHAR
-			|| kind == TokenKind.BOOLEAN
-			|| kind == TokenKind.STRING;
+				|| kind == TokenKind.SHORT
+				|| kind == TokenKind.LONG
+				|| kind == TokenKind.FLOAT
+				|| kind == TokenKind.DOUBLE
+				|| kind == TokenKind.BYTE
+				|| kind == TokenKind.INT
+				|| kind == TokenKind.CHAR
+				|| kind == TokenKind.BOOLEAN
+				|| kind == TokenKind.STRING;
 	}
 
 	public static boolean isPrimitiveType(Token token) {
@@ -166,11 +167,11 @@ public enum TokenKind {
 
 	public static boolean isAssignment(TokenKind kind) {
 		return kind == TokenKind.ASSIGNMENT
-			|| kind == TokenKind.PLUS_ASSIGNMENT
-			|| kind == TokenKind.MINUS_ASSIGNMENT
-			|| kind == TokenKind.STAR_ASSIGNMENT
-			|| kind == TokenKind.SLASH_ASSIGNMENT
-			|| kind == TokenKind.PERCENT_ASSIGNMENT;
+				|| kind == TokenKind.PLUS_ASSIGNMENT
+				|| kind == TokenKind.MINUS_ASSIGNMENT
+				|| kind == TokenKind.STAR_ASSIGNMENT
+				|| kind == TokenKind.SLASH_ASSIGNMENT
+				|| kind == TokenKind.PERCENT_ASSIGNMENT;
 	}
 
 	public static boolean isAssignment(Token token) {
@@ -183,7 +184,7 @@ public enum TokenKind {
 
 	public static boolean isUnaryOperation(TokenKind kind) {
 		return kind == TokenKind.PLUS_PLUS
-			|| kind == TokenKind.MINUS_MINUS;
+				|| kind == TokenKind.MINUS_MINUS;
 	}
 
 	public static boolean isUnaryOperation(Token token) {
@@ -196,11 +197,11 @@ public enum TokenKind {
 
 	public static boolean isControlFlow(TokenKind kind) {
 		return kind == TokenKind.WHILE
-			|| kind == TokenKind.FOR
-			|| kind == TokenKind.DO
-			|| kind == TokenKind.IF
-			|| kind == TokenKind.SWITCH
-			|| kind == TokenKind.ELSE;
+				|| kind == TokenKind.FOR
+				|| kind == TokenKind.DO
+				|| kind == TokenKind.IF
+				|| kind == TokenKind.SWITCH
+				|| kind == TokenKind.ELSE;
 	}
 
 	public static boolean isControlFlow(String text) {

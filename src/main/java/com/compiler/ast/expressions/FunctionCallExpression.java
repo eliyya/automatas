@@ -6,7 +6,7 @@ import com.compiler.ast.Expression;
 import com.compiler.lexer.Token;
 
 public class FunctionCallExpression implements Expression {
-    String _class = "FunctionCallExpression";
+    String _c = "FunctionCallExpression";
     Token name;
     List<Expression> parameters;
 

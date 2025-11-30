@@ -2,14 +2,13 @@ package com.compiler.ast.statments.declaration;
 
 import java.util.List;
 
-import com.compiler.ast.Statment;
 import com.compiler.ast.statments.BlockStatment;
 import com.compiler.ast.statments.DeclarationStatment;
 import com.compiler.ast.statments.ParameterStatment;
 import com.compiler.lexer.Token;
 
 public class DeclarationFunctionStatment implements DeclarationStatment {
-    String _class = "DeclarationFunctionStatment";
+    String _c = "DeclarationFunctionStatment";
     Token type;
     Token name;
     List<ParameterStatment> parameters;

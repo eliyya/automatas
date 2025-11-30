@@ -4,12 +4,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 
 import com.compiler.ast.Statment;
 import com.compiler.lexer.Lexer;
 import com.compiler.lexer.Token;
-import com.compiler.lexer.TokenKind;
 import com.compiler.parser.Parser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,39 +30,39 @@ public class App {
         }
 
         var source = Files.readString(Path.of(args[0]));
+
         // --------------------
         // lexer - tokenization
         // --------------------
         var tokens = Lexer.tokenize(source);
-        var lines = source.lines().toList();
+        // print tokens
+        printTokens(tokens);
+        
         // ----------------
         // parser - parsing
         // ----------------
-        var ast = Parser.parse(tokens, lines);
-        // ----------------
-        // print - printing
-        // ----------------
-        printTokens(tokens);
+        var ast = Parser.parse(tokens, source.lines().toList());
+        // print
         printAST(ast);
-        // ----------------
-        // write - writing
-        // ----------------
+        // write
         writeTokens(tokens);
         writeAST(ast);
         writeASTTree(ast);
     }
 
     private static void printTokens(List<Token> tokens) {
+        var tnl = getMaxNameLen(tokens);
+        var tvl = getMaxValueLen(tokens);
         for (var token : tokens) {
-            if (token.kind() == TokenKind.STRING_EXPRESSION
-                    || token.kind() == TokenKind.NUMBER_EXPRESSION
-                    || token.kind() == TokenKind.CHAR
-                    || token.kind() == TokenKind.IDENTIFIER) {
-                IO.println(token.kind().toString() + " (" + token.value() + ") [" + token.line() + ":"
-                        + token.column() + "]");
-            } else {
-                IO.println(token.kind().toString() + " [" + token.line() + ":" + token.column() + "]");
-            }
+            // name
+            IO.println(format(token.kind().toString(), ConsoleColor.WHITE_BRIGHT)
+                    + " ".repeat(tnl - token.kind().toString().length())
+                    // value
+                    + " (" + format(token.value(), ConsoleColor.GREEN_BOLD_BRIGHT) + ") "
+                    + " ".repeat(tvl - token.value().length())
+                    // position
+                    + "[" + format(token.line(), ConsoleColor.BLUE_BOLD_BRIGHT) + ":"
+                    + format(token.column(), ConsoleColor.BLUE_BOLD_BRIGHT) + "]");
         }
     }
 
@@ -69,7 +70,16 @@ public class App {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .create();
-        IO.println(gson.toJson(ast));
+        var json = gson.toJson(ast);
+        json = json.replaceAll(
+                "(?s)\\{\\s*\"_c\"\\s*:\\s*\"([^\"]+)\"\\s*,?",
+                "$1 {");
+        json = colorizeBraces(json);
+        json = json.replaceAll("\"([^\"]*)\"\\:", format("$1", ConsoleColor.BLACK_BRIGHT) + ":");
+        json = json.replaceAll("\"([^\"]*)\"", "\"" + format("$1", ConsoleColor.GREEN) + "\"");
+        json = json.replaceAll(": (true|false)", ": " + format("$1", ConsoleColor.GREEN));
+        json = json.replaceAll(": (\\d*)", ": " + format("$1", ConsoleColor.GREEN));
+        IO.println(json);
     }
 
     private static void writeTokens(List<Token> tokens) {
@@ -143,7 +153,8 @@ public class App {
             IO.println("  - dirigirse a " + format("File", ConsoleColor.BLUE) + " -> "
                     + format("Import", ConsoleColor.BLUE));
             IO.println(
-                    "  - arrastrar el archivo " + format("tree.json", ConsoleColor.BLUE_UNDERLINED) + " a la herramienta");
+                    "  - arrastrar el archivo " + format("tree.json", ConsoleColor.BLUE_UNDERLINED)
+                            + " a la herramienta");
             IO.println("--------------------------------------------------------");
             IO.println("");
         } catch (IOException e) {
@@ -153,7 +164,87 @@ public class App {
         }
     }
 
-    private static String format(String text, ConsoleColor color) {
+    private static String format(Object text, ConsoleColor color) {
         return ConsoleColor.format(text, color);
     }
+
+    private static int getMaxNameLen(List<Token> tokens) {
+        int max = 0;
+        for (var token : tokens) {
+            if (token.kind().toString().length() > max) {
+                max = token.kind().toString().length();
+            }
+        }
+        return max;
+    }
+
+    private static int getMaxValueLen(List<Token> tokens) {
+        int max = 0;
+        for (var token : tokens) {
+            if (token.value().length() > max) {
+                max = token.value().length();
+            }
+        }
+        return max;
+    }
+
+    public static String colorizeBraces(String json) {
+        // Paleta de colores para cada nivel (puedes agregar más)
+        ConsoleColor[] palette = new ConsoleColor[] {
+                ConsoleColor.YELLOW,
+                ConsoleColor.GREEN,
+                ConsoleColor.CYAN,
+                ConsoleColor.BLUE,
+                ConsoleColor.PURPLE,
+                ConsoleColor.RED
+        };
+
+        StringBuilder result = new StringBuilder();
+        Deque<ConsoleColor> stack = new ArrayDeque<>();
+        int level = 0;
+
+        for (int i = 0; i < json.length(); i++) {
+            char c = json.charAt(i);
+
+            // Detectar secuencia ANSI: \033[
+            if (c == '\033' && i + 1 < json.length() && json.charAt(i + 1) == '[') {
+                int start = i;
+                i += 2;
+
+                // avanzar hasta encontrar la letra final del código (A-Z o a-z)
+                while (i < json.length()) {
+                    char cc = json.charAt(i);
+                    if ((cc >= 'A' && cc <= 'Z') || (cc >= 'a' && cc <= 'z')) {
+                        i++;
+                        break;
+                    }
+                    i++;
+                }
+
+                String ansi = json.substring(start, i);
+                result.append(ansi);
+                i--;
+                continue;
+            }
+
+            if (c == '{' || c == '[') {
+                ConsoleColor col = palette[level % palette.length];
+                stack.push(col);
+
+                result.append(format(String.valueOf(c), col));
+                level++;
+            } else if (c == '}' || c == ']') {
+                level--;
+
+                ConsoleColor col = stack.pop();
+
+                result.append(format(String.valueOf(c), col));
+            } else {
+                result.append(c);
+            }
+        }
+
+        return result.toString();
+    }
+
 }
