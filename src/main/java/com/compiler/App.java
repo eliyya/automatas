@@ -37,7 +37,7 @@ public class App {
         var tokens = Lexer.tokenize(source);
         // print tokens
         printTokens(tokens);
-        
+
         // ----------------
         // parser - parsing
         // ----------------
@@ -71,14 +71,12 @@ public class App {
                 .setPrettyPrinting()
                 .create();
         var json = gson.toJson(ast);
-        json = json.replaceAll(
-                "(?s)\\{\\s*\"_c\"\\s*:\\s*\"([^\"]+)\"\\s*,?",
-                "$1 {");
-        json = colorizeBraces(json);
+        json = json.replaceAll("(?s)\\{\\s*\"_c\"\\s*:\\s*\"([^\"]+)\"\\s*,?", "$1 {");
         json = json.replaceAll("\"([^\"]*)\"\\:", format("$1", ConsoleColor.BLACK_BRIGHT) + ":");
         json = json.replaceAll("\"([^\"]*)\"", "\"" + format("$1", ConsoleColor.GREEN) + "\"");
         json = json.replaceAll(": (true|false)", ": " + format("$1", ConsoleColor.GREEN));
         json = json.replaceAll(": (\\d*)", ": " + format("$1", ConsoleColor.GREEN));
+        json = colorizeBraces(json);
         IO.println(json);
     }
 
@@ -189,14 +187,13 @@ public class App {
     }
 
     public static String colorizeBraces(String json) {
-        // Paleta de colores para cada nivel (puedes agregar más)
         ConsoleColor[] palette = new ConsoleColor[] {
+                ConsoleColor.CYAN,
+                ConsoleColor.RED,
                 ConsoleColor.YELLOW,
                 ConsoleColor.GREEN,
-                ConsoleColor.CYAN,
                 ConsoleColor.BLUE,
                 ConsoleColor.PURPLE,
-                ConsoleColor.RED
         };
 
         StringBuilder result = new StringBuilder();
@@ -204,14 +201,13 @@ public class App {
         int level = 0;
 
         for (int i = 0; i < json.length(); i++) {
-            char c = json.charAt(i);
+            var c = json.charAt(i);
 
             // Detectar secuencia ANSI: \033[
             if (c == '\033' && i + 1 < json.length() && json.charAt(i + 1) == '[') {
                 int start = i;
                 i += 2;
 
-                // avanzar hasta encontrar la letra final del código (A-Z o a-z)
                 while (i < json.length()) {
                     char cc = json.charAt(i);
                     if ((cc >= 'A' && cc <= 'Z') || (cc >= 'a' && cc <= 'z')) {
@@ -221,23 +217,21 @@ public class App {
                     i++;
                 }
 
-                String ansi = json.substring(start, i);
+                var ansi = json.substring(start, i);
                 result.append(ansi);
                 i--;
                 continue;
             }
 
             if (c == '{' || c == '[') {
-                ConsoleColor col = palette[level % palette.length];
+                var col = palette[level % palette.length];
                 stack.push(col);
 
                 result.append(format(String.valueOf(c), col));
                 level++;
             } else if (c == '}' || c == ']') {
                 level--;
-
-                ConsoleColor col = stack.pop();
-
+                var col = stack.pop();
                 result.append(format(String.valueOf(c), col));
             } else {
                 result.append(c);
