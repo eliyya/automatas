@@ -9,11 +9,16 @@ import com.compiler.ast.expressions.FunctionCallExpression;
 import com.compiler.ast.expressions.IdentifierExpression;
 import com.compiler.ast.expressions.PrimaryExpression;
 import com.compiler.ast.expressions.UnaryOperationExpression;
+import com.compiler.ast.expressions.primary.BinaryNumberExpression;
 import com.compiler.ast.expressions.primary.BooleanExpression;
 import com.compiler.ast.expressions.primary.CharExpression;
+import com.compiler.ast.expressions.primary.FloatNumberExpression;
+import com.compiler.ast.expressions.primary.HexadecimalNumberExpression;
 import com.compiler.ast.expressions.primary.NumberExpression;
+import com.compiler.ast.expressions.primary.OctalNumberExpression;
 import com.compiler.ast.expressions.primary.StringExpression;
 import com.compiler.errors.ExpectedError;
+import com.compiler.lexer.Token;
 import com.compiler.lexer.TokenKind;
 
 public class ExpressionParser {
@@ -97,11 +102,36 @@ public class ExpressionParser {
         return expression;
     }
 
+    private static boolean isF(Token token) {
+        return token.value().endsWith("f") || token.value().endsWith("F");
+    }
+
     public static PrimaryExpression parsePrimaryExpression(Parser parser) {
         switch (parser.currentTokenKind()) {
             case NUMBER_EXPRESSION -> {
                 var number = parser.advance();
                 return new NumberExpression(number);
+            }
+            case BINARY_EXPRESSION -> {
+                var number = parser.advance();
+                if (isF(number)) {
+                    return new FloatNumberExpression(number);
+                }
+                return new BinaryNumberExpression(number);
+            }
+            case OCTAL_EXPRESSION -> {
+                var number = parser.advance();
+                if (isF(number)) {
+                    return new FloatNumberExpression(number);
+                }
+                return new OctalNumberExpression(number);
+            }
+            case HEXADECIMAL_EXPRESSION -> {
+                var number = parser.advance();
+                if (isF(number)) {
+                    return new FloatNumberExpression(number);
+                }
+                return new HexadecimalNumberExpression(number);
             }
             case STRING_EXPRESSION -> {
                 var string = parser.advance();

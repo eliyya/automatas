@@ -8,9 +8,13 @@ public enum TokenKind {
 	NULL("null"),
 	TRUE("true"),
 	FALSE("false"),
-	NUMBER_EXPRESSION("number"),
-	STRING_EXPRESSION("string"),
-	IDENTIFIER("identifier"),
+	BINARY_EXPRESSION(""),
+	NUMBER_EXPRESSION(""),
+	OCTAL_EXPRESSION(""),
+	HEXADECIMAL_EXPRESSION(""),
+	FLOAT_EXPRESSION(""),
+	STRING_EXPRESSION(""),
+	IDENTIFIER(""),
 	// types
 	VOID("void"),
 	SHORT("short"),
@@ -212,5 +216,17 @@ public enum TokenKind {
 
 	public static boolean isCiclic(Token token) {
 		return isControlFlow(token.kind());
+	}
+
+	public static boolean isNumberExpression(TokenKind kind) {
+		return kind == TokenKind.NUMBER_EXPRESSION
+				|| kind == TokenKind.BINARY_EXPRESSION
+				|| kind == TokenKind.OCTAL_EXPRESSION
+				|| kind == TokenKind.HEXADECIMAL_EXPRESSION
+				|| kind == TokenKind.FLOAT_EXPRESSION;
+	}
+
+	public static boolean isNumberExpression(Token token) {
+		return isNumberExpression(token.kind());
 	}
 }

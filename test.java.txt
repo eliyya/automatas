@@ -1,6 +1,6 @@
 // float a = 3f + (45.2 + 5) * 4;
-int b;
-byte c = 1;
+// int b;
+// byte c = 1;
 // short d = 256;
 // long e = 12342123123;
 // boolean f, g = true;
@@ -44,15 +44,16 @@ byte c = 1;
 //     return n;
 // }
 
-
 // {
 //     int z = 0;
 // }
 
 // main(1, "s", true, 1.0, 'a', 1.0f, a);
 
-int[] arr;
+// int[] arr;
 
-arr = {};
+// arr = {};
 
-int[][] arr2 = {{1},{e},};
+// int[][] arr2 = {{1},{e},};
+
+int a = 0x12.fp2f;

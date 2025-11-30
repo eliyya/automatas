@@ -10,8 +10,12 @@ public class Lexer {
     int pos = 0;
     int row = 1;
     int col = 0;
+    float colFloat = 01f;
     RegexPattern[] patterns = {
             new RegexPattern(Pattern.compile("[a-zA-Z_$][a-zA-Z0-9_$]*"), identifierHandler()),
+            new RegexPattern(Pattern.compile("[+-]?0[\\d_]*\\d+([fFdD])?"), literalHandler(TokenKind.OCTAL_EXPRESSION)),
+            new RegexPattern(Pattern.compile("[+-]?0[xX][0-9a-fA-F]([0-9a-fA-F_]*([0-9a-fA-F]|(\\.[0-9a-fA-F]+[Pp][+-]?[0-9]+)))?([fFdD])?"), literalHandler(TokenKind.HEXADECIMAL_EXPRESSION)),
+            new RegexPattern(Pattern.compile("[+-]?0[Bb][01]([01_]*[01])?([fFdD])?"), literalHandler(TokenKind.BINARY_EXPRESSION)),
             new RegexPattern(Pattern.compile("([0-9]+(\\.[0-9]*)?|\\.[0-9]+)([eE][+-]?[0-9]+)?[fFdD]?|(0[xX][0-9a-fA-F]+|0[bB][01]+|[0-9]+)[lL]?"), literalHandler(TokenKind.NUMBER_EXPRESSION)),
             new RegexPattern(Pattern.compile("\".*?\""), literalHandler(TokenKind.STRING_EXPRESSION)),
             new RegexPattern(Pattern.compile("'.*?'"), literalHandler(TokenKind.CHAR)),
@@ -141,7 +145,11 @@ public class Lexer {
                     case CHAR -> match.group().substring(1, match.group().length() - 1);
                     default -> match.group();
                 };
-                lexer.push(new Token(kind, value, row, col));
+                if (TokenKind.isNumberExpression(kind) && (value.contains(".")) && (value.endsWith("f") || value.endsWith("F"))) {
+                    lexer.push(new Token(TokenKind.FLOAT_EXPRESSION, value, row, col));
+                } else {
+                    lexer.push(new Token(kind, value, row, col));
+                }
             }
         };
     }

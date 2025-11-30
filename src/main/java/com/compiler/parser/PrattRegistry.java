@@ -41,6 +41,9 @@ public class PrattRegistry {
 
         // literals
         PrattRegistry.nud(TokenKind.NUMBER_EXPRESSION, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);
+        PrattRegistry.nud(TokenKind.BINARY_EXPRESSION, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);
+        PrattRegistry.nud(TokenKind.OCTAL_EXPRESSION, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);
+        PrattRegistry.nud(TokenKind.HEXADECIMAL_EXPRESSION, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);
         PrattRegistry.nud(TokenKind.STRING_EXPRESSION, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);
         PrattRegistry.nud(TokenKind.TRUE, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);
         PrattRegistry.nud(TokenKind.FALSE, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);
