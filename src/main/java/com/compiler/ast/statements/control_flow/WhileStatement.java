@@ -1,15 +1,15 @@
-package com.compiler.ast.statments.control_flow;
+package com.compiler.ast.statements.control_flow;
 
 import com.compiler.ast.Expression;
-import com.compiler.ast.statments.BlockStatment;
-import com.compiler.ast.statments.ContolFlowStatment;
+import com.compiler.ast.statements.BlockStatement;
+import com.compiler.ast.statements.ContolFlowStatement;
 
-public class WhileStatment implements ContolFlowStatment {
+public class WhileStatement implements ContolFlowStatement {
     String _c = "WhileStatment";
     Expression condition;
-    BlockStatment body;
+    BlockStatement body;
 
-    public WhileStatment(Expression condition, BlockStatment body) {
+    public WhileStatement(Expression condition, BlockStatement body) {
         this.condition = condition;
         this.body = body;
     }
@@ -20,7 +20,7 @@ public class WhileStatment implements ContolFlowStatment {
     }
 
     @Override
-    public void statment() {
+    public void statement() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     

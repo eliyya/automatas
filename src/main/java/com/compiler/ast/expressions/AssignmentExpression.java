@@ -4,7 +4,7 @@ import com.compiler.ast.Expression;
 import com.compiler.lexer.Token;
 
 public class AssignmentExpression implements Expression {
-    final String _c = "AssignmentStatment";
+    final String _c = "AssignmentStatement";
     Token identifier;
     Token operator;
     Expression expression;

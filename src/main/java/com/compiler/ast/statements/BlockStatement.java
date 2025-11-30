@@ -1,14 +1,14 @@
-package com.compiler.ast.statments;
+package com.compiler.ast.statements;
 
 import java.util.List;
 
-import com.compiler.ast.Statment;
+import com.compiler.ast.Statement;
 
-public class BlockStatment implements Statment {
+public class BlockStatement implements Statement {
     final String _c = "BlockStatmennt";
-    List<Statment> body;
+    List<Statement> body;
 
-    public BlockStatment(List<Statment> body) {
+    public BlockStatement(List<Statement> body) {
         this.body = body;
     }
 
@@ -23,7 +23,7 @@ public class BlockStatment implements Statment {
     }
     
     @Override
-    public void statment() {
+    public void statement() {
         throw new UnsupportedOperationException("Unimplemented method 'statment'");
     }
 }

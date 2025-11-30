@@ -8,7 +8,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
 
-import com.compiler.ast.Statment;
+import com.compiler.ast.Statement;
 import com.compiler.lexer.Lexer;
 import com.compiler.lexer.Token;
 import com.compiler.parser.Parser;
@@ -66,7 +66,7 @@ public class App {
         }
     }
 
-    private static void printAST(Statment ast) {
+    private static void printAST(Statement ast) {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .create();
@@ -108,7 +108,7 @@ public class App {
         }
     }
 
-    private static void writeAST(Statment ast) {
+    private static void writeAST(Statement ast) {
         try (var writer = new FileWriter("ast.json")) {
             Gson gson = new GsonBuilder()
                     .setPrettyPrinting()
@@ -129,7 +129,7 @@ public class App {
         }
     }
 
-    private static void writeASTTree(Statment ast) {
+    private static void writeASTTree(Statement ast) {
         try (var writer = new FileWriter("tree.json")) {
             Gson gson = new GsonBuilder()
                     .setPrettyPrinting()

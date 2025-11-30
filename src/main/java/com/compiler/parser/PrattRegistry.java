@@ -6,10 +6,10 @@ import java.util.Map;
 import com.compiler.lexer.TokenKind;
 import com.compiler.parser.handlers.LedHandler;
 import com.compiler.parser.handlers.NudHandler;
-import com.compiler.parser.handlers.StatmentHandler;
+import com.compiler.parser.handlers.StatementHandler;
 
 public class PrattRegistry {
-    public static final Map<TokenKind, StatmentHandler> stmtLU = new HashMap<>();
+    public static final Map<TokenKind, StatementHandler> stmtLU = new HashMap<>();
     public static final Map<TokenKind, NudHandler> nudLU = new HashMap<>();
     public static final Map<TokenKind, LedHandler> ledLU = new HashMap<>();
     public static final Map<TokenKind, BindingPower> bpLU = new HashMap<>();
@@ -47,33 +47,33 @@ public class PrattRegistry {
         PrattRegistry.nud(TokenKind.IDENTIFIER, BindingPower.PRIMARY, ExpressionParser::parseIdentifierExpression);
 
         // declaration
-        PrattRegistry.stmt(TokenKind.FLOAT, StatmentParser::parseDeclaratioStatment);
-        PrattRegistry.stmt(TokenKind.INT, StatmentParser::parseDeclaratioStatment);
-        PrattRegistry.stmt(TokenKind.BOOLEAN, StatmentParser::parseDeclaratioStatment);
-        PrattRegistry.stmt(TokenKind.DOUBLE, StatmentParser::parseDeclaratioStatment);
-        PrattRegistry.stmt(TokenKind.SHORT, StatmentParser::parseDeclaratioStatment);
-        PrattRegistry.stmt(TokenKind.LONG, StatmentParser::parseDeclaratioStatment);
-        PrattRegistry.stmt(TokenKind.BYTE, StatmentParser::parseDeclaratioStatment);
-        PrattRegistry.stmt(TokenKind.STRING, StatmentParser::parseDeclaratioStatment);
-        PrattRegistry.stmt(TokenKind.CHAR, StatmentParser::parseDeclaratioStatment);
-        PrattRegistry.stmt(TokenKind.VOID, StatmentParser::parseDeclaratioStatment);
-        PrattRegistry.stmt(TokenKind.VAR, StatmentParser::parseDeclaratioStatment);
+        PrattRegistry.stmt(TokenKind.FLOAT, StatementParser::parseDeclaratioStatement);
+        PrattRegistry.stmt(TokenKind.INT, StatementParser::parseDeclaratioStatement);
+        PrattRegistry.stmt(TokenKind.BOOLEAN, StatementParser::parseDeclaratioStatement);
+        PrattRegistry.stmt(TokenKind.DOUBLE, StatementParser::parseDeclaratioStatement);
+        PrattRegistry.stmt(TokenKind.SHORT, StatementParser::parseDeclaratioStatement);
+        PrattRegistry.stmt(TokenKind.LONG, StatementParser::parseDeclaratioStatement);
+        PrattRegistry.stmt(TokenKind.BYTE, StatementParser::parseDeclaratioStatement);
+        PrattRegistry.stmt(TokenKind.STRING, StatementParser::parseDeclaratioStatement);
+        PrattRegistry.stmt(TokenKind.CHAR, StatementParser::parseDeclaratioStatement);
+        PrattRegistry.stmt(TokenKind.VOID, StatementParser::parseDeclaratioStatement);
+        PrattRegistry.stmt(TokenKind.VAR, StatementParser::parseDeclaratioStatement);
 
         // identifier
-        PrattRegistry.stmt(TokenKind.IDENTIFIER, StatmentParser::parseIdentifierStatment);
+        PrattRegistry.stmt(TokenKind.IDENTIFIER, StatementParser::parseIdentifierStatement);
 
         // unary
-        PrattRegistry.stmt(TokenKind.PLUS_PLUS, StatmentParser::parseUaryOperationStatment);
-        PrattRegistry.stmt(TokenKind.MINUS_MINUS, StatmentParser::parseUaryOperationStatment);
+        PrattRegistry.stmt(TokenKind.PLUS_PLUS, StatementParser::parseUaryOperationStatement);
+        PrattRegistry.stmt(TokenKind.MINUS_MINUS, StatementParser::parseUaryOperationStatement);
 
         // contol flow
-        PrattRegistry.stmt(TokenKind.WHILE, StatmentParser::parseControlFlowStatment);
-        PrattRegistry.stmt(TokenKind.IF, StatmentParser::parseControlFlowStatment);
-        PrattRegistry.stmt(TokenKind.FOR, StatmentParser::parseControlFlowStatment);
-        PrattRegistry.stmt(TokenKind.DO, StatmentParser::parseControlFlowStatment);
-        PrattRegistry.stmt(TokenKind.OPEN_CURLY, StatmentParser::parseBlockStatment);
-        PrattRegistry.stmt(TokenKind.RETURN, StatmentParser::parseReturnStatment);
-        PrattRegistry.stmt(TokenKind.BREAK, StatmentParser::parseBreakStatment);
+        PrattRegistry.stmt(TokenKind.WHILE, StatementParser::parseControlFlowStatement);
+        PrattRegistry.stmt(TokenKind.IF, StatementParser::parseControlFlowStatement);
+        PrattRegistry.stmt(TokenKind.FOR, StatementParser::parseControlFlowStatement);
+        PrattRegistry.stmt(TokenKind.DO, StatementParser::parseControlFlowStatement);
+        PrattRegistry.stmt(TokenKind.OPEN_CURLY, StatementParser::parseBlockStatement);
+        PrattRegistry.stmt(TokenKind.RETURN, StatementParser::parseReturnStatement);
+        PrattRegistry.stmt(TokenKind.BREAK, StatementParser::parseBreakStatement);
     }
 
     public static void led(TokenKind kind, BindingPower bp, LedHandler fn) {
@@ -86,7 +86,7 @@ public class PrattRegistry {
         nudLU.put(kind, fn);
     }
 
-    public static void stmt(TokenKind kind, StatmentHandler fn) {
+    public static void stmt(TokenKind kind, StatementHandler fn) {
         bpLU.put(kind, BindingPower.DEFAULT_BP);
         stmtLU.put(kind, fn);
     }

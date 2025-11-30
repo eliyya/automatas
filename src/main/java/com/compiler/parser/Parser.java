@@ -3,7 +3,7 @@ package com.compiler.parser;
 import java.util.List;
 
 import com.compiler.ast.Expression;
-import com.compiler.ast.statments.BlockStatment;
+import com.compiler.ast.statements.BlockStatement;
 import com.compiler.errors.ExpectedError;
 import com.compiler.lexer.Token;
 import com.compiler.lexer.TokenKind;
@@ -19,9 +19,9 @@ public class Parser {
         this.position = 0;
     }
 
-    public static BlockStatment parse(List<Token> tokens, List<String> lines) {
+    public static BlockStatement parse(List<Token> tokens, List<String> lines) {
         var parser = new Parser(tokens, lines);
-        return StatmentParser.parseBlockStatment(false, parser);
+        return StatementParser.parseBlockStatement(false, parser);
     }
 
     public static Expression parseExpression(Parser parser) {

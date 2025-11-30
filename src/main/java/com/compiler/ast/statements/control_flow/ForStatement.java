@@ -1,9 +1,9 @@
-package com.compiler.ast.statments.control_flow;
+package com.compiler.ast.statements.control_flow;
 
 import com.compiler.ast.Expression;
-import com.compiler.ast.statments.BlockStatment;
-import com.compiler.ast.statments.ContolFlowStatment;
-import com.compiler.ast.statments.declaration.DeclarationVariableStatment;
+import com.compiler.ast.statements.BlockStatement;
+import com.compiler.ast.statements.ContolFlowStatement;
+import com.compiler.ast.statements.declaration.DeclarationVariableStatement;
 import com.compiler.lexer.Token;
 
 enum ForType {
@@ -11,23 +11,23 @@ enum ForType {
     FOREACH
 }
 
-public class ForStatment implements ContolFlowStatment {
+public class ForStatement implements ContolFlowStatement {
     String _c = "ForStatment";
     ForType type;
-    DeclarationVariableStatment statment;
+    DeclarationVariableStatement statment;
     Token collection;
     Expression condition;
     Expression increment;
-    BlockStatment body;
+    BlockStatement body;
     
-    public ForStatment(DeclarationVariableStatment statment, Token collection, BlockStatment body) {
+    public ForStatement(DeclarationVariableStatement statment, Token collection, BlockStatement body) {
         this.statment = statment;
         this.collection = collection;
         this.body = body;
         this.type = ForType.FOREACH;
     }
 
-    public ForStatment(DeclarationVariableStatment statment, Expression condition, Expression increment, BlockStatment body) {
+    public ForStatement(DeclarationVariableStatement statment, Expression condition, Expression increment, BlockStatement body) {
         this.statment = statment;
         this.condition = condition;
         this.increment = increment;
@@ -44,7 +44,7 @@ public class ForStatment implements ContolFlowStatment {
     }
 
     @Override
-    public void statment() {
+    public void statement() {
         throw new UnsupportedOperationException("Unimplemented method 'statment'");
     }
     

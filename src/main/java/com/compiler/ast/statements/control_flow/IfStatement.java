@@ -1,21 +1,21 @@
-package com.compiler.ast.statments.control_flow;
+package com.compiler.ast.statements.control_flow;
 
 import com.compiler.ast.Expression;
-import com.compiler.ast.statments.BlockStatment;
-import com.compiler.ast.statments.ContolFlowStatment;
+import com.compiler.ast.statements.BlockStatement;
+import com.compiler.ast.statements.ContolFlowStatement;
 
-public class IfStatment implements ContolFlowStatment {
+public class IfStatement implements ContolFlowStatement {
     String _c = "IfStatment";
     Expression condition;
-    BlockStatment body;
-    BlockStatment elseBody;
+    BlockStatement body;
+    BlockStatement elseBody;
 
-    public IfStatment(Expression condition, BlockStatment body) {
+    public IfStatement(Expression condition, BlockStatement body) {
         this.condition = condition;
         this.body = body;
     }
 
-    public IfStatment(Expression condition, BlockStatment body, BlockStatment elseBody) {
+    public IfStatement(Expression condition, BlockStatement body, BlockStatement elseBody) {
         this.condition = condition;
         this.body = body;
         this.elseBody = elseBody;
@@ -30,7 +30,7 @@ public class IfStatment implements ContolFlowStatment {
     }
 
     @Override
-    public void statment() {
+    public void statement() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     

@@ -1,13 +1,13 @@
-package com.compiler.ast.statments;
+package com.compiler.ast.statements;
 
 import com.compiler.ast.Expression;
-import com.compiler.ast.Statment;
+import com.compiler.ast.Statement;
 
-public class ExpressionStatment implements Statment {
+public class ExpressionStatement implements Statement {
     final String _c = "ExpressionStatment";
     Expression expression;
 
-    public ExpressionStatment(Expression expression) {
+    public ExpressionStatement(Expression expression) {
         this.expression = expression;
     }
     
@@ -17,7 +17,7 @@ public class ExpressionStatment implements Statment {
     }
     
     @Override
-    public void statment() {
+    public void statement() {
         throw new UnsupportedOperationException("Unimplemented method 'statment'");
     }
 }

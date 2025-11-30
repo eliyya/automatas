@@ -1,17 +1,17 @@
-package com.compiler.ast.statments;
+package com.compiler.ast.statements;
 
 import com.compiler.ast.Expression;
-import com.compiler.ast.Statment;
+import com.compiler.ast.Statement;
 
-public class ReturnStatment implements Statment {
+public class ReturnStatement implements Statement {
     Expression expression;
 
-    public ReturnStatment(Expression expression) {
+    public ReturnStatement(Expression expression) {
         this.expression = expression;
     }
 
     @Override
-    public void statment() {
+    public void statement() {
         throw new UnsupportedOperationException("Unimplemented method 'statment'");
     }
     

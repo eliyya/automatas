@@ -1,14 +1,14 @@
-package com.compiler.ast.statments;
+package com.compiler.ast.statements;
 
-import com.compiler.ast.Statment;
+import com.compiler.ast.Statement;
 import com.compiler.lexer.Token;
 
-public class ParameterStatment implements Statment {
+public class ParameterStatement implements Statement {
     String _c = "ParameterStatment";
     Token type;
     Token name;
 
-    public ParameterStatment(Token type, Token name) {
+    public ParameterStatement(Token type, Token name) {
         this.type = type;
         this.name = name;
     }
@@ -19,7 +19,7 @@ public class ParameterStatment implements Statment {
     }
 
     @Override
-    public void statment() {
+    public void statement() {
         throw new UnsupportedOperationException("Unimplemented method 'statment'");
     }
     

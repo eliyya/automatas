@@ -4,39 +4,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.compiler.ast.Expression;
-import com.compiler.ast.Statment;
+import com.compiler.ast.Statement;
 import com.compiler.ast.expressions.AssignmentExpression;
 import com.compiler.ast.expressions.FunctionCallExpression;
 import com.compiler.ast.expressions.IdentifierExpression;
 import com.compiler.ast.expressions.UnaryOperationExpression;
-import com.compiler.ast.statments.BlockStatment;
-import com.compiler.ast.statments.BreakStatment;
-import com.compiler.ast.statments.ContolFlowStatment;
-import com.compiler.ast.statments.DeclarationStatment;
-import com.compiler.ast.statments.ExpressionStatment;
-import com.compiler.ast.statments.ParameterStatment;
-import com.compiler.ast.statments.ReturnStatment;
-import com.compiler.ast.statments.control_flow.DoWhileStatment;
-import com.compiler.ast.statments.control_flow.ForStatment;
-import com.compiler.ast.statments.control_flow.IfStatment;
-import com.compiler.ast.statments.control_flow.LabeledCicleStatment;
-import com.compiler.ast.statments.control_flow.WhileStatment;
-import com.compiler.ast.statments.declaration.DeclarationFunctionStatment;
-import com.compiler.ast.statments.declaration.DeclarationVariableStatment;
+import com.compiler.ast.statements.BlockStatement;
+import com.compiler.ast.statements.BreakStatement;
+import com.compiler.ast.statements.ContolFlowStatement;
+import com.compiler.ast.statements.DeclarationStatement;
+import com.compiler.ast.statements.ExpressionStatement;
+import com.compiler.ast.statements.ParameterStatement;
+import com.compiler.ast.statements.ReturnStatement;
+import com.compiler.ast.statements.control_flow.DoWhileStatement;
+import com.compiler.ast.statements.control_flow.ForStatement;
+import com.compiler.ast.statements.control_flow.IfStatement;
+import com.compiler.ast.statements.control_flow.LabeledCicleStatement;
+import com.compiler.ast.statements.control_flow.WhileStatement;
+import com.compiler.ast.statements.declaration.DeclarationFunctionStatement;
+import com.compiler.ast.statements.declaration.DeclarationVariableStatement;
 import com.compiler.errors.ExpectedError;
 import com.compiler.errors.UnexpectedSyntaxError;
 import com.compiler.lexer.TokenKind;
 
-public class StatmentParser {
-    public static BlockStatment parseBlockStatment(Parser parser) {
+public class StatementParser {
+    public static BlockStatement parseBlockStatement(Parser parser) {
         parser.expect(TokenKind.OPEN_CURLY);
-        var block = parseBlockStatment(true, parser);
+        var block = parseBlockStatement(true, parser);
         parser.expect(TokenKind.CLOSE_CURLY);
         return block;
     }
 
-    public static BlockStatment parseBlockStatment(boolean inner, Parser parser) throws ExpectedError {
-        var body = new ArrayList<Statment>();
+    public static BlockStatement parseBlockStatement(boolean inner, Parser parser) throws ExpectedError {
+        var body = new ArrayList<Statement>();
 
         while (parser.hasTokens()) {
             if (inner && parser.currentTokenKind() == TokenKind.CLOSE_CURLY) {
@@ -50,23 +50,23 @@ public class StatmentParser {
             continue;
         }
 
-        return new BlockStatment(body);
+        return new BlockStatement(body);
     }
 
     // ------------------------------------------------------------------------------
-    // parse typed variable statment
+    // parse typed variable Statement
     // ------------------------------------------------------------------------------
 
-    public static DeclarationStatment parseDeclaratioStatment(Parser parser) throws ExpectedError {
+    public static DeclarationStatement parseDeclaratioStatement(Parser parser) throws ExpectedError {
         var type = parser.currentToken();
         if (type.kind() == TokenKind.VAR) {
-            return parseVarStatment(parser);
+            return parseVarStatement(parser);
         }
         if (!TokenKind.isPrimitiveType(type)) {
             throw new ExpectedError(parser, "type", type);
         }
         if (parser.getToken(2).kind() == TokenKind.OPEN_PAREN) {
-            return parseFunctionStatment(parser);
+            return parseFunctionStatement(parser);
         }
         parser.advance();
         var expressions = new ArrayList<Expression>();
@@ -90,34 +90,34 @@ public class StatmentParser {
             throw new ExpectedError(parser, ";", parser.currentToken());
         }
         parser.expect(TokenKind.SEMI);
-        return new DeclarationVariableStatment(type, expressions);
+        return new DeclarationVariableStatement(type, expressions);
     }
 
-    private static DeclarationVariableStatment parseVarStatment(Parser parser) {
+    private static DeclarationVariableStatement parseVarStatement(Parser parser) {
         var type = parser.expect(TokenKind.VAR);
         var identifier = parser.expect(TokenKind.IDENTIFIER);
         var assignment = parser.expect(TokenKind.ASSIGNMENT);
         var expression = Parser.parseExpression(parser);
         parser.expect(TokenKind.SEMI);
         var assignmentExpression = new AssignmentExpression(identifier, assignment, expression);
-        return new DeclarationVariableStatment(type, List.of(assignmentExpression));
+        return new DeclarationVariableStatement(type, List.of(assignmentExpression));
     }
 
-    public static Statment parseIdentifierStatment(Parser parser) {
+    public static Statement parseIdentifierStatement(Parser parser) {
         var identifier = parser.expect(TokenKind.IDENTIFIER);
         // ++ or --
         if (TokenKind.isUnaryOperation(parser.currentTokenKind())) {
             var operator = parser.advance();
             parser.expect(TokenKind.SEMI);
             var uaryeExpression = new UnaryOperationExpression(identifier, operator, false);
-            return new ExpressionStatment(uaryeExpression);
+            return new ExpressionStatement(uaryeExpression);
         }
         if (TokenKind.isAssignment(parser.currentTokenKind())) {
             var assignment = parser.advance();
             var expression = Parser.parseExpression(parser);
             parser.expect(TokenKind.SEMI);
             var assignmentExpression = new AssignmentExpression(identifier, assignment, expression);
-            return new ExpressionStatment(assignmentExpression);
+            return new ExpressionStatement(assignmentExpression);
         }
         if (parser.currentTokenKind() == TokenKind.OPEN_PAREN) {
             parser.expect(TokenKind.OPEN_PAREN);
@@ -132,24 +132,24 @@ public class StatmentParser {
             parser.expect(TokenKind.CLOSE_PAREN);
             var functionCall = new FunctionCallExpression(identifier, parameters);
             parser.expect(TokenKind.SEMI);
-            return new ExpressionStatment(functionCall);
+            return new ExpressionStatement(functionCall);
         }
         if (parser.currentTokenKind() == TokenKind.COLON) {
             parser.expect(TokenKind.COLON);
             var next = parser.currentToken();
-            var cicle = StatmentParser.parseControlFlowStatment(parser);
-            if (cicle instanceof IfStatment) {
+            var cicle = StatementParser.parseControlFlowStatement(parser);
+            if (cicle instanceof IfStatement) {
                 throw new ExpectedError(parser, "cicle", next);
             }
-            // if (cicle instanceof IfStatment) {
+            // if (cicle instanceof IfStatement) {
             //     throw new ExpectedError(parser, "cicle", next);
             // }
-            return new LabeledCicleStatment(identifier, cicle);
+            return new LabeledCicleStatement(identifier, cicle);
         }
         throw new UnexpectedSyntaxError(parser, parser.currentToken());
     }
 
-    public static Statment parseUaryOperationStatment(Parser parser) {
+    public static Statement parseUaryOperationStatement(Parser parser) {
         var operator = parser.advance();
         if (operator.kind() != TokenKind.PLUS_PLUS && operator.kind() != TokenKind.MINUS_MINUS) {
             throw new ExpectedError(parser, "++", operator);
@@ -157,23 +157,23 @@ public class StatmentParser {
         var identifier = parser.expect(TokenKind.IDENTIFIER);
         parser.expect(TokenKind.SEMI);
         var uaryeExpression = new UnaryOperationExpression(identifier, operator, true);
-        return new ExpressionStatment(uaryeExpression);
+        return new ExpressionStatement(uaryeExpression);
     }
 
-    public static ContolFlowStatment parseControlFlowStatment(Parser parser) {
+    public static ContolFlowStatement parseControlFlowStatement(Parser parser) {
         var token = parser.currentToken();
         switch (token.kind()) {
             case WHILE -> {
-                return parseWhileStatment(parser);
+                return parseWhileStatement(parser);
             }
             case IF -> {
-                return parseIfStatment(parser);
+                return parseIfStatement(parser);
             }
             case FOR -> {
-                return parseForStatment(parser);
+                return parseForStatement(parser);
             }
             case DO -> {
-                return parseDoStatment(parser);
+                return parseDoStatement(parser);
             }
             default -> {
                 throw new UnexpectedSyntaxError(parser, token);
@@ -181,39 +181,39 @@ public class StatmentParser {
         }
     }
 
-    public static ReturnStatment parseReturnStatment(Parser parser) {
+    public static ReturnStatement parseReturnStatement(Parser parser) {
         parser.expect(TokenKind.RETURN);
         if (parser.currentTokenKind() == TokenKind.SEMI) {
-            return new ReturnStatment(null);
+            return new ReturnStatement(null);
         }
         var expression = Parser.parseExpression(parser);
         parser.expect(TokenKind.SEMI);
-        return new ReturnStatment(expression);
+        return new ReturnStatement(expression);
     }
 
-    public static BreakStatment parseBreakStatment(Parser parser) {
+    public static BreakStatement parseBreakStatement(Parser parser) {
         parser.expect(TokenKind.BREAK);
         if (parser.currentTokenKind() == TokenKind.SEMI) {
-            return new BreakStatment(null);
+            return new BreakStatement(null);
         }
         var expression = parser.expect(TokenKind.IDENTIFIER);
         parser.expect(TokenKind.SEMI);
-        return new BreakStatment(expression);
+        return new BreakStatement(expression);
     }
 
     // // -----------------------
-    // // parse function statment
+    // // parse function Statement
     // // -----------------------
-    private static DeclarationFunctionStatment parseFunctionStatment(Parser parser) throws ExpectedError {
+    private static DeclarationFunctionStatement parseFunctionStatement(Parser parser) throws ExpectedError {
         var type = parser.advance();
         if (!TokenKind.isPrimitiveType(type)) {
             throw new ExpectedError(parser, "type", type);
         }
         var identifier = parser.expect(TokenKind.IDENTIFIER);
         parser.expect(TokenKind.OPEN_PAREN);
-        var parameters = new ArrayList<ParameterStatment>();
+        var parameters = new ArrayList<ParameterStatement>();
         while (parser.currentTokenKind() != TokenKind.CLOSE_PAREN) {
-            parameters.add(parseParameterStatment(parser));
+            parameters.add(parseParameterStatement(parser));
             if (parser.currentTokenKind() == TokenKind.COMMA) {
                 parser.advance();
                 continue;
@@ -221,54 +221,54 @@ public class StatmentParser {
             break;
         }
         parser.expect(TokenKind.CLOSE_PAREN);
-        var body = parseBlockStatment(parser);
-        return new DeclarationFunctionStatment(type, identifier, parameters, body);
+        var body = parseBlockStatement(parser);
+        return new DeclarationFunctionStatement(type, identifier, parameters, body);
     }
 
-    private static ParameterStatment parseParameterStatment(Parser parser) throws ExpectedError {
+    private static ParameterStatement parseParameterStatement(Parser parser) throws ExpectedError {
         var type = parser.advance();
         if (!TokenKind.isPrimitiveType(type)) {
             throw new ExpectedError(parser, "type", type);
         }
         var identifier = parser.expect(TokenKind.IDENTIFIER);
-        return new ParameterStatment(type, identifier);
+        return new ParameterStatement(type, identifier);
     }
 
     // ------------------
     // parse control flow
     // ------------------
-    private static WhileStatment parseWhileStatment(Parser parser) {
+    private static WhileStatement parseWhileStatement(Parser parser) {
         parser.expect(TokenKind.WHILE);
         parser.expect(TokenKind.OPEN_PAREN);
         var expression = Parser.parseExpression(parser);
         parser.expect(TokenKind.CLOSE_PAREN);
-        var body = parseBlockStatment(parser);
-        return new WhileStatment(expression, body);
+        var body = parseBlockStatement(parser);
+        return new WhileStatement(expression, body);
     }
 
-    private static IfStatment parseIfStatment(Parser parser) {
+    private static IfStatement parseIfStatement(Parser parser) {
         // if
         parser.expect(TokenKind.IF);
         parser.expect(TokenKind.OPEN_PAREN);
         var expression = Parser.parseExpression(parser);
         parser.expect(TokenKind.CLOSE_PAREN);
-        var body = parseBlockStatment(parser);
+        var body = parseBlockStatement(parser);
         if (parser.currentTokenKind() != TokenKind.ELSE) {
-            return new IfStatment(expression, body);
+            return new IfStatement(expression, body);
         }
         // else
         parser.advance();
         // if again
         if (parser.currentTokenKind() == TokenKind.IF) {
-            var elseIfBody = parseIfStatment(parser);
-            var elseBody = new BlockStatment(List.of(elseIfBody));
-            return new IfStatment(expression, body, elseBody);
+            var elseIfBody = parseIfStatement(parser);
+            var elseBody = new BlockStatement(List.of(elseIfBody));
+            return new IfStatement(expression, body, elseBody);
         }
-        var elseBody = parseBlockStatment(parser);
-        return new IfStatment(expression, body, elseBody);
+        var elseBody = parseBlockStatement(parser);
+        return new IfStatement(expression, body, elseBody);
     }
 
-    private static ForStatment parseForStatment(Parser parser) {
+    private static ForStatement parseForStatement(Parser parser) {
         parser.expect(TokenKind.FOR);
         var open = parser.expect(TokenKind.OPEN_PAREN);
         // foreach
@@ -278,34 +278,34 @@ public class StatmentParser {
                 throw new ExpectedError(parser, "type", type);
             }
             var identifier = parser.expect(TokenKind.IDENTIFIER);
-            var stat = new DeclarationVariableStatment(type, List.of(new IdentifierExpression(identifier)));
+            var stat = new DeclarationVariableStatement(type, List.of(new IdentifierExpression(identifier)));
             parser.expect(TokenKind.COLON);
             var collection = parser.expect(TokenKind.IDENTIFIER);
             parser.expect(TokenKind.CLOSE_PAREN);
-            var body = parseBlockStatment(parser);
-            return new ForStatment(stat, collection, body);
+            var body = parseBlockStatement(parser);
+            return new ForStatement(stat, collection, body);
         }
         // for
-        var stat = parseDeclaratioStatment(parser);
-        if (stat instanceof DeclarationVariableStatment dec) {
+        var stat = parseDeclaratioStatement(parser);
+        if (stat instanceof DeclarationVariableStatement dec) {
             var condition = Parser.parseExpression(parser);
             parser.expect(TokenKind.SEMI);
             var increment = Parser.parseExpression(parser);
             parser.expect(TokenKind.CLOSE_PAREN);
-            var body = parseBlockStatment(parser);
-            return new ForStatment(dec, condition, increment, body);
+            var body = parseBlockStatement(parser);
+            return new ForStatement(dec, condition, increment, body);
         }
         throw new ExpectedError(parser,"declaration",open);
     }
 
-    private static DoWhileStatment parseDoStatment(Parser parser) {
+    private static DoWhileStatement parseDoStatement(Parser parser) {
         parser.expect(TokenKind.DO);
-        var body = parseBlockStatment(parser);
+        var body = parseBlockStatement(parser);
         parser.expect(TokenKind.WHILE);
         parser.expect(TokenKind.OPEN_PAREN);
         var expression = Parser.parseExpression(parser);
         parser.expect(TokenKind.CLOSE_PAREN);
         parser.expect(TokenKind.SEMI);
-        return new DoWhileStatment(body, expression);
+        return new DoWhileStatement(body, expression);
     }
 }
