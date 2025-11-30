@@ -101,11 +101,7 @@ public class ExpressionParser {
         parser.expect(TokenKind.CLOSE_PAREN);
         return expression;
     }
-
-    private static boolean isF(Token token) {
-        return token.value().endsWith("f") || token.value().endsWith("F");
-    }
-
+    
     public static PrimaryExpression parsePrimaryExpression(Parser parser) {
         switch (parser.currentTokenKind()) {
             case NUMBER_EXPRESSION -> {
@@ -114,24 +110,19 @@ public class ExpressionParser {
             }
             case BINARY_EXPRESSION -> {
                 var number = parser.advance();
-                if (isF(number)) {
-                    return new FloatNumberExpression(number);
-                }
                 return new BinaryNumberExpression(number);
             }
             case OCTAL_EXPRESSION -> {
                 var number = parser.advance();
-                if (isF(number)) {
-                    return new FloatNumberExpression(number);
-                }
                 return new OctalNumberExpression(number);
             }
             case HEXADECIMAL_EXPRESSION -> {
                 var number = parser.advance();
-                if (isF(number)) {
-                    return new FloatNumberExpression(number);
-                }
                 return new HexadecimalNumberExpression(number);
+            }
+            case FLOAT_EXPRESSION -> {
+                var number = parser.advance();
+                return new FloatNumberExpression(number);
             }
             case STRING_EXPRESSION -> {
                 var string = parser.advance();

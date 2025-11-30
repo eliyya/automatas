@@ -145,8 +145,20 @@ public class Lexer {
                     case CHAR -> match.group().substring(1, match.group().length() - 1);
                     default -> match.group();
                 };
-                if (TokenKind.isNumberExpression(kind) && (value.contains(".")) && (value.endsWith("f") || value.endsWith("F"))) {
-                    lexer.push(new Token(TokenKind.FLOAT_EXPRESSION, value, row, col));
+                if (TokenKind.isNumberExpression(kind)) {
+                    if (value.endsWith("f") || value.endsWith("F")) {
+                        if (kind == TokenKind.HEXADECIMAL_EXPRESSION) {
+                            if (value.contains(".")) {
+                                lexer.push(new Token(TokenKind.FLOAT_EXPRESSION, value, row, col));
+                            } else {
+                                lexer.push(new Token(kind, value, row, col));
+                            }
+                        } else {
+                            lexer.push(new Token(TokenKind.FLOAT_EXPRESSION, value, row, col));
+                        }
+                    }else {
+                        lexer.push(new Token(kind, value, row, col));
+                    }
                 } else {
                     lexer.push(new Token(kind, value, row, col));
                 }
