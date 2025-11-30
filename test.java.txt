@@ -52,3 +52,7 @@ byte c = 1;
 // main(1, "s", true, 1.0, 'a', 1.0f, a);
 
 int[] arr;
+
+arr = {};
+
+int[][] arr2 = {{1},{e},};

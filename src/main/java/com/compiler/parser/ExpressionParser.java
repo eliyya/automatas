@@ -3,6 +3,7 @@ package com.compiler.parser;
 import java.util.ArrayList;
 
 import com.compiler.ast.Expression;
+import com.compiler.ast.expressions.ArrayExpression;
 import com.compiler.ast.expressions.BinaryExpression;
 import com.compiler.ast.expressions.FunctionCallExpression;
 import com.compiler.ast.expressions.IdentifierExpression;
@@ -117,5 +118,20 @@ public class ExpressionParser {
             default ->
                 throw new RuntimeException("Cannot parse primary expression from token : " + parser.currentTokenKind());
         }
+    }
+
+    public static ArrayExpression parseArrayExpression(Parser parser) {
+        parser.expect(TokenKind.OPEN_CURLY);
+        var elements = new ArrayList<Expression>();
+        while (parser.currentTokenKind() != TokenKind.CLOSE_CURLY) {
+            elements.add(Parser.parseExpression(parser));
+            if (parser.currentTokenKind() == TokenKind.COMMA) {
+                parser.advance();
+                continue;
+            }
+            break;
+        }
+        parser.expect(TokenKind.CLOSE_CURLY);
+        return new ArrayExpression(elements);
     }
 }

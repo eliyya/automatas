@@ -9,9 +9,13 @@ import com.compiler.parser.handlers.NudHandler;
 import com.compiler.parser.handlers.StatementHandler;
 
 public class PrattRegistry {
+    // statement
     public static final Map<TokenKind, StatementHandler> stmtLU = new HashMap<>();
+    // null denotation
     public static final Map<TokenKind, NudHandler> nudLU = new HashMap<>();
+    // left denotation
     public static final Map<TokenKind, LedHandler> ledLU = new HashMap<>();
+    // binding power
     public static final Map<TokenKind, BindingPower> bpLU = new HashMap<>();
     static {
         // logical
@@ -42,6 +46,7 @@ public class PrattRegistry {
         PrattRegistry.nud(TokenKind.FALSE, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);
         PrattRegistry.nud(TokenKind.CHAR, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);
         PrattRegistry.nud(TokenKind.OPEN_PAREN, BindingPower.PRIMARY, ExpressionParser::parseParenthesizedExpression);
+        PrattRegistry.nud(TokenKind.OPEN_CURLY, BindingPower.PRIMARY, ExpressionParser::parseArrayExpression);
 
         // identifiers
         PrattRegistry.nud(TokenKind.IDENTIFIER, BindingPower.PRIMARY, ExpressionParser::parseIdentifierExpression);
