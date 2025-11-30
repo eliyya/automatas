@@ -80,14 +80,15 @@ public enum TokenKind {
 
 	// Reserved Keywords
 	VAR("var"),
-	CLASS("class"),
-	NEW("new"),
-	IMPORT("import"),
-	PACKAGE("package"),
-	INSTANCEOF("instanceof"),
+	// CLASS("class"),
+	// NEW("new"),
+	// IMPORT("import"),
+	// PACKAGE("package"),
+	// INSTANCEOF("instanceof"),
 
 	// misc
-	AT("@");
+	// AT("@"),
+	RETURN("return");
 
 	private static final Map<String, TokenKind> lookup = new HashMap<>();
 
@@ -113,17 +114,11 @@ public enum TokenKind {
 
 	public static boolean isReservedKeyword(TokenKind kind) {
 		return kind == TokenKind.VAR
-			|| kind == TokenKind.CLASS
-			|| kind == TokenKind.NEW
-			|| kind == TokenKind.IMPORT
-			|| kind == TokenKind.PACKAGE
 			|| kind == TokenKind.IF
 			|| kind == TokenKind.ELSE
 			|| kind == TokenKind.WHILE
 			|| kind == TokenKind.FOR
 			|| kind == TokenKind.DO
-			|| kind == TokenKind.INSTANCEOF
-			|| kind == TokenKind.VOID
 			|| kind == TokenKind.SHORT
 			|| kind == TokenKind.LONG
 			|| kind == TokenKind.FLOAT
@@ -135,7 +130,8 @@ public enum TokenKind {
 			|| kind == TokenKind.NULL
 			|| kind == TokenKind.TRUE
 			|| kind == TokenKind.FALSE
-			|| kind == TokenKind.STRING;
+			|| kind == TokenKind.STRING
+			|| kind == TokenKind.RETURN;
 	}
 
 	public static boolean isReservedKeyword(String text) {

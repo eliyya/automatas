@@ -10,10 +10,10 @@ public class ExpectedError extends RuntimeException {
     }
 
     public ExpectedError(Parser parser, String expected, Token found) {
-        System.out.println("");
+        IO.println("");
         var line = parser.lines.get(found.line() - 1);
-        System.out.println(line);
-        System.out.println(" ".repeat(found.column()) + "^");
+        IO.println(line);
+        IO.println(" ".repeat(found.column()) + "^");
         super(
                 format("Parser:Error ->", ConsoleColor.RED)
                         + " Expected `" + format(expected, ConsoleColor.GREEN)

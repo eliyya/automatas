@@ -14,6 +14,7 @@ import com.compiler.ast.statments.ContolFlowStatment;
 import com.compiler.ast.statments.DeclarationStatment;
 import com.compiler.ast.statments.ExpressionStatment;
 import com.compiler.ast.statments.ParameterStatment;
+import com.compiler.ast.statments.ReturnStatment;
 import com.compiler.ast.statments.control_flow.DoWhileStatment;
 import com.compiler.ast.statments.control_flow.ForStatment;
 import com.compiler.ast.statments.control_flow.IfStatment;
@@ -166,6 +167,16 @@ public class StatmentParser {
         }
     }
 
+    public static ReturnStatment parseReturnStatment(Parser parser) {
+        parser.expect(TokenKind.RETURN);
+        if (parser.currentTokenKind() == TokenKind.SEMI) {
+            return new ReturnStatment(null);
+        }
+        var expression = Parser.parseExpression(parser);
+        parser.expect(TokenKind.SEMI);
+        return new ReturnStatment(expression);
+    }
+
     // // -----------------------
     // // parse function statment
     // // -----------------------
@@ -190,13 +201,6 @@ public class StatmentParser {
         return new DeclarationFunctionStatment(type, identifier, parameters, body);
     }
 
-    // private static ExpressionStatment parseFunctionCallStatment(Parser parser)
-    // throws ExpectedError {
-    // var functionCall = ExpressionParser.parseFunctionExpression(parser);
-    // parser.expect(TokenKind.SEMI);
-    // return new ExpressionStatment(functionCall);
-    // }
-
     private static ParameterStatment parseParameterStatment(Parser parser) throws ExpectedError {
         var type = parser.advance();
         if (!TokenKind.isPrimitiveType(type)) {
@@ -206,26 +210,9 @@ public class StatmentParser {
         return new ParameterStatment(type, identifier);
     }
 
-    // private static Statment parseFunctionStatment(Parser parser) throws
-    // ExpectedError {
-    // var identifier = parser.advance();
-    // if (identifier.kind() != TokenKind.IDENTIFIER) {
-    // throw new ExpectedError(parser, "identifier", identifier);
-    // }
-    // var openParent = parser.advance();
-    // if (openParent.kind() != TokenKind.OPEN_PAREN) {
-    // throw new ExpectedError(parser, "(", openParent);
-    // }
-    // var closeParent = parser.advance();
-    // if (closeParent.kind() != TokenKind.CLOSE_PAREN) {
-    // throw new ExpectedError(parser, ")", closeParent);
-    // }
-    // return new ExpressionStatment(new FunctionExpression(identifier));
-    // }
-
-    // // ------------------
-    // // parse control flow
-    // // ------------------
+    // ------------------
+    // parse control flow
+    // ------------------
     private static WhileStatment parseWhileStatment(Parser parser) {
         parser.expect(TokenKind.WHILE);
         parser.expect(TokenKind.OPEN_PAREN);

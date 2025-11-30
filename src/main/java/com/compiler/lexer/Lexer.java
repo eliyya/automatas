@@ -53,7 +53,6 @@ public class Lexer {
             new RegexPattern(Pattern.compile("/"), defaultHandler(TokenKind.SLASH, "/")),
             new RegexPattern(Pattern.compile("\\*"), defaultHandler(TokenKind.STAR, "*")),
             new RegexPattern(Pattern.compile("%"), defaultHandler(TokenKind.PERCENT, "%")),
-            new RegexPattern(Pattern.compile("@"), defaultHandler(TokenKind.AT, "@")),
     };
 
     private Lexer(String source) {
@@ -78,9 +77,9 @@ public class Lexer {
             if (!matched) {
                 var lines = lexer.source.lines().toList();
                 var line = lines.get(lexer.row - 1);
-                System.out.println("");
-                System.out.println(line);
-                System.out.println(" ".repeat(lexer.col) + "^");
+                IO.println("");
+                IO.println(line);
+                IO.println(" ".repeat(lexer.col) + "^");
                 throw new RuntimeException("\u001B[31mLexer:Error ->\u001B[0m unrecognized token `\u001B[32m"
                         + lexer.reminder().substring(0, 1) + "\u001B[0m` at \u001B[34mline " + lexer.row
                         + "\u001B[0m and \u001B[34mcolumn " + lexer.col + "\u001B[0m");

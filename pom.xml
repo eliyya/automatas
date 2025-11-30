@@ -23,6 +23,8 @@
                     <release>25</release>
                     <compilerArgs>
                         <arg>--enable-preview</arg>
+                        <arg>--release</arg>
+                        <arg>25</arg>
                     </compilerArgs>
                 </configuration>
             </plugin>

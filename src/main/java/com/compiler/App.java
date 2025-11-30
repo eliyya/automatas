@@ -18,13 +18,13 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         if (args.length == 0) {
-            System.out.println("----------------------------------------------");
-            System.out.println(format("No se proporcionó ningún archivo", ConsoleColor.RED));
-            System.out.println("especifique la ruta del archivo como argumento");
-            System.out.println(
+            IO.println("----------------------------------------------");
+            IO.println(format("No se proporcionó ningún archivo", ConsoleColor.RED));
+            IO.println("especifique la ruta del archivo como argumento");
+            IO.println(
                     "Ejemplo: " + format("java", ConsoleColor.YELLOW) + format(" -jar", ConsoleColor.BLACK_BRIGHT)
                             + " App.jar " + format("test.java.txt", ConsoleColor.BLUE_UNDERLINED));
-            System.out.println("----------------------------------------------");
+            IO.println("----------------------------------------------");
             return;
         }
 
@@ -57,10 +57,10 @@ public class App {
                     || token.kind() == TokenKind.NUMBER_EXPRESSION
                     || token.kind() == TokenKind.CHAR
                     || token.kind() == TokenKind.IDENTIFIER) {
-                System.out.println(token.kind().toString() + " (" + token.value() + ") [" + token.line() + ":"
+                IO.println(token.kind().toString() + " (" + token.value() + ") [" + token.line() + ":"
                         + token.column() + "]");
             } else {
-                System.out.println(token.kind().toString() + " [" + token.line() + ":" + token.column() + "]");
+                IO.println(token.kind().toString() + " [" + token.line() + ":" + token.column() + "]");
             }
         }
     }
@@ -69,7 +69,7 @@ public class App {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .create();
-        System.out.println(gson.toJson(ast));
+        IO.println(gson.toJson(ast));
     }
 
     private static void writeTokens(List<Token> tokens) {
@@ -79,24 +79,24 @@ public class App {
                         + " (" + token.value() + ") "
                         + "[" + token.line() + ":" + token.column() + "]\n");
             }
-            System.out.println("");
-            System.out.println("--------------------------------------------------------");
-            System.out.println(
+            IO.println("");
+            IO.println("--------------------------------------------------------");
+            IO.println(
                     "Se han escrito los " + format("tokens", ConsoleColor.GREEN_BOLD) + " para su análisis en "
                             + format("tokens.log", ConsoleColor.BLUE_UNDERLINED));
-            System.out.println("Contiene por cada token en una linea:");
-            System.out.println("  - el tipo de token " + format("TOKEN_TYPE", ConsoleColor.WHITE_BOLD_BRIGHT));
-            System.out.println("  - su valor entre paréntesis " + format("(", ConsoleColor.WHITE_BOLD_BRIGHT)
+            IO.println("Contiene por cada token en una linea:");
+            IO.println("  - el tipo de token " + format("TOKEN_TYPE", ConsoleColor.WHITE_BOLD_BRIGHT));
+            IO.println("  - su valor entre paréntesis " + format("(", ConsoleColor.WHITE_BOLD_BRIGHT)
                     + format("value", ConsoleColor.GREEN_BOLD) + format(")", ConsoleColor.WHITE_BOLD_BRIGHT));
-            System.out.println("  - su posición en el archivo " + format("[", ConsoleColor.WHITE_BOLD_BRIGHT)
+            IO.println("  - su posición en el archivo " + format("[", ConsoleColor.WHITE_BOLD_BRIGHT)
                     + format("linea", ConsoleColor.BLUE_BOLD) + format(":", ConsoleColor.WHITE_BOLD_BRIGHT)
                     + format("columna", ConsoleColor.BLUE_BOLD) + format("]", ConsoleColor.WHITE_BOLD_BRIGHT));
-            System.out.println("--------------------------------------------------------");
-            System.out.println("");
+            IO.println("--------------------------------------------------------");
+            IO.println("");
         } catch (IOException e) {
-            System.out.println("");
-            System.out.println("Error al escribir tokens");
-            System.out.println("");
+            IO.println("");
+            IO.println("Error al escribir tokens");
+            IO.println("");
         }
     }
 
@@ -106,18 +106,18 @@ public class App {
                     .setPrettyPrinting()
                     .create();
             writer.write(gson.toJson(ast));
-            System.out.println("");
-            System.out.println("--------------------------------------------------------");
-            System.out.println(
+            IO.println("");
+            IO.println("--------------------------------------------------------");
+            IO.println(
                     "Se ha generado el " + format("Abstract Syntax Tree", ConsoleColor.GREEN) + " ("
                             + format("AST", ConsoleColor.GREEN_BOLD) + ") en "
                             + format("ast.json", ConsoleColor.BLUE_UNDERLINED));
-            System.out.println("--------------------------------------------------------");
-            System.out.println("");
+            IO.println("--------------------------------------------------------");
+            IO.println("");
         } catch (IOException e) {
-            System.out.println("");
-            System.out.println("Error al escribir AST");
-            System.out.println("");
+            IO.println("");
+            IO.println("Error al escribir AST");
+            IO.println("");
         }
     }
 
@@ -128,28 +128,28 @@ public class App {
                     .create();
             var tree = gson.toJson(ast).replaceAll("\"_c\"", "\"\"");
             writer.write(tree);
-            System.out.println("");
-            System.out.println("--------------------------------------------------------");
-            System.out.println(
+            IO.println("");
+            IO.println("--------------------------------------------------------");
+            IO.println(
                     "Se ha escrito un archivo especial basado en el "
                             + format("ast.json", ConsoleColor.BLUE_UNDERLINED));
-            System.out.println("en " + format("tree.json", ConsoleColor.BLUE_BOLD)
+            IO.println("en " + format("tree.json", ConsoleColor.BLUE_UNDERLINED)
                     + " para su análisis de manera visual creado");
-            System.out.println(
+            IO.println(
                     "para la herramienta online: "
                             + format("https://jsoncrack.com/editor", ConsoleColor.BLUE_UNDERLINED));
-            System.out.println("Solamente necesita:");
-            System.out.println("  - abrir la herramienta online");
-            System.out.println("  - dirigirse a " + format("File", ConsoleColor.BLUE) + " -> "
+            IO.println("Solamente necesita:");
+            IO.println("  - abrir la herramienta online");
+            IO.println("  - dirigirse a " + format("File", ConsoleColor.BLUE) + " -> "
                     + format("Import", ConsoleColor.BLUE));
-            System.out.println(
-                    "  - arrastrar el archivo " + format("tree.json", ConsoleColor.BLUE_BOLD) + " a la herramienta");
-            System.out.println("--------------------------------------------------------");
-            System.out.println("");
+            IO.println(
+                    "  - arrastrar el archivo " + format("tree.json", ConsoleColor.BLUE_UNDERLINED) + " a la herramienta");
+            IO.println("--------------------------------------------------------");
+            IO.println("");
         } catch (IOException e) {
-            System.out.println("");
-            System.out.println("Error al escribir AST Tree");
-            System.out.println("");
+            IO.println("");
+            IO.println("Error al escribir AST Tree");
+            IO.println("");
         }
     }
 
