@@ -88,6 +88,7 @@ public enum TokenKind {
 
 	// misc
 	// AT("@"),
+	BREAK("break"),
 	RETURN("return");
 
 	private static final Map<String, TokenKind> lookup = new HashMap<>();
@@ -132,7 +133,8 @@ public enum TokenKind {
 				|| kind == TokenKind.TRUE
 				|| kind == TokenKind.FALSE
 				|| kind == TokenKind.STRING
-				|| kind == TokenKind.RETURN;
+				|| kind == TokenKind.RETURN
+				|| kind == TokenKind.BREAK;
 	}
 
 	public static boolean isReservedKeyword(String text) {

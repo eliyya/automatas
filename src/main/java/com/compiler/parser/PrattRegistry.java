@@ -73,6 +73,7 @@ public class PrattRegistry {
         PrattRegistry.stmt(TokenKind.DO, StatmentParser::parseControlFlowStatment);
         PrattRegistry.stmt(TokenKind.OPEN_CURLY, StatmentParser::parseBlockStatment);
         PrattRegistry.stmt(TokenKind.RETURN, StatmentParser::parseReturnStatment);
+        PrattRegistry.stmt(TokenKind.BREAK, StatmentParser::parseBreakStatment);
     }
 
     public static void led(TokenKind kind, BindingPower bp, LedHandler fn) {
