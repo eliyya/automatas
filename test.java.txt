@@ -1,52 +1,54 @@
-float a = 3f + (45.2 + 5) * 4;
+// float a = 3f + (45.2 + 5) * 4;
 int b;
 byte c = 1;
-short d = 256;
-long e = 12342123123;
-boolean f, g = true;
-int h = 10; int i = 20;
-String j="hola mundo";
-char k = 'a';
-i++;
-++i;
-b = 2;
-while (i < 10) {
-    if (i == 2) {
-        // do things
-    } else if (i ==3) {
-        i+=2;
-    } else {
-        i++;
-    }
-}
+// short d = 256;
+// long e = 12342123123;
+// boolean f, g = true;
+// int h = 10; int i = 20;
+// String j="hola mundo";
+// char k = 'a';
+// i++;
+// ++i;
+// b = 2;
+// while (i < 10) {
+//     if (i == 2) {
+//         // do things
+//     } else if (i ==3) {
+//         i+=2;
+//     } else {
+//         i++;
+//     }
+// }
 
-lab: for (int i = 0; i < 10; i++) {
-    if (i == 2) {
-        // do things
-        break lab;
-    } else if (i ==3) {
-        i+=2;
-    } else {
-        i++;
-    }
-}
+// lab: for (int i = 0; i < 10; i++) {
+//     if (i == 2) {
+//         // do things
+//         break lab;
+//     } else if (i ==3) {
+//         i+=2;
+//     } else {
+//         i++;
+//     }
+// }
 
-for (String c : j) {
-    // do things
-}
+// for (String c : j) {
+//     // do things
+// }
 
-do {
-    // do things
-} while (i < 10);
+// do {
+//     // do things
+// } while (i < 10);
 
-void main(String args) {
-    var n = false;
-    return n;
-}
+// void main(String args) {
+//     var n = false;
+//     return n;
+// }
 
 
-{
-    int z = 0;
-}
+// {
+//     int z = 0;
+// }
 
-main(1, "s", true, 1.0, 'a', 1.0f, a);
+// main(1, "s", true, 1.0, 'a', 1.0f, a);
+
+int[] arr;

@@ -1,21 +1,22 @@
 package com.compiler.ast.statements;
 
 import com.compiler.ast.Statement;
+import com.compiler.ast.Type;
 import com.compiler.lexer.Token;
 
 public class ParameterStatement implements Statement {
     String _c = "ParameterStatment";
-    Token type;
+    Type type;
     Token name;
 
-    public ParameterStatement(Token type, Token name) {
+    public ParameterStatement(Type type, Token name) {
         this.type = type;
         this.name = name;
     }
 
     @Override
     public String toString() {
-        return type.value() + " " + name;
+        return type.toString() + " " + name;
     }
 
     @Override

@@ -3,9 +3,11 @@ package com.compiler.parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.compiler.ast.Type;
 import com.compiler.ast.Expression;
 import com.compiler.ast.Statement;
 import com.compiler.ast.expressions.AssignmentExpression;
+import com.compiler.ast.expressions.DeclarativeExpression;
 import com.compiler.ast.expressions.FunctionCallExpression;
 import com.compiler.ast.expressions.IdentifierExpression;
 import com.compiler.ast.expressions.UnaryOperationExpression;
@@ -23,6 +25,8 @@ import com.compiler.ast.statements.control_flow.LabeledCicleStatement;
 import com.compiler.ast.statements.control_flow.WhileStatement;
 import com.compiler.ast.statements.declaration.DeclarationFunctionStatement;
 import com.compiler.ast.statements.declaration.DeclarationVariableStatement;
+import com.compiler.ast.types.ArrayType;
+import com.compiler.ast.types.SingleType;
 import com.compiler.errors.ExpectedError;
 import com.compiler.errors.UnexpectedSyntaxError;
 import com.compiler.lexer.TokenKind;
@@ -68,8 +72,11 @@ public class StatementParser {
         if (parser.getToken(2).kind() == TokenKind.OPEN_PAREN) {
             return parseFunctionStatement(parser);
         }
+        if (parser.getToken(1).kind() == TokenKind.OPEN_BRACKET) {
+            return parseArrayStatement(parser);
+        }
         parser.advance();
-        var expressions = new ArrayList<Expression>();
+        var expressions = new ArrayList<DeclarativeExpression>();
         while (true) {
             var identifier = parser.expect(TokenKind.IDENTIFIER);
             if (parser.currentTokenKind() == TokenKind.ASSIGNMENT) {
@@ -85,12 +92,37 @@ public class StatementParser {
             }
             // ends with ;
             if (parser.currentTokenKind() == TokenKind.SEMI) {
+                expressions.add(new IdentifierExpression(identifier));
                 break;
             }
             throw new ExpectedError(parser, ";", parser.currentToken());
         }
         parser.expect(TokenKind.SEMI);
-        return new DeclarationVariableStatement(type, expressions);
+        return new DeclarationVariableStatement(new SingleType(type), expressions);
+    }
+
+    private static DeclarationVariableStatement parseArrayStatement(Parser parser) {
+        var type = parser.advance();
+        if (!TokenKind.isPrimitiveType(type.kind())) {
+            throw new ExpectedError(parser, "type", type);
+        }
+        Type innerType = new SingleType(type);
+        while (parser.currentTokenKind() == TokenKind.OPEN_BRACKET) {
+            parser.expect(TokenKind.OPEN_BRACKET);
+            parser.expect(TokenKind.CLOSE_BRACKET);
+            innerType = new ArrayType(innerType);
+        }
+        var expressions = new ArrayList<DeclarativeExpression>();
+        var identifier = parser.expect(TokenKind.IDENTIFIER);
+        if (parser.currentTokenKind() == TokenKind.SEMI) {
+            parser.advance();
+            expressions.add(new IdentifierExpression(identifier));
+            return new DeclarationVariableStatement(innerType, expressions);
+        }
+        var assignment = parser.expect(TokenKind.ASSIGNMENT);
+        expressions.add(new AssignmentExpression(identifier, assignment, Parser.parseExpression(parser)));
+        parser.expect(TokenKind.SEMI);
+        return new DeclarationVariableStatement(innerType, expressions);
     }
 
     private static DeclarationVariableStatement parseVarStatement(Parser parser) {
@@ -100,7 +132,7 @@ public class StatementParser {
         var expression = Parser.parseExpression(parser);
         parser.expect(TokenKind.SEMI);
         var assignmentExpression = new AssignmentExpression(identifier, assignment, expression);
-        return new DeclarationVariableStatement(type, List.of(assignmentExpression));
+        return new DeclarationVariableStatement(new SingleType(type), List.of(assignmentExpression));
     }
 
     public static Statement parseIdentifierStatement(Parser parser) {
@@ -142,7 +174,7 @@ public class StatementParser {
                 throw new ExpectedError(parser, "cicle", next);
             }
             // if (cicle instanceof IfStatement) {
-            //     throw new ExpectedError(parser, "cicle", next);
+            // throw new ExpectedError(parser, "cicle", next);
             // }
             return new LabeledCicleStatement(identifier, cicle);
         }
@@ -222,7 +254,7 @@ public class StatementParser {
         }
         parser.expect(TokenKind.CLOSE_PAREN);
         var body = parseBlockStatement(parser);
-        return new DeclarationFunctionStatement(type, identifier, parameters, body);
+        return new DeclarationFunctionStatement(new SingleType(type), identifier, parameters, body);
     }
 
     private static ParameterStatement parseParameterStatement(Parser parser) throws ExpectedError {
@@ -231,7 +263,7 @@ public class StatementParser {
             throw new ExpectedError(parser, "type", type);
         }
         var identifier = parser.expect(TokenKind.IDENTIFIER);
-        return new ParameterStatement(type, identifier);
+        return new ParameterStatement(new SingleType(type), identifier);
     }
 
     // ------------------
@@ -278,7 +310,8 @@ public class StatementParser {
                 throw new ExpectedError(parser, "type", type);
             }
             var identifier = parser.expect(TokenKind.IDENTIFIER);
-            var stat = new DeclarationVariableStatement(type, List.of(new IdentifierExpression(identifier)));
+            var stat = new DeclarationVariableStatement(new SingleType(type),
+                    List.of(new IdentifierExpression(identifier)));
             parser.expect(TokenKind.COLON);
             var collection = parser.expect(TokenKind.IDENTIFIER);
             parser.expect(TokenKind.CLOSE_PAREN);
@@ -295,7 +328,7 @@ public class StatementParser {
             var body = parseBlockStatement(parser);
             return new ForStatement(dec, condition, increment, body);
         }
-        throw new ExpectedError(parser,"declaration",open);
+        throw new ExpectedError(parser, "declaration", open);
     }
 
     private static DoWhileStatement parseDoStatement(Parser parser) {

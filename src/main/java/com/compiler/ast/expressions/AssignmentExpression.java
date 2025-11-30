@@ -3,8 +3,8 @@ package com.compiler.ast.expressions;
 import com.compiler.ast.Expression;
 import com.compiler.lexer.Token;
 
-public class AssignmentExpression implements Expression {
-    final String _c = "AssignmentStatement";
+public final class AssignmentExpression implements DeclarativeExpression {
+    final String _c = "AssignmentExpression";
     Token identifier;
     Token operator;
     Expression expression;

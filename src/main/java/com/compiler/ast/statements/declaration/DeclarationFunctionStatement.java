@@ -6,15 +6,16 @@ import com.compiler.ast.statements.BlockStatement;
 import com.compiler.ast.statements.DeclarationStatement;
 import com.compiler.ast.statements.ParameterStatement;
 import com.compiler.lexer.Token;
+import com.compiler.ast.Type;
 
 public class DeclarationFunctionStatement implements DeclarationStatement {
     String _c = "DeclarationFunctionStatment";
-    Token type;
+    Type type;
     Token name;
     List<ParameterStatement> parameters;
     BlockStatement body;
 
-    public DeclarationFunctionStatement(Token type, Token name, List<ParameterStatement> parameters, BlockStatement body) {
+    public DeclarationFunctionStatement(Type type, Token name, List<ParameterStatement> parameters, BlockStatement body) {
         this.type = type;
         this.name = name;
         this.parameters = parameters;
@@ -23,7 +24,7 @@ public class DeclarationFunctionStatement implements DeclarationStatement {
 
     @Override
     public String toString() {
-        return type.value() + " " + name + "(" + parameters + ")" + body;
+        return type.toString() + " " + name + "(" + parameters + ")" + body;
     }
 
     @Override

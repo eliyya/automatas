@@ -1,9 +1,8 @@
 package com.compiler.ast.expressions;
 
-import com.compiler.ast.Expression;
 import com.compiler.lexer.Token;
 
-public class IdentifierExpression implements Expression {
+public final class IdentifierExpression implements DeclarativeExpression {
     final String _c = "IdentifierExpression";
     Token value;
 

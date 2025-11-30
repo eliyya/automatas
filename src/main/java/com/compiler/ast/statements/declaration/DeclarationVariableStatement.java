@@ -2,16 +2,16 @@ package com.compiler.ast.statements.declaration;
 
 import java.util.List;
 
-import com.compiler.ast.Expression;
+import com.compiler.ast.Type;
+import com.compiler.ast.expressions.DeclarativeExpression;
 import com.compiler.ast.statements.DeclarationStatement;
-import com.compiler.lexer.Token;
 
 public class DeclarationVariableStatement implements DeclarationStatement {
     final String _c = "DeclarationVariableStatment";
-    Token type;
-    List<Expression> identifiers;
+    Type type;
+    List<DeclarativeExpression> identifiers;
 
-    public DeclarationVariableStatement(Token type, List<Expression> identifiers) {
+    public DeclarationVariableStatement(Type type, List<DeclarativeExpression> identifiers) {
         this.type = type;
         this.identifiers = identifiers;
     }
