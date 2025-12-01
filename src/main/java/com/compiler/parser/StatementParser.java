@@ -66,7 +66,7 @@ public class StatementParser {
         if (type.kind() == TokenKind.VAR) {
             return parseVarStatement(parser);
         }
-        if (!TokenKind.isPrimitiveType(type)) {
+        if (!TokenKind.isPrimitiveType(type.kind())) {
             throw new ExpectedError(parser, "type", type);
         }
         if (parser.getToken(2).kind() == TokenKind.OPEN_PAREN) {
@@ -238,7 +238,7 @@ public class StatementParser {
     // // -----------------------
     private static DeclarationFunctionStatement parseFunctionStatement(Parser parser) throws ExpectedError {
         var type = parser.advance();
-        if (!TokenKind.isPrimitiveType(type)) {
+        if (!TokenKind.isPrimitiveType(type.kind())) {
             throw new ExpectedError(parser, "type", type);
         }
         var identifier = parser.expect(TokenKind.IDENTIFIER);
@@ -259,7 +259,7 @@ public class StatementParser {
 
     private static ParameterStatement parseParameterStatement(Parser parser) throws ExpectedError {
         var type = parser.advance();
-        if (!TokenKind.isPrimitiveType(type)) {
+        if (!TokenKind.isPrimitiveType(type.kind())) {
             throw new ExpectedError(parser, "type", type);
         }
         var identifier = parser.expect(TokenKind.IDENTIFIER);
@@ -306,7 +306,7 @@ public class StatementParser {
         // foreach
         if (parser.getToken(2).kind() == TokenKind.COLON) {
             var type = parser.advance();
-            if (!TokenKind.isPrimitiveType(type)) {
+            if (!TokenKind.isPrimitiveType(type.kind())) {
                 throw new ExpectedError(parser, "type", type);
             }
             var identifier = parser.expect(TokenKind.IDENTIFIER);

@@ -34,7 +34,8 @@ public class App {
         // --------------------
         // lexer - tokenization
         // --------------------
-        var tokens = Lexer.tokenize(source);
+        var lexer = new Lexer(source);
+        var tokens = lexer.tokenize();
         // print tokens
         printTokens(tokens);
 

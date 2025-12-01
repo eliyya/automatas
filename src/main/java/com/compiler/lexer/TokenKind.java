@@ -8,11 +8,7 @@ public enum TokenKind {
 	NULL("null"),
 	TRUE("true"),
 	FALSE("false"),
-	BINARY_EXPRESSION(""),
 	NUMBER_EXPRESSION(""),
-	OCTAL_EXPRESSION(""),
-	HEXADECIMAL_EXPRESSION(""),
-	FLOAT_EXPRESSION(""),
 	STRING_EXPRESSION(""),
 	IDENTIFIER(""),
 	// types
@@ -141,15 +137,6 @@ public enum TokenKind {
 				|| kind == TokenKind.BREAK;
 	}
 
-	public static boolean isReservedKeyword(String text) {
-		TokenKind kind = fromText(text);
-		return kind != null && isReservedKeyword(kind);
-	}
-
-	public static boolean isReservedKeyword(Token token) {
-		return isReservedKeyword(token.kind());
-	}
-
 	public static boolean isPrimitiveType(TokenKind kind) {
 		return kind == TokenKind.VOID
 				|| kind == TokenKind.SHORT
@@ -163,14 +150,6 @@ public enum TokenKind {
 				|| kind == TokenKind.STRING;
 	}
 
-	public static boolean isPrimitiveType(Token token) {
-		return isPrimitiveType(token.kind());
-	}
-
-	public static boolean isPrimitiveType(String text) {
-		return isPrimitiveType(fromText(text));
-	}
-
 	public static boolean isAssignment(TokenKind kind) {
 		return kind == TokenKind.ASSIGNMENT
 				|| kind == TokenKind.PLUS_ASSIGNMENT
@@ -180,25 +159,9 @@ public enum TokenKind {
 				|| kind == TokenKind.PERCENT_ASSIGNMENT;
 	}
 
-	public static boolean isAssignment(Token token) {
-		return isAssignment(token.kind());
-	}
-
-	public static boolean isAssignment(String text) {
-		return isAssignment(fromText(text));
-	}
-
 	public static boolean isUnaryOperation(TokenKind kind) {
 		return kind == TokenKind.PLUS_PLUS
 				|| kind == TokenKind.MINUS_MINUS;
-	}
-
-	public static boolean isUnaryOperation(Token token) {
-		return isUnaryOperation(token.kind());
-	}
-
-	public static boolean isUnaryOperation(String text) {
-		return isUnaryOperation(fromText(text));
 	}
 
 	public static boolean isControlFlow(TokenKind kind) {
@@ -208,25 +171,5 @@ public enum TokenKind {
 				|| kind == TokenKind.IF
 				|| kind == TokenKind.SWITCH
 				|| kind == TokenKind.ELSE;
-	}
-
-	public static boolean isControlFlow(String text) {
-		return isControlFlow(fromText(text));
-	}
-
-	public static boolean isCiclic(Token token) {
-		return isControlFlow(token.kind());
-	}
-
-	public static boolean isNumberExpression(TokenKind kind) {
-		return kind == TokenKind.NUMBER_EXPRESSION
-				|| kind == TokenKind.BINARY_EXPRESSION
-				|| kind == TokenKind.OCTAL_EXPRESSION
-				|| kind == TokenKind.HEXADECIMAL_EXPRESSION
-				|| kind == TokenKind.FLOAT_EXPRESSION;
-	}
-
-	public static boolean isNumberExpression(Token token) {
-		return isNumberExpression(token.kind());
 	}
 }
