@@ -5,7 +5,7 @@ import com.compiler.ast.statements.BlockStatement;
 import com.compiler.ast.statements.ContolFlowStatement;
 
 public class IfStatement implements ContolFlowStatement {
-    String _c = "IfStatment";
+    String _c = "IfStatement";
     Expression condition;
     BlockStatement body;
     BlockStatement elseBody;

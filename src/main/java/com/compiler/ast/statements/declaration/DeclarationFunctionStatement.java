@@ -9,7 +9,7 @@ import com.compiler.lexer.Token;
 import com.compiler.ast.Type;
 
 public class DeclarationFunctionStatement implements DeclarationStatement {
-    String _c = "DeclarationFunctionStatment";
+    String _c = "DeclarationFunctionStatement";
     Type type;
     Token name;
     List<ParameterStatement> parameters;
@@ -29,7 +29,7 @@ public class DeclarationFunctionStatement implements DeclarationStatement {
 
     @Override
     public void statement() {
-        throw new UnsupportedOperationException("Unimplemented method 'statment'");
+        throw new UnsupportedOperationException("Unimplemented method 'Statement'");
     }
     
 }

@@ -4,7 +4,7 @@ import com.compiler.ast.statements.ContolFlowStatement;
 import com.compiler.lexer.Token;
 
 public class LabeledCicleStatement implements ContolFlowStatement {
-    String _c = "LabeledCicleStatment";
+    String _c = "LabeledCicleStatement";
     Token label;
     ContolFlowStatement cicle;
 
@@ -15,7 +15,7 @@ public class LabeledCicleStatement implements ContolFlowStatement {
 
     @Override
     public void statement() {
-        throw new UnsupportedOperationException("Unimplemented method 'statment'");
+        throw new UnsupportedOperationException("Unimplemented method 'Statement'");
     }
     
 }

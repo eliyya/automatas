@@ -4,7 +4,7 @@ import com.compiler.ast.Expression;
 import com.compiler.ast.Statement;
 
 public class ExpressionStatement implements Statement {
-    final String _c = "ExpressionStatment";
+    final String _c = "ExpressionStatement";
     Expression expression;
 
     public ExpressionStatement(Expression expression) {
@@ -18,6 +18,6 @@ public class ExpressionStatement implements Statement {
     
     @Override
     public void statement() {
-        throw new UnsupportedOperationException("Unimplemented method 'statment'");
+        throw new UnsupportedOperationException("Unimplemented method 'Statement'");
     }
 }

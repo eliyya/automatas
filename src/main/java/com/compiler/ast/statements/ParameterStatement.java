@@ -5,7 +5,7 @@ import com.compiler.ast.Type;
 import com.compiler.lexer.Token;
 
 public class ParameterStatement implements Statement {
-    String _c = "ParameterStatment";
+    String _c = "ParameterStatement";
     Type type;
     Token name;
 
@@ -21,7 +21,7 @@ public class ParameterStatement implements Statement {
 
     @Override
     public void statement() {
-        throw new UnsupportedOperationException("Unimplemented method 'statment'");
+        throw new UnsupportedOperationException("Unimplemented method 'Statement'");
     }
     
 }

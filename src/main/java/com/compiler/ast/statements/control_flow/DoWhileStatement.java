@@ -5,7 +5,7 @@ import com.compiler.ast.statements.BlockStatement;
 import com.compiler.ast.statements.ContolFlowStatement;
 
 public class DoWhileStatement implements ContolFlowStatement {
-    String _c = "DoWhileStatment";
+    String _c = "DoWhileStatement";
     BlockStatement body;
     Expression condition;
 

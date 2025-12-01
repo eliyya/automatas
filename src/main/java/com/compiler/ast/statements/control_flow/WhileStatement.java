@@ -5,7 +5,7 @@ import com.compiler.ast.statements.BlockStatement;
 import com.compiler.ast.statements.ContolFlowStatement;
 
 public class WhileStatement implements ContolFlowStatement {
-    String _c = "WhileStatment";
+    String _c = "WhileStatement";
     Expression condition;
     BlockStatement body;
 

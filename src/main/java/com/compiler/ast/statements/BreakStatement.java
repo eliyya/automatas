@@ -4,7 +4,7 @@ import com.compiler.ast.Statement;
 import com.compiler.lexer.Token;
 
 public class BreakStatement implements Statement {
-    String _c = "BreakStatment";
+    String _c = "BreakStatement";
     Token label;
 
     public BreakStatement(Token label) {
@@ -13,7 +13,7 @@ public class BreakStatement implements Statement {
 
     @Override
     public void statement() {
-        throw new UnsupportedOperationException("Unimplemented method 'statment'");
+        throw new UnsupportedOperationException("Unimplemented method 'Statement'");
     }
     
 }

@@ -7,7 +7,7 @@ import com.compiler.ast.expressions.DeclarativeExpression;
 import com.compiler.ast.statements.DeclarationStatement;
 
 public class DeclarationVariableStatement implements DeclarationStatement {
-    final String _c = "DeclarationVariableStatment";
+    final String _c = "DeclarationVariableStatement";
     Type type;
     List<DeclarativeExpression> identifiers;
 
@@ -18,7 +18,7 @@ public class DeclarationVariableStatement implements DeclarationStatement {
 
     @Override
     public void statement() {
-        throw new UnsupportedOperationException("Unimplemented method 'statment'");
+        throw new UnsupportedOperationException("Unimplemented method 'Statement'");
     }
 
     @Override

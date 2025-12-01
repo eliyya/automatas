@@ -12,23 +12,23 @@ enum ForType {
 }
 
 public class ForStatement implements ContolFlowStatement {
-    String _c = "ForStatment";
+    String _c = "ForStatement";
     ForType type;
-    DeclarationVariableStatement statment;
+    DeclarationVariableStatement Statement;
     Expression collection;
     Expression condition;
     Expression increment;
     BlockStatement body;
     
-    public ForStatement(DeclarationVariableStatement statment, Expression collection, BlockStatement body) {
-        this.statment = statment;
+    public ForStatement(DeclarationVariableStatement Statement, Expression collection, BlockStatement body) {
+        this.Statement = Statement;
         this.collection = collection;
         this.body = body;
         this.type = ForType.FOREACH;
     }
 
-    public ForStatement(DeclarationVariableStatement statment, Expression condition, Expression increment, BlockStatement body) {
-        this.statment = statment;
+    public ForStatement(DeclarationVariableStatement Statement, Expression condition, Expression increment, BlockStatement body) {
+        this.Statement = Statement;
         this.condition = condition;
         this.increment = increment;
         this.body = body;
@@ -38,14 +38,14 @@ public class ForStatement implements ContolFlowStatement {
     @Override
     public String toString() {
         if (type == ForType.FOREACH) {
-            return "for (" + statment + " : " + collection.toString() + ") " + body;
+            return "for (" + Statement + " : " + collection.toString() + ") " + body;
         }
-        return "for (" + statment + "; " + condition + "; " + increment + ") " + body;
+        return "for (" + Statement + "; " + condition + "; " + increment + ") " + body;
     }
 
     @Override
     public void statement() {
-        throw new UnsupportedOperationException("Unimplemented method 'statment'");
+        throw new UnsupportedOperationException("Unimplemented method 'Statement'");
     }
     
 }

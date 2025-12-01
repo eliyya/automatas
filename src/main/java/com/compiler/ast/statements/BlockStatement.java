@@ -24,6 +24,6 @@ public class BlockStatement implements Statement {
     
     @Override
     public void statement() {
-        throw new UnsupportedOperationException("Unimplemented method 'statment'");
+        throw new UnsupportedOperationException("Unimplemented method 'Statement'");
     }
 }
