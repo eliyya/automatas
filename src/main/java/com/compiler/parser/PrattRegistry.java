@@ -7,7 +7,11 @@ import java.util.function.Function;
 import com.compiler.ast.Expression;
 import com.compiler.ast.Statement;
 import com.compiler.lexer.TokenKind;
-import com.compiler.parser.handlers.LedHandler;
+
+@FunctionalInterface
+interface LedHandler {
+    Expression handle(Parser parser, Expression left, BindingPower bp);
+}
 
 public class PrattRegistry {
     // statement
