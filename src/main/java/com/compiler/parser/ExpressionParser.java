@@ -78,7 +78,8 @@ public class ExpressionParser {
             case PLUS_PLUS, MINUS_MINUS -> {
                 parser.advance();
                 parser.advance();
-                return new UnaryOperationExpression(identifier, pp, false);
+                var expression = new IdentifierExpression(identifier);
+                return new UnaryOperationExpression(pp, expression);
             }
             case OPEN_PAREN -> {
                 return parseFunctionExpression(parser);
@@ -88,6 +89,12 @@ public class ExpressionParser {
                 return new IdentifierExpression(identifier);
             }
         }
+    }
+
+    public static Expression parsePrefixExpression(Parser parser) {
+        var operator = parser.advance();
+        var expression = parseExpression(parser, BindingPower.UNARY);
+        return new UnaryOperationExpression(operator, expression);
     }
 
     public static Expression parseParenthesizedExpression(Parser parser) {

@@ -5,20 +5,25 @@ import com.compiler.lexer.Token;
 
 public class UnaryOperationExpression implements Expression {
     final String _c = "UnaryOperationExpression";
-    Token identifier;
+    Expression expression;
     Token operator;
-    boolean prefix;
+    boolean suffix;
 
-    public UnaryOperationExpression(Token identifier, Token operation, boolean prefix) {
-        this.identifier = identifier;
+    public UnaryOperationExpression(Token operation, Expression expression, boolean suffix) {
+        this.expression = expression;
         this.operator = operation;
-        this.prefix = prefix;
+        this.suffix = suffix;
+    }    
+
+    public UnaryOperationExpression(Token operation, Expression expression) {
+        this.expression = expression;
+        this.operator = operation;
     }
 
     @Override
     public String toString() {
-        if (prefix) return operator.value() + identifier.value();
-        else return identifier.value() + operator.value();
+        if (suffix) return expression.toString() + operator.value();
+        else return operator.value() + expression.toString();
     }
 
     @Override

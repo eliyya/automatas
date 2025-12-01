@@ -141,7 +141,8 @@ public class StatementParser {
         if (TokenKind.isUnaryOperation(parser.currentTokenKind())) {
             var operator = parser.advance();
             parser.expect(TokenKind.SEMI);
-            var uaryeExpression = new UnaryOperationExpression(identifier, operator, false);
+            var expression = new IdentifierExpression(identifier);
+            var uaryeExpression = new UnaryOperationExpression(operator, expression, true);
             return new ExpressionStatement(uaryeExpression);
         }
         if (TokenKind.isAssignment(parser.currentTokenKind())) {
@@ -188,7 +189,8 @@ public class StatementParser {
         }
         var identifier = parser.expect(TokenKind.IDENTIFIER);
         parser.expect(TokenKind.SEMI);
-        var uaryeExpression = new UnaryOperationExpression(identifier, operator, true);
+        var expression = new IdentifierExpression(identifier);
+        var uaryeExpression = new UnaryOperationExpression(operator, expression);
         return new ExpressionStatement(uaryeExpression);
     }
 
