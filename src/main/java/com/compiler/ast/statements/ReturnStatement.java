@@ -4,6 +4,7 @@ import com.compiler.ast.Expression;
 import com.compiler.ast.Statement;
 
 public class ReturnStatement implements Statement {
+    String _c = "ReturnStatement";
     Expression expression;
 
     public ReturnStatement(Expression expression) {
