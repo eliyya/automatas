@@ -79,7 +79,7 @@ public class ExpressionParser {
                 parser.advance();
                 parser.advance();
                 var expression = new IdentifierExpression(identifier);
-                return new PrefixExpression(pp, expression);
+                return new PrefixExpression(pp, expression, true);
             }
             case OPEN_PAREN -> {
                 return parseFunctionExpression(parser);
