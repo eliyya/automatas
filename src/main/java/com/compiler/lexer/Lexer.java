@@ -2,11 +2,10 @@ package com.compiler.lexer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
-record RegexPattern(Pattern regex, BiConsumer<Lexer, Pattern> handler) {
-}
+record RegexPattern(Pattern regex, Consumer<Pattern> handler) {}
 
 public class Lexer {
     List<Token> tokens = new ArrayList<>();
@@ -16,27 +15,23 @@ public class Lexer {
     int col = 0;
     float colFloat = 01f;
     RegexPattern[] patterns = {
+            // espacios
+            new RegexPattern(Pattern.compile("\\s+"), skip()),
+            // comentarios
+            new RegexPattern(Pattern.compile("//.*"), skip()),
+            new RegexPattern(Pattern.compile("/\\*.*?\\*/", Pattern.DOTALL), skip()),
             // binary
-            new RegexPattern(Pattern.compile("[+-]?0[Bb][01]([01_]*[01])?[fFdDLl]?"),
-                    handler(TokenKind.NUMBER_EXPRESSION)),
+            new RegexPattern(Pattern.compile("[+-]?0[Bb][01]([01_]*[01])?[fFdDLl]?"), handler(TokenKind.NUMBER_EXPRESSION)),
             // octal
             new RegexPattern(Pattern.compile("[+-]?0[0-7_]*[0-7]+[fFdDLl]?"), handler(TokenKind.NUMBER_EXPRESSION)),
             // hex
-            new RegexPattern(Pattern.compile(
-                    "[+-]?0[xX](([0-9a-fA-F][0-9a-fA-F_]*[0-9a-fA-F]+)|[0-9a-fA-F]+)(\\.(([0-9a-fA-F][0-9a-fA-F_]*[0-9a-fA-F]+)|[0-9a-fA-F]+)[Pp][+-]?[0-9]+)?([fFdDdLl])?"),
-                    handler(TokenKind.NUMBER_EXPRESSION)),
+            new RegexPattern(Pattern.compile("[+-]?0[xX](([0-9a-fA-F][0-9a-fA-F_]*[0-9a-fA-F]+)|[0-9a-fA-F]+)(\\.(([0-9a-fA-F][0-9a-fA-F_]*[0-9a-fA-F]+)|[0-9a-fA-F]+)[Pp][+-]?[0-9]+)?([fFdDdLl])?"), handler(TokenKind.NUMBER_EXPRESSION)),
             // decoimal
-            new RegexPattern(
-                    Pattern.compile("[+-]?((\\d[\\d_]*\\d+)|(\\d+))(\\.((\\d[\\d_]*\\d+)|(\\d+))?)?[fFdDdLl]?"),
-                    handler(TokenKind.NUMBER_EXPRESSION)),
+            new RegexPattern(Pattern.compile("[+-]?((\\d[\\d_]*\\d+)|(\\d+))(\\.((\\d[\\d_]*\\d+)|(\\d+))?)?[fFdDdLl]?"), handler(TokenKind.NUMBER_EXPRESSION)),
             // integer
-            new RegexPattern(Pattern.compile("[+-]?((\\d[\\d_]*\\d+)|(\\d+))[fFdDLl]?"),
-                    handler(TokenKind.NUMBER_EXPRESSION)),
+            new RegexPattern(Pattern.compile("[+-]?((\\d[\\d_]*\\d+)|(\\d+))[fFdDLl]?"), handler(TokenKind.NUMBER_EXPRESSION)),
             new RegexPattern(Pattern.compile("\".*?\""), handler(TokenKind.STRING_EXPRESSION)),
             new RegexPattern(Pattern.compile("'.*?'"), handler(TokenKind.CHAR)),
-            new RegexPattern(Pattern.compile("\\s+"), skip()),
-            new RegexPattern(Pattern.compile("//.*"), skip()),
-            new RegexPattern(Pattern.compile("/\\*.*?\\*/", Pattern.DOTALL), skip()),
             new RegexPattern(Pattern.compile("\\["), handler(TokenKind.OPEN_BRACKET)),
             new RegexPattern(Pattern.compile("\\]"), handler(TokenKind.CLOSE_BRACKET)),
             new RegexPattern(Pattern.compile("\\{"), handler(TokenKind.OPEN_CURLY)),
@@ -111,7 +106,7 @@ public class Lexer {
             for (var pattern : this.patterns) {
                 var match = pattern.regex().matcher(this.reminder());
                 if (match.find() && match.start() == 0) {
-                    pattern.handler().accept(this, pattern.regex());
+                    pattern.handler().accept(pattern.regex());
                     matched = true;
                     break;
                 }
@@ -134,7 +129,7 @@ public class Lexer {
         return this.tokens;
     }
 
-    private void advanceN(int n) {
+    private void advance(int n) {
         String consumed = this.source.substring(this.pos, this.pos + n);
 
         for (int i = 0; i < consumed.length(); i++) {
@@ -162,26 +157,26 @@ public class Lexer {
         return this.pos >= this.source.length();
     }
 
-    private static BiConsumer<Lexer, Pattern> handler(TokenKind kind) {
-        return (lexer, regex) -> {
-            var match = regex.matcher(lexer.reminder());
+    private Consumer<Pattern> handler(TokenKind kind) {
+        return (regex) -> {
+            var match = regex.matcher(this.reminder());
             if (match.find() && match.start() == 0) {
-                lexer.advanceN(match.end());
+                this.advance(match.end());
                 var value = switch (kind) {
                     case STRING_EXPRESSION -> match.group().substring(1, match.group().length() - 1);
                     case CHAR -> match.group().substring(1, match.group().length() - 1);
                     default -> match.group();
                 };
-                lexer.push(new Token(kind, value, lexer.row, lexer.col));
+                this.push(new Token(kind, value, this.row, this.col));
             }
         };
     }
 
-    private static BiConsumer<Lexer, Pattern> skip() {
-        return (lexer, regex) -> {
-            var match = regex.matcher(lexer.reminder());
+    private Consumer<Pattern> skip() {
+        return (pattern) -> {
+            var match = pattern.matcher(reminder());
             if (match.find() && match.start() == 0) {
-                lexer.advanceN(match.end());
+                advance(match.end());
             }
         };
     }
