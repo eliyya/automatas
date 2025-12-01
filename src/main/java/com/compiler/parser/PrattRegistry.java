@@ -2,17 +2,18 @@ package com.compiler.parser;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
+import com.compiler.ast.Expression;
+import com.compiler.ast.Statement;
 import com.compiler.lexer.TokenKind;
 import com.compiler.parser.handlers.LedHandler;
-import com.compiler.parser.handlers.NudHandler;
-import com.compiler.parser.handlers.StatementHandler;
 
 public class PrattRegistry {
     // statement
-    public static final Map<TokenKind, StatementHandler> stmtLU = new HashMap<>();
+    public static final Map<TokenKind, Function<Parser, Statement>> stmtLU = new HashMap<>();
     // null denotation
-    public static final Map<TokenKind, NudHandler> nudLU = new HashMap<>();
+    public static final Map<TokenKind, Function<Parser, Expression>> nudLU = new HashMap<>();
     // left denotation
     public static final Map<TokenKind, LedHandler> ledLU = new HashMap<>();
     // binding power
@@ -86,12 +87,12 @@ public class PrattRegistry {
         ledLU.put(kind, fn);
     }
 
-    public static void nud(TokenKind kind, BindingPower bp, NudHandler fn) {
+    public static void nud(TokenKind kind, BindingPower bp, Function<Parser, Expression> fn) {
         bpLU.put(kind, BindingPower.PRIMARY);
         nudLU.put(kind, fn);
     }
 
-    public static void stmt(TokenKind kind, StatementHandler fn) {
+    public static void stmt(TokenKind kind, Function<Parser, Statement> fn) {
         bpLU.put(kind, BindingPower.DEFAULT_BP);
         stmtLU.put(kind, fn);
     }

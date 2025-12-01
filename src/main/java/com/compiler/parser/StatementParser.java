@@ -50,7 +50,7 @@ public class StatementParser {
             if (handler == null) {
                 throw new UnexpectedSyntaxError(parser, parser.currentToken());
             }
-            body.add(handler.handle(parser));
+            body.add(handler.apply(parser));
             continue;
         }
 

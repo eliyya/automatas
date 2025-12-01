@@ -24,7 +24,7 @@ public class ExpressionParser {
         if (nud == null) {
             throw new RuntimeException("nud handler expected for token: " + tokenKind);
         }
-        var left = nud.handle(parser);
+        var left = nud.apply(parser);
 
         while (true) {
             var opkb = parser.currentTokenKind();
