@@ -83,6 +83,15 @@ public class StatementParser {
                 var assignment = parser.advance();
                 var expression = Parser.parseExpression(parser);
                 expressions.add(new AssignmentExpression(identifier, assignment, expression));
+                // ends with ,
+                if (parser.currentTokenKind() == TokenKind.COMMA) {
+                    parser.advance();
+                    continue;
+                }
+                // ends with ;
+                if (parser.currentTokenKind() == TokenKind.SEMI) {
+                    break;
+                }
             }
             // ends with ,
             if (parser.currentTokenKind() == TokenKind.COMMA) {
@@ -315,7 +324,7 @@ public class StatementParser {
             var stat = new DeclarationVariableStatement(new SingleType(type),
                     List.of(new IdentifierExpression(identifier)));
             parser.expect(TokenKind.COLON);
-            var collection = parser.expect(TokenKind.IDENTIFIER);
+            var collection = Parser.parseExpression(parser);
             parser.expect(TokenKind.CLOSE_PAREN);
             var body = parseBlockStatement(parser);
             return new ForStatement(stat, collection, body);

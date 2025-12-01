@@ -2,7 +2,7 @@ float a = 3f + (45.2 + 5) * 4;
 int b;
 byte c = 1;
 short d = 256;
-long e = 12342123123;
+long e = 12342123123l;
 boolean f, g = true;
 int h = 10; int i = 20;
 String j="hola mundo";
@@ -15,9 +15,11 @@ while (i < 10) {
         // do things
     } else if (i ==3) {
         i+=2;
-    } else {
-        i++;
-    }
+    } 
+}
+
+for (String c : j) {
+    // do things
 }
 
 lab: for (int i = 0; i < 10; i++) {
@@ -29,10 +31,6 @@ lab: for (int i = 0; i < 10; i++) {
     } else {
         i++;
     }
-}
-
-for (String c : j) {
-    // do things
 }
 
 do {

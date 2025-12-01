@@ -15,12 +15,12 @@ public class ForStatement implements ContolFlowStatement {
     String _c = "ForStatment";
     ForType type;
     DeclarationVariableStatement statment;
-    Token collection;
+    Expression collection;
     Expression condition;
     Expression increment;
     BlockStatement body;
     
-    public ForStatement(DeclarationVariableStatement statment, Token collection, BlockStatement body) {
+    public ForStatement(DeclarationVariableStatement statment, Expression collection, BlockStatement body) {
         this.statment = statment;
         this.collection = collection;
         this.body = body;
@@ -38,7 +38,7 @@ public class ForStatement implements ContolFlowStatement {
     @Override
     public String toString() {
         if (type == ForType.FOREACH) {
-            return "for (" + statment + " : " + collection.value() + ") " + body;
+            return "for (" + statment + " : " + collection.toString() + ") " + body;
         }
         return "for (" + statment + "; " + condition + "; " + increment + ") " + body;
     }
