@@ -50,6 +50,10 @@ public class PrattRegistry {
         PrattRegistry.nud(TokenKind.CHAR, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);
         PrattRegistry.nud(TokenKind.OPEN_PAREN, BindingPower.PRIMARY, ExpressionParser::parseParenthesizedExpression);
         PrattRegistry.nud(TokenKind.OPEN_CURLY, BindingPower.PRIMARY, ExpressionParser::parseArrayExpression);
+        PrattRegistry.nud(TokenKind.NOT, BindingPower.PRIMARY, ExpressionParser::parsePrefixExpression);
+        PrattRegistry.nud(TokenKind.MINUS, BindingPower.PRIMARY, ExpressionParser::parsePrefixExpression);
+        PrattRegistry.nud(TokenKind.PLUS_PLUS, BindingPower.PRIMARY, ExpressionParser::parsePrefixExpression);
+        PrattRegistry.nud(TokenKind.MINUS_MINUS, BindingPower.PRIMARY, ExpressionParser::parsePrefixExpression);
 
         // identifiers
         PrattRegistry.nud(TokenKind.IDENTIFIER, BindingPower.PRIMARY, ExpressionParser::parseIdentifierExpression);
