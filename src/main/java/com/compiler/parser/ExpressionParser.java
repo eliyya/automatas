@@ -8,7 +8,7 @@ import com.compiler.ast.expressions.BinaryExpression;
 import com.compiler.ast.expressions.FunctionCallExpression;
 import com.compiler.ast.expressions.IdentifierExpression;
 import com.compiler.ast.expressions.PrimaryExpression;
-import com.compiler.ast.expressions.UnaryOperationExpression;
+import com.compiler.ast.expressions.PrefixExpression;
 import com.compiler.ast.expressions.primary.BooleanExpression;
 import com.compiler.ast.expressions.primary.CharExpression;
 import com.compiler.ast.expressions.primary.NumberExpression;
@@ -79,7 +79,7 @@ public class ExpressionParser {
                 parser.advance();
                 parser.advance();
                 var expression = new IdentifierExpression(identifier);
-                return new UnaryOperationExpression(pp, expression);
+                return new PrefixExpression(pp, expression);
             }
             case OPEN_PAREN -> {
                 return parseFunctionExpression(parser);
@@ -94,7 +94,7 @@ public class ExpressionParser {
     public static Expression parsePrefixExpression(Parser parser) {
         var operator = parser.advance();
         var expression = parseExpression(parser, BindingPower.UNARY);
-        return new UnaryOperationExpression(operator, expression);
+        return new PrefixExpression(operator, expression);
     }
 
     public static Expression parseParenthesizedExpression(Parser parser) {

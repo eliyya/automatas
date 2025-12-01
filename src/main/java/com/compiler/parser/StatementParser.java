@@ -10,7 +10,7 @@ import com.compiler.ast.expressions.AssignmentExpression;
 import com.compiler.ast.expressions.DeclarativeExpression;
 import com.compiler.ast.expressions.FunctionCallExpression;
 import com.compiler.ast.expressions.IdentifierExpression;
-import com.compiler.ast.expressions.UnaryOperationExpression;
+import com.compiler.ast.expressions.PrefixExpression;
 import com.compiler.ast.statements.BlockStatement;
 import com.compiler.ast.statements.BreakStatement;
 import com.compiler.ast.statements.ContolFlowStatement;
@@ -142,7 +142,7 @@ public class StatementParser {
             var operator = parser.advance();
             parser.expect(TokenKind.SEMI);
             var expression = new IdentifierExpression(identifier);
-            var uaryeExpression = new UnaryOperationExpression(operator, expression, true);
+            var uaryeExpression = new PrefixExpression(operator, expression, true);
             return new ExpressionStatement(uaryeExpression);
         }
         if (TokenKind.isAssignment(parser.currentTokenKind())) {
@@ -190,7 +190,7 @@ public class StatementParser {
         var identifier = parser.expect(TokenKind.IDENTIFIER);
         parser.expect(TokenKind.SEMI);
         var expression = new IdentifierExpression(identifier);
-        var uaryeExpression = new UnaryOperationExpression(operator, expression);
+        var uaryeExpression = new PrefixExpression(operator, expression);
         return new ExpressionStatement(uaryeExpression);
     }
 

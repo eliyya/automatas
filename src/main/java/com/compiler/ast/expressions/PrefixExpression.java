@@ -3,19 +3,19 @@ package com.compiler.ast.expressions;
 import com.compiler.ast.Expression;
 import com.compiler.lexer.Token;
 
-public class UnaryOperationExpression implements Expression {
+public class PrefixExpression implements Expression {
     final String _c = "UnaryOperationExpression";
     Expression expression;
     Token operator;
     boolean suffix;
 
-    public UnaryOperationExpression(Token operation, Expression expression, boolean suffix) {
+    public PrefixExpression(Token operation, Expression expression, boolean suffix) {
         this.expression = expression;
         this.operator = operation;
         this.suffix = suffix;
     }    
 
-    public UnaryOperationExpression(Token operation, Expression expression) {
+    public PrefixExpression(Token operation, Expression expression) {
         this.expression = expression;
         this.operator = operation;
     }
