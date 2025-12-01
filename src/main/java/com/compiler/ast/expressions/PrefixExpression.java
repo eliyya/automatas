@@ -4,7 +4,7 @@ import com.compiler.ast.Expression;
 import com.compiler.lexer.Token;
 
 public class PrefixExpression implements Expression {
-    final String _c = "UnaryOperationExpression";
+    final String _c = "PrefixExpression";
     Expression expression;
     Token operator;
     boolean suffix;
