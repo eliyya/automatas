@@ -27,7 +27,7 @@ public class Lexer {
             // hex
             new RegexPattern(Pattern.compile("[+-]?0[xX](([0-9a-fA-F][0-9a-fA-F_]*[0-9a-fA-F]+)|[0-9a-fA-F]+)(\\.(([0-9a-fA-F][0-9a-fA-F_]*[0-9a-fA-F]+)|[0-9a-fA-F]+)[Pp][+-]?[0-9]+)?([fFdDdLl])?"), handler(TokenKind.NUMBER_EXPRESSION)),
             // decoimal
-            new RegexPattern(Pattern.compile("[+-]?((\\d[\\d_]*\\d+)|(\\d+))(\\.((\\d[\\d_]*\\d+)|(\\d+))?)?[fFdDdLl]?"), handler(TokenKind.NUMBER_EXPRESSION)),
+            new RegexPattern(Pattern.compile("[+-]?((\\d[\\d_]*\\d+)|(\\d+))(\\.((\\d[\\d_]*\\d+)|(\\d+))?)?([fFdDLl]|([eE][-+]?\\d+[fFdD]?))?"), handler(TokenKind.NUMBER_EXPRESSION)),
             // integer
             new RegexPattern(Pattern.compile("[+-]?((\\d[\\d_]*\\d+)|(\\d+))[fFdDLl]?"), handler(TokenKind.NUMBER_EXPRESSION)),
             new RegexPattern(Pattern.compile("\".*?\""), handler(TokenKind.STRING_EXPRESSION)),
