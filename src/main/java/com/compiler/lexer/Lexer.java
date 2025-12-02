@@ -77,6 +77,7 @@ public class Lexer {
             new RegexPattern(Pattern.compile("char"), handler(TokenKind.CHAR)),
             new RegexPattern(Pattern.compile("boolean"), handler(TokenKind.BOOLEAN)),
             new RegexPattern(Pattern.compile("String"), handler(TokenKind.STRING)),
+            new RegexPattern(Pattern.compile("Object"), handler(TokenKind.OBJECT)),
             new RegexPattern(Pattern.compile("void"), handler(TokenKind.VOID)),
             new RegexPattern(Pattern.compile("var"), handler(TokenKind.VAR)),
             new RegexPattern(Pattern.compile("true"), handler(TokenKind.TRUE)),

@@ -23,6 +23,7 @@ public enum TokenKind {
 	CHAR("char"),
 	BOOLEAN("boolean"),
 	STRING("String"),
+	OBJECT("Object"),
 
 	// Grouping & Braces
 	OPEN_BRACKET("["),
@@ -134,6 +135,7 @@ public enum TokenKind {
 				|| kind == TokenKind.TRUE
 				|| kind == TokenKind.FALSE
 				|| kind == TokenKind.STRING
+				|| kind == TokenKind.OBJECT
 				|| kind == TokenKind.RETURN
 				|| kind == TokenKind.BREAK;
 	}
@@ -148,7 +150,8 @@ public enum TokenKind {
 				|| kind == TokenKind.INT
 				|| kind == TokenKind.CHAR
 				|| kind == TokenKind.BOOLEAN
-				|| kind == TokenKind.STRING;
+				|| kind == TokenKind.STRING
+				|| kind == TokenKind.OBJECT;
 	}
 
 	public static boolean isNumberType(TokenKind kind) {

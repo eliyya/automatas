@@ -1,13 +1,16 @@
 package com.compiler;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
+import javax.tools.ToolProvider;
+
 import com.compiler.ast.statements.BlockStatement;
 
 public class Compiler {
-    public static void compile(BlockStatement ast) {
+    public static boolean compile(BlockStatement ast) {
         String gen = """
                 public class App {
                     void println(Object obj) { IO.println(obj); }
@@ -19,10 +22,16 @@ public class Compiler {
                     }
                 }
                 """;
-        try (var writer = new FileWriter("App.java")) {
+        var file = new File("App.java");
+        try (var writer = new FileWriter(file)) {
             writer.write(gen);
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
+        var jc = ToolProvider.getSystemJavaCompiler();
+        jc.run(System.in, System.out, System.err, file.getPath());
+        file.delete();
+        return true;
     }
 }

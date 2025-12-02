@@ -67,6 +67,7 @@ public class PrattRegistry {
         PrattRegistry.stmt(TokenKind.LONG, StatementParser::parseDeclaratioStatement);
         PrattRegistry.stmt(TokenKind.BYTE, StatementParser::parseDeclaratioStatement);
         PrattRegistry.stmt(TokenKind.STRING, StatementParser::parseDeclaratioStatement);
+        PrattRegistry.stmt(TokenKind.OBJECT, StatementParser::parseDeclaratioStatement);
         PrattRegistry.stmt(TokenKind.CHAR, StatementParser::parseDeclaratioStatement);
         PrattRegistry.stmt(TokenKind.VOID, StatementParser::parseDeclaratioStatement);
         PrattRegistry.stmt(TokenKind.VAR, StatementParser::parseDeclaratioStatement);

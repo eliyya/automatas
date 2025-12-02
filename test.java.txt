@@ -38,10 +38,10 @@ b = 2;
 //     // do things
 // } while (i < 10);
 
-// void main(String args) {
-//     var n = false;
-//     return n;
-// }
+void test(Object args) {
+    var n = false;
+    return n;
+}
 
 // {
 //     int z = 0;
