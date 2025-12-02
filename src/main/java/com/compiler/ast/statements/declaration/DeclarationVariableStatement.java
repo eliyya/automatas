@@ -1,6 +1,7 @@
 package com.compiler.ast.statements.declaration;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.compiler.ast.Type;
 import com.compiler.ast.expressions.DeclarativeExpression;
@@ -27,7 +28,7 @@ public class DeclarationVariableStatement implements DeclarationStatement {
 
     @Override
     public String toString() {
-        return "";
+        return this.type.token().value() + " " + this.identifiers.stream().map(DeclarativeExpression::toString).collect(Collectors.joining(", ")) + ";";
         // if (expression == null) {
         //     return type.value() + " " + identifier.value() + ";";
         // }

@@ -15,5 +15,11 @@ public class BreakStatement implements Statement {
     public void validate(BlockStatement parent) {
         throw new UnsupportedOperationException("Unimplemented method 'Statement'");
     }
+
+    @Override
+    public String toString() {
+        if (label == null) return "break;";
+        else return "break " + label.value() + ";";
+    }
     
 }

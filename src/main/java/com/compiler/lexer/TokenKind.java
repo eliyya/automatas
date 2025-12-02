@@ -10,6 +10,7 @@ public enum TokenKind {
 	FALSE("false"),
 	NUMBER_EXPRESSION(""),
 	STRING_EXPRESSION(""),
+	CHAR_EXPRESSION(""),
 	IDENTIFIER(""),
 	// types
 	VOID("void"),

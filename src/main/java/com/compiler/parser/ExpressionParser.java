@@ -114,7 +114,7 @@ public class ExpressionParser {
                 var string = parser.advance();
                 return new StringExpression(string);
             }
-            case CHAR -> {
+            case CHAR_EXPRESSION -> {
                 var string = parser.advance();
                 return new CharExpression(string);
             }

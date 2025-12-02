@@ -18,7 +18,7 @@ public final class AssignmentExpression implements DeclarativeExpression {
 
     @Override
     public String toString() {
-        return identifier.value() + " " + operator.value() + " " + expression + ";";
+        return identifier.value() + " " + operator.value() + " " + expression;
     }
 
     @Override

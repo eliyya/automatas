@@ -18,5 +18,10 @@ public class LabeledCicleStatement implements ContolFlowStatement {
     public void validate(BlockStatement parent) {
         throw new UnsupportedOperationException("Unimplemented method 'Statement'");
     }
+
+    @Override
+    public String toString() {
+        return this.label + ": " + this.cicle;
+    }
     
 }

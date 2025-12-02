@@ -31,7 +31,7 @@ public class Lexer {
             // integer
             new RegexPattern(Pattern.compile("[+-]?((\\d[\\d_]*\\d+)|(\\d+))[fFdDLl]?"), handler(TokenKind.NUMBER_EXPRESSION)),
             new RegexPattern(Pattern.compile("\".*?\""), handler(TokenKind.STRING_EXPRESSION)),
-            new RegexPattern(Pattern.compile("'.*?'"), handler(TokenKind.CHAR)),
+            new RegexPattern(Pattern.compile("'.*?'"), handler(TokenKind.CHAR_EXPRESSION)),
             new RegexPattern(Pattern.compile("\\["), handler(TokenKind.OPEN_BRACKET)),
             new RegexPattern(Pattern.compile("\\]"), handler(TokenKind.CLOSE_BRACKET)),
             new RegexPattern(Pattern.compile("\\{"), handler(TokenKind.OPEN_CURLY)),
@@ -165,7 +165,7 @@ public class Lexer {
                 this.advance(match.end());
                 var value = switch (kind) {
                     case STRING_EXPRESSION -> match.group().substring(1, match.group().length() - 1);
-                    case CHAR -> match.group().substring(1, match.group().length() - 1);
+                    case CHAR_EXPRESSION -> match.group().substring(1, match.group().length() - 1);
                     default -> match.group();
                 };
                 this.push(new Token(kind, value, this.row, this.col, this.lines.get(this.row - 1)));

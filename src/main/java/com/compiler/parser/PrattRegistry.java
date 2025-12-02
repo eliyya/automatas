@@ -47,7 +47,7 @@ public class PrattRegistry {
         PrattRegistry.nud(TokenKind.STRING_EXPRESSION, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);
         PrattRegistry.nud(TokenKind.TRUE, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);
         PrattRegistry.nud(TokenKind.FALSE, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);
-        PrattRegistry.nud(TokenKind.CHAR, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);
+        PrattRegistry.nud(TokenKind.CHAR_EXPRESSION, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);
         PrattRegistry.nud(TokenKind.OPEN_PAREN, BindingPower.PRIMARY, ExpressionParser::parseParenthesizedExpression);
         PrattRegistry.nud(TokenKind.OPEN_CURLY, BindingPower.PRIMARY, ExpressionParser::parseArrayExpression);
         PrattRegistry.nud(TokenKind.NOT, BindingPower.PRIMARY, ExpressionParser::parsePrefixExpression);

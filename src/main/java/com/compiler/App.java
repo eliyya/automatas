@@ -94,6 +94,7 @@ public class App {
                     IO.println("Fase 2: " + format("Parseo ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
                     IO.println("Fase 3: " + format("Validación ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
                     IO.println("----------------------------------------------");
+                    Compiler.compile(ast);
                 } catch (Exception e) {
                     e.printStackTrace();
                     IO.println("----------------------------------------------");

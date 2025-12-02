@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.compiler.ast.Statement;
+import com.compiler.ast.statements.declaration.DeclarationFunctionStatement;
 import com.compiler.lexer.Token;
 import com.compiler.utils.JsonIgnore;
 
@@ -47,5 +48,17 @@ public class BlockStatement implements Statement {
         for (var elem : body) {
             elem.validate(parent);
         }
+    }
+
+    public String getScript() {
+        var text = "";
+        for (var elem : body) {
+            if (elem instanceof DeclarationFunctionStatement) {
+                // do nothing
+            } else {
+                text += elem.toString() + "\n";
+            }
+        }
+        return text;
     }
 }
