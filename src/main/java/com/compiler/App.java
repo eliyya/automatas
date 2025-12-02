@@ -43,7 +43,7 @@ public class App {
         // ----------------
         // parser - parsing
         // ----------------
-        var ast = Parser.parse(tokens, source.lines().toList());
+        var ast = Parser.parse(tokens);
         printAST(ast);
         writeAST(ast);
         writeASTTree(ast);

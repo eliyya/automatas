@@ -13,7 +13,7 @@ public class Lexer {
     int pos = 0;
     int row = 1;
     int col = 0;
-    float colFloat = 01f;
+    List<String> lines;
     RegexPattern[] patterns = {
             // espacios
             new RegexPattern(Pattern.compile("\\s+"), skip()),
@@ -97,6 +97,7 @@ public class Lexer {
 
     public Lexer(String source) {
         this.source = source;
+        this.lines = source.lines().toList();
     }
 
     public List<Token> tokenize() {
@@ -124,7 +125,7 @@ public class Lexer {
             }
         }
 
-        this.push(new Token(TokenKind.EOF, "EOF", this.row, this.col));
+        this.push(new Token(TokenKind.EOF, "EOF", this.row, this.col, this.lines.get(this.row - 1)));
 
         return this.tokens;
     }
@@ -167,7 +168,7 @@ public class Lexer {
                     case CHAR -> match.group().substring(1, match.group().length() - 1);
                     default -> match.group();
                 };
-                this.push(new Token(kind, value, this.row, this.col));
+                this.push(new Token(kind, value, this.row, this.col, this.lines.get(this.row - 1)));
             }
         };
     }

@@ -48,7 +48,7 @@ public class StatementParser {
             }
             var handler = PrattRegistry.stmtLU.get(parser.currentTokenKind());
             if (handler == null) {
-                throw new UnexpectedSyntaxError(parser, parser.currentToken());
+                throw new UnexpectedSyntaxError(parser.currentToken());
             }
             body.add(handler.apply(parser));
             continue;
@@ -67,7 +67,7 @@ public class StatementParser {
             return parseVarStatement(parser);
         }
         if (!TokenKind.isPrimitiveType(type.kind())) {
-            throw new ExpectedError(parser, "type", type);
+            throw new ExpectedError("type", type);
         }
         if (parser.getToken(2).kind() == TokenKind.OPEN_PAREN) {
             return parseFunctionStatement(parser);
@@ -104,7 +104,7 @@ public class StatementParser {
                 expressions.add(new IdentifierExpression(identifier));
                 break;
             }
-            throw new ExpectedError(parser, ";", parser.currentToken());
+            throw new ExpectedError(";", parser.currentToken());
         }
         parser.expect(TokenKind.SEMI);
         return new DeclarationVariableStatement(new SingleType(type), expressions);
@@ -113,7 +113,7 @@ public class StatementParser {
     private static DeclarationVariableStatement parseArrayStatement(Parser parser) {
         var type = parser.advance();
         if (!TokenKind.isPrimitiveType(type.kind())) {
-            throw new ExpectedError(parser, "type", type);
+            throw new ExpectedError("type", type);
         }
         Type innerType = new SingleType(type);
         while (parser.currentTokenKind() == TokenKind.OPEN_BRACKET) {
@@ -181,20 +181,20 @@ public class StatementParser {
             var next = parser.currentToken();
             var cicle = StatementParser.parseControlFlowStatement(parser);
             if (cicle instanceof IfStatement) {
-                throw new ExpectedError(parser, "cicle", next);
+                throw new ExpectedError("cicle", next);
             }
             // if (cicle instanceof IfStatement) {
-            // throw new ExpectedError(parser, "cicle", next);
+            // throw new ExpectedError("cicle", next);
             // }
             return new LabeledCicleStatement(identifier, cicle);
         }
-        throw new UnexpectedSyntaxError(parser, parser.currentToken());
+        throw new UnexpectedSyntaxError(parser.currentToken());
     }
 
     public static Statement parseUaryOperationStatement(Parser parser) {
         var operator = parser.advance();
         if (operator.kind() != TokenKind.PLUS_PLUS && operator.kind() != TokenKind.MINUS_MINUS) {
-            throw new ExpectedError(parser, "++", operator);
+            throw new ExpectedError("++", operator);
         }
         var identifier = parser.expect(TokenKind.IDENTIFIER);
         parser.expect(TokenKind.SEMI);
@@ -219,7 +219,7 @@ public class StatementParser {
                 return parseDoStatement(parser);
             }
             default -> {
-                throw new UnexpectedSyntaxError(parser, token);
+                throw new UnexpectedSyntaxError(token);
             }
         }
     }
@@ -250,7 +250,7 @@ public class StatementParser {
     private static DeclarationFunctionStatement parseFunctionStatement(Parser parser) throws ExpectedError {
         var type = parser.advance();
         if (!TokenKind.isPrimitiveType(type.kind())) {
-            throw new ExpectedError(parser, "type", type);
+            throw new ExpectedError("type", type);
         }
         var identifier = parser.expect(TokenKind.IDENTIFIER);
         parser.expect(TokenKind.OPEN_PAREN);
@@ -271,7 +271,7 @@ public class StatementParser {
     private static ParameterStatement parseParameterStatement(Parser parser) throws ExpectedError {
         var type = parser.advance();
         if (!TokenKind.isPrimitiveType(type.kind())) {
-            throw new ExpectedError(parser, "type", type);
+            throw new ExpectedError("type", type);
         }
         var identifier = parser.expect(TokenKind.IDENTIFIER);
         return new ParameterStatement(new SingleType(type), identifier);
@@ -318,7 +318,7 @@ public class StatementParser {
         if (parser.getToken(2).kind() == TokenKind.COLON) {
             var type = parser.advance();
             if (!TokenKind.isPrimitiveType(type.kind())) {
-                throw new ExpectedError(parser, "type", type);
+                throw new ExpectedError("type", type);
             }
             var identifier = parser.expect(TokenKind.IDENTIFIER);
             var stat = new DeclarationVariableStatement(new SingleType(type),
@@ -339,7 +339,7 @@ public class StatementParser {
             var body = parseBlockStatement(parser);
             return new ForStatement(dec, condition, increment, body);
         }
-        throw new ExpectedError(parser, "declaration", open);
+        throw new ExpectedError("declaration", open);
     }
 
     private static DoWhileStatement parseDoStatement(Parser parser) {

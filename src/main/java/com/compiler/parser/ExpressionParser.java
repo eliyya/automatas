@@ -40,7 +40,7 @@ public class ExpressionParser {
             var led = PrattRegistry.ledLU.get(opkb);
             if (led == null) {
                 if (opkb == TokenKind.OPEN_PAREN) {
-                    throw new ExpectedError(parser, "operator", parser.currentToken());
+                    throw new ExpectedError("operator", parser.currentToken());
                 }
                 throw new RuntimeException("led handler expected for token : " + opkb);
             }

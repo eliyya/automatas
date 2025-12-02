@@ -1,7 +1,6 @@
 package com.compiler.errors;
 
 import com.compiler.lexer.Token;
-import com.compiler.parser.Parser;
 import com.compiler.utils.ConsoleColor;
 
 public class ExpectedError extends RuntimeException {
@@ -9,10 +8,9 @@ public class ExpectedError extends RuntimeException {
         return ConsoleColor.format(text, color);
     }
 
-    public ExpectedError(Parser parser, String expected, Token found) {
+    public ExpectedError(String expected, Token found) {
         IO.println("");
-        var line = parser.lines.get(found.line() - 1);
-        IO.println(line);
+        IO.println(found.textLine());
         IO.println(" ".repeat(found.column()) + "^");
         super(
                 format("Parser:Error ->", ConsoleColor.RED)

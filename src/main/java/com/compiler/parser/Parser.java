@@ -9,18 +9,16 @@ import com.compiler.lexer.Token;
 import com.compiler.lexer.TokenKind;
 
 public class Parser {
-    public List<String> lines;
     List<Token> tokens;
     int position;
 
-    private Parser(List<Token> tokens, List<String> lines) {
+    private Parser(List<Token> tokens) {
         this.tokens = tokens;
-        this.lines = lines;
         this.position = 0;
     }
 
-    public static BlockStatement parse(List<Token> tokens, List<String> lines) {
-        var parser = new Parser(tokens, lines);
+    public static BlockStatement parse(List<Token> tokens) {
+        var parser = new Parser(tokens);
         return StatementParser.parseBlockStatement(false, parser);
     }
 
@@ -57,7 +55,7 @@ public class Parser {
     public Token expect(TokenKind kind, String expect) {
         var token = this.advance();
         if (token.kind() != kind) {
-            throw new ExpectedError(this, expect, token);
+            throw new ExpectedError(expect, token);
         }
         return token;
     }

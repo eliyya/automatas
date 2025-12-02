@@ -9,12 +9,15 @@ public class Token {
     private int line;
     @JsonIgnore
     private int column;
+    @JsonIgnore
+    private String textLine;
 
-    public Token(TokenKind kind, String value, int line, int column) {
+    public Token(TokenKind kind, String value, int line, int column, String textLine) {
         this.kind = kind;
         this.value = value;
         this.line = line;
         this.column = column;
+        this.textLine = textLine;
     }
 
     public TokenKind kind() {
@@ -31,6 +34,10 @@ public class Token {
 
     public int column() {
         return this.column;
+    }
+
+    public String textLine() {
+        return this.textLine;
     }
 
     public String toString() {
