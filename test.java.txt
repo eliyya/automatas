@@ -10,7 +10,7 @@ char k = 'a';
 i++;
 ++i;
 b = 2;
-println("Hola mundo");
+// println("Hola mundo");
 // while (i++ < 10) {
 //     if (i == 2) {
 //         // do things
