@@ -1,7 +1,10 @@
 package com.compiler.ast.expressions;
 
 import com.compiler.ast.statements.BlockStatement;
+import com.compiler.errors.InvalidTypeError;
+import com.compiler.errors.UnresolvedError;
 import com.compiler.lexer.Token;
+import com.compiler.lexer.TokenKind;
 
 public final class IdentifierExpression implements DeclarativeExpression {
     final String _c = "IdentifierExpression";
@@ -26,6 +29,30 @@ public final class IdentifierExpression implements DeclarativeExpression {
         if (currentType.value().equals(type.value())) {
             return;
         }
-        throw new UnsupportedOperationException("Type mismatch: " + currentType.value() + " != " + type.value());
+        throw new InvalidTypeError(type, this.value);
+    }
+
+    @Override
+    public Token getToken() {
+        return this.value;
+    }
+
+    @Override
+    public boolean isBoolean(BlockStatement parent) {
+        throw new UnsupportedOperationException("Unimplemented method 'isBoolean'");
+    }
+
+    @Override
+    public boolean isNumber(BlockStatement parent) {
+        var type = parent.getVar(this.value.value());
+        if (type == null) {
+            throw new UnresolvedError(this.value);
+        }
+        return TokenKind.isNumberType(type.kind());
+    }
+
+    @Override
+    public boolean isDeclared(BlockStatement parent) {
+        return parent.getVar(this.value.value()) != null;
     }
 }

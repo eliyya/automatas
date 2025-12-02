@@ -2,6 +2,7 @@ package com.compiler.ast.statements;
 
 import com.compiler.ast.Expression;
 import com.compiler.ast.Statement;
+import com.compiler.errors.UnresolvedError;
 
 public class ExpressionStatement implements Statement {
     final String _c = "ExpressionStatement";
@@ -19,5 +20,8 @@ public class ExpressionStatement implements Statement {
     @Override
     public void validate(BlockStatement parent) {
         // ExpressionStatement is not necessary to validate
+        if (!this.expression.isDeclared(parent)) {
+            throw new UnresolvedError(this.expression.getToken());
+        }
     }
 }

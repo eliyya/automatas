@@ -18,4 +18,24 @@ public class ArrayExpression implements Expression {
     public void validateType(Token type, BlockStatement parent) {
         throw new UnsupportedOperationException("Unimplemented method 'expression'");
     }
+
+    @Override
+    public Token getToken() {
+        return elements.getFirst().getToken();
+    }
+
+    @Override
+    public boolean isBoolean(BlockStatement parent) {
+        return false;
+    }
+
+    @Override
+    public boolean isNumber(BlockStatement parent) {
+        throw new UnsupportedOperationException("Unimplemented method 'isNumber'");
+    }
+
+    @Override
+    public boolean isDeclared(BlockStatement parent) {
+        return this.elements.stream().allMatch(e -> e.isDeclared(parent));
+    }
 }

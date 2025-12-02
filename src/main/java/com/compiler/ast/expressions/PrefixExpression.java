@@ -3,6 +3,7 @@ package com.compiler.ast.expressions;
 import com.compiler.ast.Expression;
 import com.compiler.ast.statements.BlockStatement;
 import com.compiler.lexer.Token;
+import com.compiler.lexer.TokenKind;
 
 public class PrefixExpression implements Expression {
     final String _c = "PrefixExpression";
@@ -30,5 +31,29 @@ public class PrefixExpression implements Expression {
     @Override
     public void validateType(Token type, BlockStatement parent) {
         throw new UnsupportedOperationException("Unimplemented method 'expression'");
+    }
+
+    @Override
+    public Token getToken() {
+        if (this.suffix) return this.expression.getToken();
+        return this.operator;
+    }
+
+    @Override
+    public boolean isBoolean(BlockStatement parent) {
+        throw new UnsupportedOperationException("Unimplemented method 'isBoolean'");
+    }
+
+    @Override
+    public boolean isNumber(BlockStatement parent) {
+        if (this.operator.kind() == TokenKind.NOT) {
+            return false;
+        }
+        return this.expression.isNumber(parent);
+    }
+
+    @Override
+    public boolean isDeclared(BlockStatement parent) {
+        return this.expression.isDeclared(parent);
     }
 }

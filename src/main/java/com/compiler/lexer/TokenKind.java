@@ -150,6 +150,16 @@ public enum TokenKind {
 				|| kind == TokenKind.STRING;
 	}
 
+	public static boolean isNumberType(TokenKind kind) {
+		return kind == TokenKind.SHORT
+				|| kind == TokenKind.LONG
+				|| kind == TokenKind.FLOAT
+				|| kind == TokenKind.DOUBLE
+				|| kind == TokenKind.BYTE
+				|| kind == TokenKind.INT
+				|| kind == TokenKind.CHAR;
+	}
+
 	public static boolean isAssignment(TokenKind kind) {
 		return kind == TokenKind.ASSIGNMENT
 				|| kind == TokenKind.PLUS_ASSIGNMENT

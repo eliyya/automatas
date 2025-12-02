@@ -25,5 +25,25 @@ public class FunctionCallExpression implements Expression {
     public void validateType(Token type, BlockStatement parent) {
         throw new UnsupportedOperationException("Unimplemented method 'expression'");
     }
+
+    @Override
+    public Token getToken() {
+        return this.name;
+    }
+
+    @Override
+    public boolean isBoolean(BlockStatement parent) {
+        throw new UnsupportedOperationException("Unimplemented method 'isBoolean'");
+    }
+
+    @Override
+    public boolean isNumber(BlockStatement parent) {
+        throw new UnsupportedOperationException("Unimplemented method 'isNumber'");
+    }
+
+    @Override
+    public boolean isDeclared(BlockStatement parent) {
+        throw new UnsupportedOperationException("Unimplemented method 'isDeclared'");
+    }
     
 }

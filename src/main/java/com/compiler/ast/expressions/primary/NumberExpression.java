@@ -51,6 +51,8 @@ public class NumberExpression implements PrimaryExpression {
             throw new InvalidTypeError(type, this.value);
         } else if (type.kind() == TokenKind.VOID) {
             throw new InvalidTypeError(type, this.value);
+        } else if (type.kind() == TokenKind.BOOLEAN) {
+            throw new InvalidTypeError(type, this.value);
         } else {
             throw new UnsupportedOperationException("Unimplemented method 'validateType' for type " + type.value());
         }
@@ -139,6 +141,26 @@ public class NumberExpression implements PrimaryExpression {
         }
         if (this.isValidLong()) return false;
         return Integer.parseInt(this.value.value()) <= Integer.MAX_VALUE;
+    }
+
+    @Override
+    public Token getToken() {
+        return this.value;
+    }
+
+    @Override
+    public boolean isBoolean(BlockStatement parent) {
+        return false;
+    }
+
+    @Override
+    public boolean isNumber(BlockStatement parent) {
+        return true;
+    }
+
+    @Override
+    public boolean isDeclared(BlockStatement parent) {
+        return true;
     }
 
 }

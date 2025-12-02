@@ -30,5 +30,25 @@ public final class AssignmentExpression implements DeclarativeExpression {
         }
         expression.validateType(type, parent);
     }
+
+    @Override
+    public Token getToken() {
+        return this.identifier;
+    }
+
+    @Override
+    public boolean isBoolean(BlockStatement parent) {
+        return this.expression.isBoolean(parent);
+    }
+
+    @Override
+    public boolean isNumber(BlockStatement parent) {
+        throw new UnsupportedOperationException("Unimplemented method 'isNumber'");
+    }
+
+    @Override
+    public boolean isDeclared(BlockStatement parent) {
+        return parent.getVar(this.identifier.value()) != null;
+    }
     
 }

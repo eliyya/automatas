@@ -9,6 +9,7 @@ public class InvalidTypeError extends RuntimeException {
     }
 
     public InvalidTypeError(Token type, Token found) {
+        System.out.println(found.column() + " " + found);
         IO.println("");
         IO.println(found.textLine());
         IO.println(" ".repeat(found.column()) + "^");
@@ -16,6 +17,17 @@ public class InvalidTypeError extends RuntimeException {
                 format("AST:Error ->", ConsoleColor.RED)
                         + " Type of `" + format(found.value(), ConsoleColor.GREEN)
                         + "` is not valid type " + format(type.value(), ConsoleColor.GREEN));
+    }
+
+    public InvalidTypeError(String type, Token found) {
+        System.out.println(found.column() + " " + found);
+        IO.println("");
+        IO.println(found.textLine());
+        IO.println(" ".repeat(found.column()) + "^");
+        super(
+                format("AST:Error ->", ConsoleColor.RED)
+                        + " Type of `" + format(found.value(), ConsoleColor.GREEN)
+                        + "` is not valid type " + format(type, ConsoleColor.GREEN));
     }
 }
 

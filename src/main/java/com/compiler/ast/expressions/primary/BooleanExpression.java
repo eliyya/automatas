@@ -25,5 +25,24 @@ public class BooleanExpression implements PrimaryExpression {
             throw new InvalidTypeError(type, this.value);
         }
     }
-    
+
+    @Override
+    public Token getToken() {
+        return this.value;
+    }
+
+    @Override
+    public boolean isBoolean(BlockStatement parent) {
+        return true;
+    }
+
+    @Override
+    public boolean isNumber(BlockStatement parent) {
+        return false;
+    }
+
+    @Override
+    public boolean isDeclared(BlockStatement parent) {
+        return true;
+    }
 }
