@@ -38,9 +38,9 @@ b = 2;
 //     // do things
 // } while (i < 10);
 
-void test(Object args) {
+int test(Object args) {
     var n = false;
-    return n;
+    return;
 }
 
 // {

@@ -7,6 +7,7 @@ import com.compiler.ast.Type;
 import com.compiler.ast.expressions.DeclarativeExpression;
 import com.compiler.ast.statements.BlockStatement;
 import com.compiler.ast.statements.DeclarationStatement;
+import com.compiler.lexer.Token;
 
 public class DeclarationVariableStatement implements DeclarationStatement {
     final String _c = "DeclarationVariableStatement";

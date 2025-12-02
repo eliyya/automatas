@@ -23,5 +23,11 @@ public class LabeledCicleStatement implements ContolFlowStatement {
     public String toString() {
         return this.label + ": " + this.cicle;
     }
+
+    @Override
+    public void validate(BlockStatement parent, Token returnType) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'validate'");
+    }
     
 }

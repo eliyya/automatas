@@ -47,5 +47,11 @@ public class ForStatement implements ContolFlowStatement {
     public void validate(BlockStatement parent) {
         throw new UnsupportedOperationException("Unimplemented method 'Statement'");
     }
+
+    @Override
+    public void validate(BlockStatement parent, Token returnType) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'validate'");
+    }
     
 }

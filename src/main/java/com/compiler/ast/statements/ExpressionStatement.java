@@ -3,6 +3,7 @@ package com.compiler.ast.statements;
 import com.compiler.ast.Expression;
 import com.compiler.ast.Statement;
 import com.compiler.errors.UnresolvedError;
+import com.compiler.lexer.Token;
 
 public class ExpressionStatement implements Statement {
     final String _c = "ExpressionStatement";

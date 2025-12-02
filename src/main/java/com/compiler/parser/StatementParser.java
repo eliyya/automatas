@@ -225,13 +225,14 @@ public class StatementParser {
     }
 
     public static ReturnStatement parseReturnStatement(Parser parser) {
-        parser.expect(TokenKind.RETURN);
+        var rt = parser.expect(TokenKind.RETURN);
         if (parser.currentTokenKind() == TokenKind.SEMI) {
-            return new ReturnStatement(null);
+            parser.expect(TokenKind.SEMI);
+            return new ReturnStatement(null, rt);
         }
         var expression = Parser.parseExpression(parser);
         parser.expect(TokenKind.SEMI);
-        return new ReturnStatement(expression);
+        return new ReturnStatement(expression, rt);
     }
 
     public static BreakStatement parseBreakStatement(Parser parser) {

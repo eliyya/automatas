@@ -31,4 +31,10 @@ public class WhileStatement implements ContolFlowStatement {
         }
     }
 
+    @Override
+    public void validate(BlockStatement parent, Token returnType) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'validate'");
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.compiler.ast.statements;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,12 @@ public class BlockStatement implements Statement {
     List<Statement> body;
     @JsonIgnore
     private Map<String, Token> vars = new HashMap<>();
+    @JsonIgnore
+    private Map<String, List<DeclarationFunctionStatement>> funcs = new HashMap<>();
+
+    public BlockStatement(List<Statement> body) {
+        this.body = body;
+    }
 
     public Token getVar(String identifier) {
         return vars.get(identifier);
@@ -23,8 +30,24 @@ public class BlockStatement implements Statement {
         vars.put(identifier, token);
     }
 
-    public BlockStatement(List<Statement> body) {
-        this.body = body;
+    public Map<String, Token> getVars() {
+        return vars;
+    }
+
+    public void addFunc(String identifier, DeclarationFunctionStatement func) {
+        var e = funcs.get(identifier);
+        if (e == null) {
+            funcs.put(identifier, new ArrayList<>());
+        }
+        funcs.get(identifier).add(func);
+    }
+
+    public List<DeclarationFunctionStatement> getFuncs(String identifier) {
+        return funcs.get(identifier);
+    }
+
+    public Map<String, List<DeclarationFunctionStatement>> getFuncs() {
+        return funcs;
     }
 
     @Override
@@ -36,10 +59,32 @@ public class BlockStatement implements Statement {
         text += "}";
         return text;
     }
-    
+
     public void validate() {
         for (var elem : body) {
             elem.validate(this);
+        }
+    }
+
+    public void validate(Map<String, Token> vars, Map<String, List<DeclarationFunctionStatement>> funcs) {
+        this.vars.putAll(vars);
+        this.funcs.putAll(funcs);
+        for (var elem : body) {
+            elem.validate(this);
+        }
+    }
+
+    public void validate(Map<String, Token> vars, Map<String, List<DeclarationFunctionStatement>> funcs, Token returnType) {
+        this.vars.putAll(vars);
+        this.funcs.putAll(funcs);
+        for (var elem : body) {
+            if (elem instanceof ReturnStatement returnStatement) {
+                returnStatement.validate(this, returnType);
+            } else if (elem instanceof ContolFlowStatement controlFlowStatment) {
+                controlFlowStatment.validate(this, returnType);
+            } else {
+                elem.validate(this);
+            }
         }
     }
     

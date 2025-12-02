@@ -3,6 +3,7 @@ package com.compiler.ast.statements.control_flow;
 import com.compiler.ast.Expression;
 import com.compiler.ast.statements.BlockStatement;
 import com.compiler.ast.statements.ContolFlowStatement;
+import com.compiler.lexer.Token;
 
 public class IfStatement implements ContolFlowStatement {
     String _c = "IfStatement";
@@ -32,6 +33,12 @@ public class IfStatement implements ContolFlowStatement {
     @Override
     public void validate(BlockStatement parent) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void validate(BlockStatement parent, Token returnType) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'validate'");
     }
     
 }
