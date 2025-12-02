@@ -16,6 +16,7 @@ public class WhileStatement implements ContolFlowStatement {
 
     @Override
     public String toString() {
+        int a = 'a';
         return "while (" + condition + ") " + body;
     }
 

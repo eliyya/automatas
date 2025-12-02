@@ -18,9 +18,9 @@ public final class IdentifierExpression implements DeclarativeExpression {
 
     @Override
     public void validateType(Token type, BlockStatement parent) {
-        var currentType = parent.getVars().get(this.value.value());
+        var currentType = parent.getVar(this.value.value());
         if (currentType == null) {
-            parent.getVars().put(this.value.value(), type);
+            parent.addVar(this.value.value(), type);
             return;
         }
         if (currentType.value().equals(type.value())) {

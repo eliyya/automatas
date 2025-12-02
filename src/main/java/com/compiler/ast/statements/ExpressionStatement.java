@@ -18,6 +18,6 @@ public class ExpressionStatement implements Statement {
     
     @Override
     public void validate(BlockStatement parent) {
-        throw new UnsupportedOperationException("Unimplemented method 'Statement'");
+        // ExpressionStatement is not necessary to validate
     }
 }

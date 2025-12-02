@@ -23,9 +23,9 @@ public final class AssignmentExpression implements DeclarativeExpression {
 
     @Override
     public void validateType(Token type, BlockStatement parent) {
-        var identifierType = parent.getVars().get(identifier.value());
+        var identifierType = parent.getVar(identifier.value());
         if (identifierType == null) {
-            parent.getVars().put(identifier.value(), type);
+            parent.addVar(identifier.value(), type);
             identifierType = type;
         }
         expression.validateType(type, parent);

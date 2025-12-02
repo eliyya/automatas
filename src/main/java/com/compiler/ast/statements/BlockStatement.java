@@ -6,15 +6,20 @@ import java.util.Map;
 
 import com.compiler.ast.Statement;
 import com.compiler.lexer.Token;
+import com.compiler.utils.JsonIgnore;
 
 public class BlockStatement implements Statement {
     final String _c = "BlockStatement";
     List<Statement> body;
+    @JsonIgnore
+    private Map<String, Token> vars = new HashMap<>();
 
-    private HashMap<String, Token> vars = new HashMap<>();
+    public Token getVar(String identifier) {
+        return vars.get(identifier);
+    }
 
-    public Map<String, Token> getVars() {
-        return vars;
+    public void addVar(String identifier, Token token) {
+        vars.put(identifier, token);
     }
 
     public BlockStatement(List<Statement> body) {

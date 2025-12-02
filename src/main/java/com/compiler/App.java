@@ -38,13 +38,14 @@ public class App {
         var tokens = lexer.tokenize();
         // print tokens
         printTokens(tokens);
-        writeTokens(tokens);
+        var success = writeTokens(tokens);
 
         // ----------------
         // parser - parsing
         // ----------------
         var ast = Parser.parse(tokens);
         printAST(ast);
+        writeTokensSucces(success);
         writeAST(ast);
         writeASTTree(ast);
 
@@ -81,32 +82,37 @@ public class App {
         IO.println(json);
     }
 
-    private static void writeTokens(List<Token> tokens) {
+    private static boolean writeTokens(List<Token> tokens) {
         try (var writer = new FileWriter("tokens.log")) {
             for (var token : tokens) {
                 writer.write(token.kind().toString()
                         + " (" + token.value() + ") "
                         + "[" + token.line() + ":" + token.column() + "]\n");
             }
-            IO.println("");
-            IO.println("--------------------------------------------------------");
-            IO.println(
-                    "Se han escrito los " + format("tokens", ConsoleColor.GREEN_BOLD) + " para su análisis en "
-                            + format("tokens.log", ConsoleColor.BLUE_UNDERLINED));
-            IO.println("Contiene por cada token en una linea:");
-            IO.println("  - el tipo de token " + format("TOKEN_TYPE", ConsoleColor.WHITE_BOLD_BRIGHT));
-            IO.println("  - su valor entre paréntesis " + format("(", ConsoleColor.WHITE_BOLD_BRIGHT)
-                    + format("value", ConsoleColor.GREEN_BOLD) + format(")", ConsoleColor.WHITE_BOLD_BRIGHT));
-            IO.println("  - su posición en el archivo " + format("[", ConsoleColor.WHITE_BOLD_BRIGHT)
-                    + format("linea", ConsoleColor.BLUE_BOLD) + format(":", ConsoleColor.WHITE_BOLD_BRIGHT)
-                    + format("columna", ConsoleColor.BLUE_BOLD) + format("]", ConsoleColor.WHITE_BOLD_BRIGHT));
-            IO.println("--------------------------------------------------------");
-            IO.println("");
+            return true;
         } catch (IOException e) {
             IO.println("");
             IO.println("Error al escribir tokens");
             IO.println("");
+            return false;
         }
+    }
+
+    private static void writeTokensSucces(boolean success) {
+        if (!success) return;
+        IO.println("");
+        IO.println("--------------------------------------------------------");
+        IO.println(
+                "Se han escrito los " + format("tokens", ConsoleColor.GREEN_BOLD) + " para su análisis en "
+                        + format("tokens.log", ConsoleColor.BLUE_UNDERLINED));
+        IO.println("Contiene por cada token en una linea:");
+        IO.println("  - el tipo de token " + format("TOKEN_TYPE", ConsoleColor.WHITE_BOLD_BRIGHT));
+        IO.println("  - su valor entre paréntesis " + format("(", ConsoleColor.WHITE_BOLD_BRIGHT)
+                + format("value", ConsoleColor.GREEN_BOLD) + format(")", ConsoleColor.WHITE_BOLD_BRIGHT));
+        IO.println("  - su posición en el archivo " + format("[", ConsoleColor.WHITE_BOLD_BRIGHT)
+                + format("linea", ConsoleColor.BLUE_BOLD) + format(":", ConsoleColor.WHITE_BOLD_BRIGHT)
+                + format("columna", ConsoleColor.BLUE_BOLD) + format("]", ConsoleColor.WHITE_BOLD_BRIGHT));
+        IO.println("--------------------------------------------------------");
     }
 
     private static void writeAST(Statement ast) {
@@ -119,7 +125,6 @@ public class App {
                             + format("AST", ConsoleColor.GREEN_BOLD) + ") en "
                             + format("ast.json", ConsoleColor.BLUE_UNDERLINED));
             IO.println("--------------------------------------------------------");
-            IO.println("");
         } catch (IOException e) {
             IO.println("");
             IO.println("Error al escribir AST");
@@ -149,7 +154,6 @@ public class App {
                     "  - arrastrar el archivo " + format("tree.json", ConsoleColor.BLUE_UNDERLINED)
                             + " a la herramienta");
             IO.println("--------------------------------------------------------");
-            IO.println("");
         } catch (IOException e) {
             IO.println("");
             IO.println("Error al escribir AST Tree");
