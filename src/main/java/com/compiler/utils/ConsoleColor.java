@@ -1,4 +1,4 @@
-package com.compiler;
+package com.compiler.utils;
 
 public enum ConsoleColor {
     RESET("\033[0m"),

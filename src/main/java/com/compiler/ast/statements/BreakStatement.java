@@ -12,7 +12,7 @@ public class BreakStatement implements Statement {
     }
 
     @Override
-    public void statement() {
+    public void validate(BlockStatement parent) {
         throw new UnsupportedOperationException("Unimplemented method 'Statement'");
     }
     

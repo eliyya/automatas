@@ -1,5 +1,5 @@
-float a = 3f + (45.2 + 5) * 4;
 int b;
+float a = 3f + (45.2 + 5) * 4;
 byte c = 1;
 short d = 256;
 long e = 12342123123l;

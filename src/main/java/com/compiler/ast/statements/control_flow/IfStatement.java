@@ -30,7 +30,7 @@ public class IfStatement implements ContolFlowStatement {
     }
 
     @Override
-    public void statement() {
+    public void validate(BlockStatement parent) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     

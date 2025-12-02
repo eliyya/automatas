@@ -3,6 +3,8 @@ package com.compiler.ast.expressions;
 import java.util.List;
 
 import com.compiler.ast.Expression;
+import com.compiler.ast.statements.BlockStatement;
+import com.compiler.lexer.Token;
 
 public class ArrayExpression implements Expression {
     String _c = "ArrayExpression";
@@ -13,7 +15,7 @@ public class ArrayExpression implements Expression {
     }
 
     @Override
-    public void expression() {
+    public void validateType(Token type, BlockStatement parent) {
         throw new UnsupportedOperationException("Unimplemented method 'expression'");
     }
 }

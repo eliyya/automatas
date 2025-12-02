@@ -1,6 +1,7 @@
 package com.compiler.ast.types;
 
 import com.compiler.ast.Type;
+import com.compiler.lexer.Token;
 
 public class ArrayType implements Type {
     String _c = "ArrayType";
@@ -11,8 +12,8 @@ public class ArrayType implements Type {
     }
 
     @Override
-    public void type() {
-        throw new UnsupportedOperationException("Unimplemented method 'type'");
+    public Token token() {
+        return this.inner.token();
     }
 
 }

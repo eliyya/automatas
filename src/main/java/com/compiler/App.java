@@ -12,8 +12,8 @@ import com.compiler.ast.Statement;
 import com.compiler.lexer.Lexer;
 import com.compiler.lexer.Token;
 import com.compiler.parser.Parser;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.compiler.utils.ConsoleColor;
+import com.compiler.utils.JSON;
 
 public class App {
 
@@ -38,17 +38,20 @@ public class App {
         var tokens = lexer.tokenize();
         // print tokens
         printTokens(tokens);
+        writeTokens(tokens);
 
         // ----------------
         // parser - parsing
         // ----------------
         var ast = Parser.parse(tokens, source.lines().toList());
-        // print
         printAST(ast);
-        // write
-        writeTokens(tokens);
         writeAST(ast);
         writeASTTree(ast);
+
+        // ----------------
+        // validator
+        // ----------------
+        ast.validate();
     }
 
     private static void printTokens(List<Token> tokens) {
@@ -68,10 +71,7 @@ public class App {
     }
 
     private static void printAST(Statement ast) {
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
-        var json = gson.toJson(ast);
+        var json = JSON.serialize(ast);
         json = json.replaceAll("(?s)\\{\\s*\"_c\"\\s*:\\s*\"([^\"]+)\"\\s*,?", "$1 {");
         json = json.replaceAll("\"([^\"]*)\"\\:", format("$1", ConsoleColor.BLACK_BRIGHT) + ":");
         json = json.replaceAll("\"([^\"]*)\"", "\"" + format("$1", ConsoleColor.GREEN) + "\"");
@@ -111,10 +111,7 @@ public class App {
 
     private static void writeAST(Statement ast) {
         try (var writer = new FileWriter("ast.json")) {
-            Gson gson = new GsonBuilder()
-                    .setPrettyPrinting()
-                    .create();
-            writer.write(gson.toJson(ast));
+            writer.write(JSON.serialize(ast));
             IO.println("");
             IO.println("--------------------------------------------------------");
             IO.println(
@@ -132,10 +129,7 @@ public class App {
 
     private static void writeASTTree(Statement ast) {
         try (var writer = new FileWriter("tree.json")) {
-            Gson gson = new GsonBuilder()
-                    .setPrettyPrinting()
-                    .create();
-            var tree = gson.toJson(ast).replaceAll("\"_c\"", "\"\"");
+            var tree = JSON.serialize(ast).replaceAll("\"_c\"", "\"\"");
             writer.write(tree);
             IO.println("");
             IO.println("--------------------------------------------------------");

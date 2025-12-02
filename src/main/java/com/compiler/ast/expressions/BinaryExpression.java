@@ -1,6 +1,7 @@
 package com.compiler.ast.expressions;
 
 import com.compiler.ast.Expression;
+import com.compiler.ast.statements.BlockStatement;
 import com.compiler.lexer.Token;
 
 public class BinaryExpression implements Expression {
@@ -21,7 +22,8 @@ public class BinaryExpression implements Expression {
     }
     
     @Override
-    public void expression() {
-        throw new UnsupportedOperationException("Unimplemented method 'expression'");
+    public void validateType(Token type, BlockStatement parent) {
+        left.validateType(type, parent);
+        right.validateType(type, parent);
     }
 }

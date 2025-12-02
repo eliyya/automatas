@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.compiler.ast.Type;
 import com.compiler.ast.expressions.DeclarativeExpression;
+import com.compiler.ast.statements.BlockStatement;
 import com.compiler.ast.statements.DeclarationStatement;
 
 public class DeclarationVariableStatement implements DeclarationStatement {
@@ -17,8 +18,11 @@ public class DeclarationVariableStatement implements DeclarationStatement {
     }
 
     @Override
-    public void statement() {
-        throw new UnsupportedOperationException("Unimplemented method 'Statement'");
+    public void validate(BlockStatement parent) {
+        var type = this.type.token();
+        for (var identifier : identifiers) {
+            identifier.validateType(type, parent);
+        }
     }
 
     @Override

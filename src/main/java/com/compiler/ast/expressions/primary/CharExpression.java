@@ -1,6 +1,7 @@
 package com.compiler.ast.expressions.primary;
 
 import com.compiler.ast.expressions.PrimaryExpression;
+import com.compiler.ast.statements.BlockStatement;
 import com.compiler.lexer.Token;
 
 public class CharExpression implements PrimaryExpression {
@@ -17,7 +18,7 @@ public class CharExpression implements PrimaryExpression {
     }
 
     @Override
-    public void expression() {
+    public void validateType(Token type, BlockStatement parent) {
         throw new UnsupportedOperationException("Unimplemented method 'expression'");
     }
 }

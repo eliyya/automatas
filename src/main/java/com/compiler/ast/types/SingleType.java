@@ -12,8 +12,8 @@ public class SingleType implements Type {
     }
 
     @Override
-    public void type() {
-        throw new UnsupportedOperationException("Unimplemented method 'type'");
+    public Token token() {
+        return this.type;
     }
     
 }

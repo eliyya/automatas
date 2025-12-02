@@ -1,5 +1,6 @@
 package com.compiler.ast.expressions;
 
+import com.compiler.ast.statements.BlockStatement;
 import com.compiler.lexer.Token;
 
 public final class IdentifierExpression implements DeclarativeExpression {
@@ -16,7 +17,15 @@ public final class IdentifierExpression implements DeclarativeExpression {
     }
 
     @Override
-    public void expression() {
-        throw new UnsupportedOperationException("Unimplemented method 'expression'");
+    public void validateType(Token type, BlockStatement parent) {
+        var currentType = parent.getVars().get(this.value.value());
+        if (currentType == null) {
+            parent.getVars().put(this.value.value(), type);
+            return;
+        }
+        if (currentType.value().equals(type.value())) {
+            return;
+        }
+        throw new UnsupportedOperationException("Type mismatch: " + currentType.value() + " != " + type.value());
     }
 }

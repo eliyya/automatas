@@ -1,8 +1,8 @@
 package com.compiler.errors;
 
-import com.compiler.ConsoleColor;
 import com.compiler.lexer.Token;
 import com.compiler.parser.Parser;
+import com.compiler.utils.ConsoleColor;
 
 public class UnexpectedSyntaxError extends RuntimeException {
     public UnexpectedSyntaxError(Parser parser, Token token) {

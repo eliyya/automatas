@@ -1,5 +1,7 @@
 package com.compiler.ast;
 
+import com.compiler.lexer.Token;
+
 public interface Type {
-    public void type();   
+    public Token token();   
 }

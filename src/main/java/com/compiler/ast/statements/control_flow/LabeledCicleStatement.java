@@ -1,5 +1,6 @@
 package com.compiler.ast.statements.control_flow;
 
+import com.compiler.ast.statements.BlockStatement;
 import com.compiler.ast.statements.ContolFlowStatement;
 import com.compiler.lexer.Token;
 
@@ -14,7 +15,7 @@ public class LabeledCicleStatement implements ContolFlowStatement {
     }
 
     @Override
-    public void statement() {
+    public void validate(BlockStatement parent) {
         throw new UnsupportedOperationException("Unimplemented method 'Statement'");
     }
     
