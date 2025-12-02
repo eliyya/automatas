@@ -31,28 +31,98 @@ public class App {
 
         var source = Files.readString(Path.of(args[0]));
 
+        IO.println("----------------------------------------------");
+        IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+        IO.println("Fase 2: " + format("Parseo ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+        IO.println("Fase 3: " + format("Validación ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+        IO.println(format("Presiona Enter para continuar", ConsoleColor.BLACK_BRIGHT));
+        IO.println("----------------------------------------------");
+        IO.readln();
         // --------------------
         // lexer - tokenization
         // --------------------
-        var lexer = new Lexer(source);
-        var tokens = lexer.tokenize();
-        // print tokens
-        printTokens(tokens);
-        var success = writeTokens(tokens);
+        try {
+            var lexer = new Lexer(source);
+            var tokens = lexer.tokenize();
+            // print tokens
+            printTokens(tokens);
+            var successTokens = writeTokens(tokens);
+            writeTokensSucces(successTokens);
+            IO.println();
+            IO.println("----------------------------------------------");
+            IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
+            IO.println("Fase 2: " + format("Parseo ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+            IO.println("Fase 3: " + format("Validación ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+            IO.println(format("Presiona Enter para continuar", ConsoleColor.BLACK_BRIGHT));
+            IO.println("----------------------------------------------");
+            IO.readln();
+            clearConsole();
 
-        // ----------------
-        // parser - parsing
-        // ----------------
-        var ast = Parser.parse(tokens);
-        printAST(ast);
-        writeTokensSucces(success);
-        writeAST(ast);
-        writeASTTree(ast);
-
-        // ----------------
-        // validator
-        // ----------------
-        ast.validate();
+            // ----------------
+            // parser - parsing
+            // ----------------
+            try {
+                var ast = Parser.parse(tokens);
+                printAST(ast);
+                writeTokensSucces(successTokens);
+                var successAST = writeAST(ast);
+                writeASTSucces(successAST);
+                var successTree = writeASTTree(ast);
+                writeTreeSucces(successTree);
+                IO.println();
+                IO.println("----------------------------------------------");
+                IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
+                IO.println("Fase 2: " + format("Parseo ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
+                IO.println("Fase 3: " + format("Validación ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+                IO.println(format("Presiona Enter para continuar", ConsoleColor.BLACK_BRIGHT));
+                IO.println("----------------------------------------------");
+                IO.readln();
+                clearConsole();
+                IO.println();
+                // ----------------
+                // validator
+                // ----------------
+                try {
+                    ast.validate();
+                    writeTokensSucces(successTokens);
+                    writeASTSucces(successAST);
+                    writeTreeSucces(successTree);
+                    IO.println();
+                    IO.println("----------------------------------------------");
+                    IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
+                    IO.println("Fase 2: " + format("Parseo ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
+                    IO.println("Fase 3: " + format("Validación ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
+                    IO.println("----------------------------------------------");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    IO.println("----------------------------------------------");
+                    IO.println(format("Error al validar el AST", ConsoleColor.RED));
+                    IO.println("----------------------------------------------");
+                    IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
+                    IO.println("Fase 2: " + format("Parseo ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
+                    IO.println("Fase 3: " + format("Validación ", ConsoleColor.BLUE_BOLD) + format("Fallido", ConsoleColor.RED));
+                    IO.println("----------------------------------------------");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                IO.println("----------------------------------------------");
+                IO.println(format("Error al generar el AST", ConsoleColor.RED));
+                IO.println("----------------------------------------------");
+                IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
+                IO.println("Fase 2: " + format("Parseo ", ConsoleColor.BLUE_BOLD) + format("Fallido", ConsoleColor.RED));
+                IO.println("Fase 3: " + format("Validación ", ConsoleColor.BLUE_BOLD) + format("Fallido", ConsoleColor.RED));
+                IO.println("----------------------------------------------");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            IO.println("----------------------------------------------");
+            IO.println(format("Error al generar tokens", ConsoleColor.RED));
+            IO.println("----------------------------------------------");
+            IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD) + format("Fallido", ConsoleColor.RED));
+            IO.println("Fase 2: " + format("Parseo ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+            IO.println("Fase 3: " + format("Validación ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+            IO.println("----------------------------------------------");
+        }
     }
 
     private static void printTokens(List<Token> tokens) {
@@ -99,7 +169,9 @@ public class App {
     }
 
     private static void writeTokensSucces(boolean success) {
-        if (!success) return;
+        if (!success) {
+            return;
+        }
         IO.println("");
         IO.println("--------------------------------------------------------");
         IO.println(
@@ -115,50 +187,66 @@ public class App {
         IO.println("--------------------------------------------------------");
     }
 
-    private static void writeAST(Statement ast) {
+    private static boolean writeAST(Statement ast) {
         try (var writer = new FileWriter("ast.json")) {
             writer.write(JSON.serialize(ast));
-            IO.println("");
-            IO.println("--------------------------------------------------------");
-            IO.println(
-                    "Se ha generado el " + format("Abstract Syntax Tree", ConsoleColor.GREEN) + " ("
-                            + format("AST", ConsoleColor.GREEN_BOLD) + ") en "
-                            + format("ast.json", ConsoleColor.BLUE_UNDERLINED));
-            IO.println("--------------------------------------------------------");
+            return true;
         } catch (IOException e) {
             IO.println("");
             IO.println("Error al escribir AST");
             IO.println("");
+            return false;
         }
     }
+    
+    private static void writeASTSucces(boolean success) {
+        if (!success) {
+            return;
+        }
+        IO.println("");
+        IO.println("--------------------------------------------------------");
+        IO.println(
+                "Se ha generado el " + format("Abstract Syntax Tree", ConsoleColor.GREEN) + " ("
+                        + format("AST", ConsoleColor.GREEN_BOLD) + ") en "
+                        + format("ast.json", ConsoleColor.BLUE_UNDERLINED));
+        IO.println("--------------------------------------------------------");
+    }
 
-    private static void writeASTTree(Statement ast) {
+    private static boolean writeASTTree(Statement ast) {
         try (var writer = new FileWriter("tree.json")) {
             var tree = JSON.serialize(ast).replaceAll("\"_c\"", "\"\"");
             writer.write(tree);
-            IO.println("");
-            IO.println("--------------------------------------------------------");
-            IO.println(
-                    "Se ha escrito un archivo especial basado en el "
-                            + format("ast.json", ConsoleColor.BLUE_UNDERLINED));
-            IO.println("en " + format("tree.json", ConsoleColor.BLUE_UNDERLINED)
-                    + " para su análisis de manera visual creado");
-            IO.println(
-                    "para la herramienta online: "
-                            + format("https://jsoncrack.com/editor", ConsoleColor.BLUE_UNDERLINED));
-            IO.println("Solamente necesita:");
-            IO.println("  - abrir la herramienta online");
-            IO.println("  - dirigirse a " + format("File", ConsoleColor.BLUE) + " -> "
-                    + format("Import", ConsoleColor.BLUE));
-            IO.println(
-                    "  - arrastrar el archivo " + format("tree.json", ConsoleColor.BLUE_UNDERLINED)
-                            + " a la herramienta");
-            IO.println("--------------------------------------------------------");
+            return true;
         } catch (IOException e) {
             IO.println("");
             IO.println("Error al escribir AST Tree");
             IO.println("");
+            return false;
         }
+    }
+    
+    private static void writeTreeSucces(boolean success) {
+        if (!success) {
+            return;
+        }
+        IO.println("");
+        IO.println("--------------------------------------------------------");
+        IO.println(
+                "Se ha escrito un archivo especial basado en el "
+                        + format("ast.json", ConsoleColor.BLUE_UNDERLINED));
+        IO.println("en " + format("tree.json", ConsoleColor.BLUE_UNDERLINED)
+                + " para su análisis de manera visual creado");
+        IO.println(
+                "para la herramienta online: "
+                        + format("https://jsoncrack.com/editor", ConsoleColor.BLUE_UNDERLINED));
+        IO.println("Solamente necesita:");
+        IO.println("  - abrir la herramienta online");
+        IO.println("  - dirigirse a " + format("File", ConsoleColor.BLUE) + " -> "
+                + format("Import", ConsoleColor.BLUE));
+        IO.println(
+                "  - arrastrar el archivo " + format("tree.json", ConsoleColor.BLUE_UNDERLINED)
+                        + " a la herramienta");
+        IO.println("--------------------------------------------------------");
     }
 
     private static String format(Object text, ConsoleColor color) {
@@ -238,6 +326,26 @@ public class App {
         }
 
         return result.toString();
+    }
+
+    private static void clearConsole() {
+        try {
+            String os = System.getProperty("os.name");
+            if (os.contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls")
+                    .inheritIO()
+                    .start()
+                    .waitFor();
+            } else {
+                new ProcessBuilder("clear")
+                    .inheritIO()
+                    .start()
+                    .waitFor();
+            }
+        } catch (Exception e) {
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+        }
     }
 
 }

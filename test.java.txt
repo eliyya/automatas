@@ -10,13 +10,13 @@ char k = 'a';
 i++;
 ++i;
 b = 2;
-while (i++ < 10) {
-    if (i == 2) {
-        // do things
-    } else if (i ==3) {
-        i+=2;
-    } 
-}
+// while (i++ < 10) {
+//     if (i == 2) {
+//         // do things
+//     } else if (i ==3) {
+//         i+=2;
+//     } 
+// }
 
 // for (String c : j) {
 //     // do things
