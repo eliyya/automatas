@@ -1,11 +1,12 @@
 package com.compiler.errors;
 
 import com.compiler.lexer.Token;
+import com.compiler.utils.Console;
 import com.compiler.utils.ConsoleColor;
 
 public class ExpectedError extends RuntimeException {
     private static String format(String text, ConsoleColor color) {
-        return ConsoleColor.format(text, color);
+        return Console.format(text, color);
     }
 
     public ExpectedError(String expected, Token found) {

@@ -12,6 +12,7 @@ import com.compiler.ast.Statement;
 import com.compiler.lexer.Lexer;
 import com.compiler.lexer.Token;
 import com.compiler.parser.Parser;
+import com.compiler.utils.Console;
 import com.compiler.utils.ConsoleColor;
 import com.compiler.utils.JSON;
 
@@ -56,7 +57,7 @@ public class App {
             IO.println(format("Presiona Enter para continuar", ConsoleColor.BLACK_BRIGHT));
             IO.println("----------------------------------------------");
             IO.readln();
-            clearConsole();
+            Console.clear();
 
             // ----------------
             // parser - parsing
@@ -77,7 +78,7 @@ public class App {
                 IO.println(format("Presiona Enter para continuar", ConsoleColor.BLACK_BRIGHT));
                 IO.println("----------------------------------------------");
                 IO.readln();
-                clearConsole();
+                Console.clear();
                 IO.println();
                 // ----------------
                 // validator
@@ -250,7 +251,7 @@ public class App {
     }
 
     private static String format(Object text, ConsoleColor color) {
-        return ConsoleColor.format(text, color);
+        return Console.format(text, color);
     }
 
     private static int getMaxNameLen(List<Token> tokens) {
@@ -326,26 +327,6 @@ public class App {
         }
 
         return result.toString();
-    }
-
-    private static void clearConsole() {
-        try {
-            String os = System.getProperty("os.name");
-            if (os.contains("Windows")) {
-                new ProcessBuilder("cmd", "/c", "cls")
-                    .inheritIO()
-                    .start()
-                    .waitFor();
-            } else {
-                new ProcessBuilder("clear")
-                    .inheritIO()
-                    .start()
-                    .waitFor();
-            }
-        } catch (Exception e) {
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
-        }
     }
 
 }
