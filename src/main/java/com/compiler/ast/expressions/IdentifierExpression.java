@@ -20,6 +20,10 @@ public final class IdentifierExpression implements DeclarativeExpression {
         return value.value();
     }
 
+    public String name() {
+        return this.value.value();
+    }
+
     @Override
     public void validateType(Type type, BlockStatement parent) {
         var currentType = parent.getVar(this.value.value());
@@ -37,7 +41,7 @@ public final class IdentifierExpression implements DeclarativeExpression {
     }
 
     @Override
-    public Token getToken() {
+    public Token getIdentifier() {
         return this.value;
     }
 

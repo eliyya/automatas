@@ -41,7 +41,7 @@ public class BinaryExpression implements Expression {
     }
 
     @Override
-    public Token getToken() {
+    public Token getIdentifier() {
         return this.operator;
     }
 

@@ -126,7 +126,7 @@ public class NumberExpression implements PrimaryExpression {
         try {
             return Long.parseLong(this.value.value()) > Integer.MAX_VALUE;
         } catch (Exception e) {
-            return Long.parseLong(this.value.value().replace("l", "").replace("L", "")) <= Long.MAX_VALUE;
+            return Long.parseLong(this.value.value().replaceAll("[lLdDfF]", "")) <= Long.MAX_VALUE;
         }
     }
 
@@ -147,7 +147,7 @@ public class NumberExpression implements PrimaryExpression {
     }
 
     @Override
-    public Token getToken() {
+    public Token getIdentifier() {
         return this.value;
     }
 

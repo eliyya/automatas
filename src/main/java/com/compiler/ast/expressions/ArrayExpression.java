@@ -21,8 +21,8 @@ public class ArrayExpression implements Expression {
     }
 
     @Override
-    public Token getToken() {
-        return elements.getFirst().getToken();
+    public Token getIdentifier() {
+        return elements.getFirst().getIdentifier();
     }
 
     @Override

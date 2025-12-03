@@ -2,6 +2,7 @@ package com.compiler.ast.statements;
 
 import com.compiler.ast.Expression;
 import com.compiler.ast.Statement;
+import com.compiler.ast.expressions.AssignmentExpression;
 import com.compiler.ast.expressions.FunctionCallExpression;
 import com.compiler.errors.UnresolvedError;
 
@@ -23,10 +24,16 @@ public class ExpressionStatement implements Statement {
         // ExpressionStatement is not necessary to validate
         if (this.expression instanceof FunctionCallExpression fc) {
             if (!fc.isDeclared(parent)) {
-                throw new UnresolvedError(this.expression.getToken());
+                throw new UnresolvedError(this.expression.getIdentifier());
             }
+        } else if (this.expression instanceof AssignmentExpression as) {
+            if (!as.isDeclared(parent)) {
+                throw new UnresolvedError(this.expression.getIdentifier());
+            }
+            var type = parent.getVar(as.getIdentifier().value());
+            as.expression().validateType(type, parent);
         } else if (!this.expression.isDeclared(parent)) {
-            throw new UnresolvedError(this.expression.getToken());
+            throw new UnresolvedError(this.expression.getIdentifier());
         }
     }
 }

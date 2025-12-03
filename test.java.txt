@@ -7,10 +7,9 @@ boolean f, g = true;
 int h = 10; int i = 20;
 String j="hola mundo";
 char k = 'a';
-boolean args = true;
 i++;
 ++i;
-b = 2;
+b = 3f;
 println(j);
 // while (i++ < 10) {
 //     if (i == 2) {

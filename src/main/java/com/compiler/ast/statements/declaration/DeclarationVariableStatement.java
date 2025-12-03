@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.compiler.ast.Type;
+import com.compiler.ast.expressions.AssignmentExpression;
 import com.compiler.ast.expressions.DeclarativeExpression;
+import com.compiler.ast.expressions.IdentifierExpression;
 import com.compiler.ast.statements.BlockStatement;
 import com.compiler.ast.statements.DeclarationStatement;
+import com.compiler.errors.DuplicateError;
 
 public class DeclarationVariableStatement implements DeclarationStatement {
     final String _c = "DeclarationVariableStatement";
@@ -21,7 +24,21 @@ public class DeclarationVariableStatement implements DeclarationStatement {
     @Override
     public void validate(BlockStatement parent) {
         for (var identifier : identifiers) {
-            identifier.validateType(this.type, parent);
+            if (identifier instanceof IdentifierExpression id) {
+                if (id.isDeclared(parent)) {
+                    throw new DuplicateError(id.getIdentifier());
+                } else {
+                    parent.addVar(id.name(), this.type);
+                }
+            } else if (identifier instanceof AssignmentExpression as) {
+                var id = as.getIdentifier();
+                if (as.isDeclared(parent)) {
+                    throw new DuplicateError(id);
+                } else {
+                    parent.addVar(id.value(), this.type);
+                    as.expression().validateType(this.type, parent);
+                }
+            }
         }
     }
 

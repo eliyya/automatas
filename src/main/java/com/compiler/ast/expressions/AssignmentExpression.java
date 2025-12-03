@@ -33,8 +33,12 @@ public final class AssignmentExpression implements DeclarativeExpression {
     }
 
     @Override
-    public Token getToken() {
+    public Token getIdentifier() {
         return this.identifier;
+    }
+
+    public Expression expression() {
+        return this.expression;
     }
 
     @Override

@@ -29,7 +29,7 @@ public class FunctionCallExpression implements Expression {
     }
 
     @Override
-    public Token getToken() {
+    public Token getIdentifier() {
         return this.name;
     }
 

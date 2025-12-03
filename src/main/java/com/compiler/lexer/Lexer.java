@@ -169,7 +169,7 @@ public class Lexer {
                     case CHAR_EXPRESSION -> match.group().substring(1, match.group().length() - 1);
                     default -> match.group();
                 };
-                this.push(new Token(kind, value, this.row, this.col, this.lines.get(this.row - 1)));
+                this.push(new Token(kind, value, this.row, this.col - value.length(), this.lines.get(this.row - 1)));
             }
         };
     }

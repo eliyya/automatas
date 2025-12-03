@@ -31,7 +31,7 @@ public class CharExpression implements PrimaryExpression {
     }
 
     @Override
-    public Token getToken() {
+    public Token getIdentifier() {
         return this.value;
     }
 

@@ -35,8 +35,8 @@ public class PrefixExpression implements Expression {
     }
 
     @Override
-    public Token getToken() {
-        if (this.suffix) return this.expression.getToken();
+    public Token getIdentifier() {
+        if (this.suffix) return this.expression.getIdentifier();
         return this.operator;
     }
 
