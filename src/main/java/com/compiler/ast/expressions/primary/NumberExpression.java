@@ -23,7 +23,9 @@ public class NumberExpression implements PrimaryExpression {
 
     @Override
     public void validateType(Token type, BlockStatement parent) {
-        if (type.kind() == TokenKind.FLOAT) {
+        if (type.kind() == TokenKind.OBJECT) {
+            // always valid
+        } else if (type.kind() == TokenKind.FLOAT) {
             if (!this.isValidFloat()) {
                 throw new InvalidTypeError(type, this.value);
             }

@@ -7,7 +7,9 @@ import java.util.Map;
 
 import com.compiler.ast.Statement;
 import com.compiler.ast.statements.declaration.DeclarationFunctionStatement;
+import com.compiler.ast.types.SingleType;
 import com.compiler.lexer.Token;
+import com.compiler.lexer.TokenKind;
 import com.compiler.utils.JsonIgnore;
 
 public class BlockStatement implements Statement {
@@ -86,6 +88,26 @@ public class BlockStatement implements Statement {
                 elem.validate(this);
             }
         }
+    }
+
+    public BlockStatement poblate() {
+        Map<String, List<DeclarationFunctionStatement>> funcs = new HashMap<>();
+        funcs.put("println", this.printLn());
+        this.funcs.putAll(funcs);
+        return this;
+    }
+
+    private ArrayList<DeclarationFunctionStatement> printLn() {
+        var type = new SingleType(new Token(TokenKind.VOID, "void", 0, 0, ""));
+        var name = new Token(TokenKind.IDENTIFIER, "printLn", 0, 0, "");
+        var params = new ArrayList<ParameterStatement>();
+        var objParam = new ParameterStatement(new SingleType(new Token(TokenKind.OBJECT, "object", 0, 0, "")), new Token(TokenKind.IDENTIFIER, "obj", 0, 0, ""));
+        params.add(objParam);
+        var body = new BlockStatement(new ArrayList<>());
+        var dec = new DeclarationFunctionStatement(type, name, params, body);
+        var arr = new ArrayList<DeclarationFunctionStatement>();
+        arr.add(dec);
+        return arr;
     }
     
     @Override

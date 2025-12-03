@@ -21,6 +21,9 @@ public class StringExpression implements PrimaryExpression {
 
     @Override
     public void validateType(Token type, BlockStatement parent) {
+        if (type.kind() == TokenKind.OBJECT) {
+            return;
+        }
         if (type.kind() != TokenKind.STRING) {
             throw new InvalidTypeError(type, this.value);
         }

@@ -26,6 +26,9 @@ public final class IdentifierExpression implements DeclarativeExpression {
             parent.addVar(this.value.value(), type);
             return;
         }
+        if (type.kind() == TokenKind.OBJECT) {
+            return;
+        }
         if (currentType.value().equals(type.value())) {
             return;
         }

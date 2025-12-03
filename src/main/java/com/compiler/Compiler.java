@@ -13,7 +13,7 @@ public class Compiler {
     public static boolean compile(BlockStatement ast) {
         String gen = """
                 public class App {
-                    void println(Object obj) { IO.println(obj); }
+                    static void println(Object obj) { IO.println(obj); }
                     public static void main(String[] args) {
                 """;
         gen += ast.getScript().lines().map(s -> "        " + s).collect(Collectors.joining("\n"));
@@ -31,7 +31,7 @@ public class Compiler {
         }
         var jc = ToolProvider.getSystemJavaCompiler();
         jc.run(System.in, System.out, System.err, file.getPath());
-        file.delete();
+        // file.delete();
         return true;
     }
 }

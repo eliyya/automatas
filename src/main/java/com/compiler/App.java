@@ -87,7 +87,7 @@ public class App {
                 // validator
                 // ----------------
                 try {
-                    ast.validate();
+                    ast.poblate().validate();
                     writeTokensSucces(successTokens);
                     writeASTSucces(successAST);
                     writeTreeSucces(successTree);

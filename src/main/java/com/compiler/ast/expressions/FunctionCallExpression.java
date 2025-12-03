@@ -1,6 +1,7 @@
 package com.compiler.ast.expressions;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.compiler.ast.Expression;
 import com.compiler.ast.statements.BlockStatement;
@@ -18,7 +19,7 @@ public class FunctionCallExpression implements Expression {
 
     @Override
     public String toString() {
-        return name.value() + "(" + parameters + ")";
+        return name.value() + "(" + parameters.stream().map(e -> e.toString()).collect(Collectors.joining(", ")) + ")";
     }
 
     @Override
@@ -43,7 +44,23 @@ public class FunctionCallExpression implements Expression {
 
     @Override
     public boolean isDeclared(BlockStatement parent) {
-        throw new UnsupportedOperationException("Unimplemented method 'isDeclared'");
+        var funcs = parent.getFuncs(this.name.value());
+        if (funcs == null) {
+            return false;
+        }
+        for (var func : funcs) {
+            var params = func.parameters();
+            if (params.size() != this.parameters.size()) {
+                continue;
+            }
+            for (int i = 0; i < params.size(); i++) {
+                var param = this.parameters.get(i);
+                var funcParam = params.get(i);
+                param.validateType(funcParam.type().token(), parent);
+            }
+            return true;
+        }
+        return false;
     }
     
 }

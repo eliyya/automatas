@@ -1,7 +1,6 @@
 package com.compiler.ast.statements.declaration;
 
 import java.util.List;
-import java.util.Objects;
 
 import com.compiler.ast.statements.BlockStatement;
 import com.compiler.ast.statements.DeclarationStatement;
@@ -22,6 +21,10 @@ public class DeclarationFunctionStatement implements DeclarationStatement {
         this.name = name;
         this.parameters = parameters;
         this.body = body;
+    }
+
+    public List<ParameterStatement> parameters() {
+        return parameters;
     }
 
     @Override

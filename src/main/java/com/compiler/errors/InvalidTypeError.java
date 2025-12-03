@@ -10,7 +10,6 @@ public class InvalidTypeError extends RuntimeException {
     }
 
     public InvalidTypeError(Token type, Token found) {
-        System.out.println(found.column() + " " + found);
         IO.println("");
         IO.println(found.textLine());
         IO.println(" ".repeat(found.column()) + "^");

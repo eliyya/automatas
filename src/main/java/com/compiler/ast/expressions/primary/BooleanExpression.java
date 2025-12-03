@@ -21,6 +21,9 @@ public class BooleanExpression implements PrimaryExpression {
 
     @Override
     public void validateType(Token type, BlockStatement parent) {
+        if (type.kind() == TokenKind.OBJECT) {
+            return;
+        }
         if (type.kind() != TokenKind.BOOLEAN && type.kind() != TokenKind.VAR && type.kind() != TokenKind.OBJECT) {
             throw new InvalidTypeError(type, this.value);
         }

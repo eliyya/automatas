@@ -21,6 +21,9 @@ public class CharExpression implements PrimaryExpression {
 
     @Override
     public void validateType(Token type, BlockStatement parent) {
+        if (type.kind() == TokenKind.OBJECT) {
+            return;
+        }
         if (type.kind() != TokenKind.CHAR && type.kind() != TokenKind.INT) {
             throw new InvalidTypeError(type, this.value);
         }

@@ -10,7 +10,7 @@ char k = 'a';
 i++;
 ++i;
 b = 2;
-// println("Hola mundo");
+println(b);
 // while (i++ < 10) {
 //     if (i == 2) {
 //         // do things
@@ -38,7 +38,7 @@ b = 2;
 //     // do things
 // } while (i < 10);
 
-int test(Object args) {
+void test(Object args) {
     var n = false;
     return;
 }
