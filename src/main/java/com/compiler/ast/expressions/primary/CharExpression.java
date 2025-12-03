@@ -1,5 +1,6 @@
 package com.compiler.ast.expressions.primary;
 
+import com.compiler.ast.Type;
 import com.compiler.ast.expressions.PrimaryExpression;
 import com.compiler.ast.statements.BlockStatement;
 import com.compiler.errors.InvalidTypeError;
@@ -20,12 +21,12 @@ public class CharExpression implements PrimaryExpression {
     }
 
     @Override
-    public void validateType(Token type, BlockStatement parent) {
-        if (type.kind() == TokenKind.OBJECT) {
+    public void validateType(Type type, BlockStatement parent) {
+        if (type.token().kind() == TokenKind.OBJECT) {
             return;
         }
-        if (type.kind() != TokenKind.CHAR && type.kind() != TokenKind.INT) {
-            throw new InvalidTypeError(type, this.value);
+        if (type.token().kind() != TokenKind.CHAR && type.token().kind() != TokenKind.INT) {
+            throw new InvalidTypeError(type.token(), this.value);
         }
     }
 

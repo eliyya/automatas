@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 import com.compiler.ast.expressions.PrimaryExpression;
 import com.compiler.ast.statements.BlockStatement;
 import com.compiler.errors.InvalidTypeError;
+import com.compiler.ast.Type;
 import com.compiler.lexer.Token;
 import com.compiler.lexer.TokenKind;
 
@@ -22,41 +23,41 @@ public class NumberExpression implements PrimaryExpression {
     }
 
     @Override
-    public void validateType(Token type, BlockStatement parent) {
-        if (type.kind() == TokenKind.OBJECT) {
+    public void validateType(Type type, BlockStatement parent) {
+        if (type.token().kind() == TokenKind.OBJECT) {
             // always valid
-        } else if (type.kind() == TokenKind.FLOAT) {
+        } else if (type.token().kind() == TokenKind.FLOAT) {
             if (!this.isValidFloat()) {
-                throw new InvalidTypeError(type, this.value);
+                throw new InvalidTypeError(type.token(), this.value);
             }
-        } else if (type.kind() == TokenKind.BYTE) {
+        } else if (type.token().kind() == TokenKind.BYTE) {
             if (!this.isValidByte()) {
-                throw new InvalidTypeError(type, this.value);
+                throw new InvalidTypeError(type.token(), this.value);
             }
-        } else if (type.kind() == TokenKind.SHORT) {
+        } else if (type.token().kind() == TokenKind.SHORT) {
             if (!this.isValidShort()) {
-                throw new InvalidTypeError(type, this.value);
+                throw new InvalidTypeError(type.token(), this.value);
             }
-        } else if (type.kind() == TokenKind.LONG) {
+        } else if (type.token().kind() == TokenKind.LONG) {
             if (!this.isValidLong()) {
-                throw new InvalidTypeError(type, this.value);
+                throw new InvalidTypeError(type.token(), this.value);
             }
-        } else if (type.kind() == TokenKind.INT) {
+        } else if (type.token().kind() == TokenKind.INT) {
             if (!this.isValidInt()) {
-                throw new InvalidTypeError(type, this.value);
+                throw new InvalidTypeError(type.token(), this.value);
             }
-        } else if (type.kind() == TokenKind.CHAR) {
+        } else if (type.token().kind() == TokenKind.CHAR) {
             if (!this.isValidInt() || this.isValidShort() || this.isValidByte()) {
-                throw new InvalidTypeError(type, this.value);
+                throw new InvalidTypeError(type.token(), this.value);
             }
-        } else if (type.kind() == TokenKind.STRING) {
-            throw new InvalidTypeError(type, this.value);
-        } else if (type.kind() == TokenKind.VOID) {
-            throw new InvalidTypeError(type, this.value);
-        } else if (type.kind() == TokenKind.BOOLEAN) {
-            throw new InvalidTypeError(type, this.value);
+        } else if (type.token().kind() == TokenKind.STRING) {
+            throw new InvalidTypeError(type.token(), this.value);
+        } else if (type.token().kind() == TokenKind.VOID) {
+            throw new InvalidTypeError(type.token(), this.value);
+        } else if (type.token().kind() == TokenKind.BOOLEAN) {
+            throw new InvalidTypeError(type.token(), this.value);
         } else {
-            throw new UnsupportedOperationException("Unimplemented method 'validateType' for type " + type.value());
+            throw new UnsupportedOperationException("Unimplemented method 'validateType' for type " + type.token().value());
         }
     }
 

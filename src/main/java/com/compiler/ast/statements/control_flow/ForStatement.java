@@ -1,6 +1,7 @@
 package com.compiler.ast.statements.control_flow;
 
 import com.compiler.ast.Expression;
+import com.compiler.ast.Type;
 import com.compiler.ast.statements.BlockStatement;
 import com.compiler.ast.statements.ContolFlowStatement;
 import com.compiler.ast.statements.declaration.DeclarationVariableStatement;
@@ -49,7 +50,7 @@ public class ForStatement implements ContolFlowStatement {
     }
 
     @Override
-    public void validate(BlockStatement parent, Token returnType) {
+    public void validate(BlockStatement parent, Type returnType) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'validate'");
     }

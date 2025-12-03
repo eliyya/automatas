@@ -1,5 +1,6 @@
 package com.compiler.ast.expressions.primary;
 
+import com.compiler.ast.Type;
 import com.compiler.ast.expressions.PrimaryExpression;
 import com.compiler.ast.statements.BlockStatement;
 import com.compiler.errors.InvalidTypeError;
@@ -20,12 +21,12 @@ public class BooleanExpression implements PrimaryExpression {
     }
 
     @Override
-    public void validateType(Token type, BlockStatement parent) {
-        if (type.kind() == TokenKind.OBJECT) {
+    public void validateType(Type type, BlockStatement parent) {
+        if (type.token().kind() == TokenKind.OBJECT) {
             return;
         }
-        if (type.kind() != TokenKind.BOOLEAN && type.kind() != TokenKind.VAR && type.kind() != TokenKind.OBJECT) {
-            throw new InvalidTypeError(type, this.value);
+        if (type.token().kind() != TokenKind.BOOLEAN && type.token().kind() != TokenKind.VAR && type.token().kind() != TokenKind.OBJECT) {
+            throw new InvalidTypeError(type.token(), this.value);
         }
     }
 

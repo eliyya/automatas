@@ -2,6 +2,7 @@ package com.compiler.ast.expressions;
 
 import com.compiler.ast.Expression;
 import com.compiler.ast.statements.BlockStatement;
+import com.compiler.ast.Type;
 import com.compiler.lexer.Token;
 
 public final class AssignmentExpression implements DeclarativeExpression {
@@ -22,7 +23,7 @@ public final class AssignmentExpression implements DeclarativeExpression {
     }
 
     @Override
-    public void validateType(Token type, BlockStatement parent) {
+    public void validateType(Type type, BlockStatement parent) {
         var identifierType = parent.getVar(identifier.value());
         if (identifierType == null) {
             parent.addVar(identifier.value(), type);

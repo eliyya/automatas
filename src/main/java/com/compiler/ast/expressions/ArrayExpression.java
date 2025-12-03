@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.compiler.ast.Expression;
 import com.compiler.ast.statements.BlockStatement;
+import com.compiler.ast.Type;
 import com.compiler.lexer.Token;
 
 public class ArrayExpression implements Expression {
@@ -15,7 +16,7 @@ public class ArrayExpression implements Expression {
     }
 
     @Override
-    public void validateType(Token type, BlockStatement parent) {
+    public void validateType(Type type, BlockStatement parent) {
         throw new UnsupportedOperationException("Unimplemented method 'expression'");
     }
 

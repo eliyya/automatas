@@ -7,7 +7,6 @@ import com.compiler.ast.Type;
 import com.compiler.ast.expressions.DeclarativeExpression;
 import com.compiler.ast.statements.BlockStatement;
 import com.compiler.ast.statements.DeclarationStatement;
-import com.compiler.lexer.Token;
 
 public class DeclarationVariableStatement implements DeclarationStatement {
     final String _c = "DeclarationVariableStatement";
@@ -21,9 +20,8 @@ public class DeclarationVariableStatement implements DeclarationStatement {
 
     @Override
     public void validate(BlockStatement parent) {
-        var type = this.type.token();
         for (var identifier : identifiers) {
-            identifier.validateType(type, parent);
+            identifier.validateType(this.type, parent);
         }
     }
 

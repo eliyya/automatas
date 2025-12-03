@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.compiler.ast.Expression;
 import com.compiler.ast.statements.BlockStatement;
+import com.compiler.ast.Type;
 import com.compiler.lexer.Token;
 
 public class FunctionCallExpression implements Expression {
@@ -23,7 +24,7 @@ public class FunctionCallExpression implements Expression {
     }
 
     @Override
-    public void validateType(Token type, BlockStatement parent) {
+    public void validateType(Type type, BlockStatement parent) {
         throw new UnsupportedOperationException("Unimplemented method 'expression'");
     }
 
@@ -56,7 +57,7 @@ public class FunctionCallExpression implements Expression {
             for (int i = 0; i < params.size(); i++) {
                 var param = this.parameters.get(i);
                 var funcParam = params.get(i);
-                param.validateType(funcParam.type().token(), parent);
+                param.validateType(funcParam.type(), parent);
             }
             return true;
         }

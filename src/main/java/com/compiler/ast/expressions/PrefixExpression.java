@@ -2,6 +2,7 @@ package com.compiler.ast.expressions;
 
 import com.compiler.ast.Expression;
 import com.compiler.ast.statements.BlockStatement;
+import com.compiler.ast.Type;
 import com.compiler.lexer.Token;
 import com.compiler.lexer.TokenKind;
 
@@ -29,7 +30,7 @@ public class PrefixExpression implements Expression {
     }
 
     @Override
-    public void validateType(Token type, BlockStatement parent) {
+    public void validateType(Type type, BlockStatement parent) {
         throw new UnsupportedOperationException("Unimplemented method 'expression'");
     }
 

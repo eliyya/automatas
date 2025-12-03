@@ -8,6 +8,8 @@ import java.util.Map;
 import com.compiler.ast.Statement;
 import com.compiler.ast.statements.declaration.DeclarationFunctionStatement;
 import com.compiler.ast.types.SingleType;
+import com.compiler.ast.Type;
+import com.compiler.ast.types.ArrayType;
 import com.compiler.lexer.Token;
 import com.compiler.lexer.TokenKind;
 import com.compiler.utils.JsonIgnore;
@@ -16,7 +18,7 @@ public class BlockStatement implements Statement {
     final String _c = "BlockStatement";
     List<Statement> body;
     @JsonIgnore
-    private Map<String, Token> vars = new HashMap<>();
+    private Map<String, Type> vars = new HashMap<>();
     @JsonIgnore
     private Map<String, List<DeclarationFunctionStatement>> funcs = new HashMap<>();
 
@@ -24,15 +26,15 @@ public class BlockStatement implements Statement {
         this.body = body;
     }
 
-    public Token getVar(String identifier) {
+    public Type getVar(String identifier) {
         return vars.get(identifier);
     }
 
-    public void addVar(String identifier, Token token) {
+    public void addVar(String identifier, Type token) {
         vars.put(identifier, token);
     }
 
-    public Map<String, Token> getVars() {
+    public Map<String, Type> getVars() {
         return vars;
     }
 
@@ -68,7 +70,7 @@ public class BlockStatement implements Statement {
         }
     }
 
-    public void validate(Map<String, Token> vars, Map<String, List<DeclarationFunctionStatement>> funcs) {
+    public void validate(Map<String, Type> vars, Map<String, List<DeclarationFunctionStatement>> funcs) {
         this.vars.putAll(vars);
         this.funcs.putAll(funcs);
         for (var elem : body) {
@@ -76,7 +78,7 @@ public class BlockStatement implements Statement {
         }
     }
 
-    public void validate(Map<String, Token> vars, Map<String, List<DeclarationFunctionStatement>> funcs, Token returnType) {
+    public void validate(Map<String, Type> vars, Map<String, List<DeclarationFunctionStatement>> funcs, Type returnType) {
         this.vars.putAll(vars);
         this.funcs.putAll(funcs);
         for (var elem : body) {
@@ -92,12 +94,14 @@ public class BlockStatement implements Statement {
 
     public BlockStatement poblate() {
         Map<String, List<DeclarationFunctionStatement>> funcs = new HashMap<>();
-        funcs.put("println", this.printLn());
+        funcs.put("println", this.genPrintLn());
         this.funcs.putAll(funcs);
+
+        this.vars.put("args", this.genArgs());
         return this;
     }
 
-    private ArrayList<DeclarationFunctionStatement> printLn() {
+    private ArrayList<DeclarationFunctionStatement> genPrintLn() {
         var type = new SingleType(new Token(TokenKind.VOID, "void", 0, 0, ""));
         var name = new Token(TokenKind.IDENTIFIER, "printLn", 0, 0, "");
         var params = new ArrayList<ParameterStatement>();
@@ -109,7 +113,11 @@ public class BlockStatement implements Statement {
         arr.add(dec);
         return arr;
     }
-    
+
+    private ArrayType genArgs() {
+        return new ArrayType(new SingleType(new Token(TokenKind.STRING, "String", 0, 0, "")));
+    }   
+
     @Override
     public void validate(BlockStatement parent) {
         for (var elem : body) {

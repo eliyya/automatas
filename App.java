@@ -11,9 +11,10 @@ public class App {
         int i = 20;
         String j = "hola mundo";
         char k = 'a';
+        boolean args = true;
         i++;
         ++i;
         b = 2;
-        println(b);
+        println(j);
     }
 }

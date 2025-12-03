@@ -2,6 +2,7 @@ package com.compiler.ast.statements;
 
 import com.compiler.ast.Expression;
 import com.compiler.ast.Statement;
+import com.compiler.ast.Type;
 import com.compiler.errors.InvalidTypeError;
 import com.compiler.lexer.Token;
 import com.compiler.utils.JsonIgnore;
@@ -22,10 +23,10 @@ public class ReturnStatement implements Statement {
         throw new UnsupportedOperationException("Unimplemented method 'Statement'");
     }
     
-    public void validate(BlockStatement parent, Token returnType) {
+    public void validate(BlockStatement parent, Type returnType) {
         if (this.expression == null) {
-            if (!returnType.value().equals("void")) {
-                throw new InvalidTypeError(returnType, this.returnToken);
+            if (!returnType.token().value().equals("void")) {
+                throw new InvalidTypeError(returnType.token(), this.returnToken);
             }
             return;
         }

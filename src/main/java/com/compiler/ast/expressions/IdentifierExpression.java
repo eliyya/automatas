@@ -3,6 +3,7 @@ package com.compiler.ast.expressions;
 import com.compiler.ast.statements.BlockStatement;
 import com.compiler.errors.InvalidTypeError;
 import com.compiler.errors.UnresolvedError;
+import com.compiler.ast.Type;
 import com.compiler.lexer.Token;
 import com.compiler.lexer.TokenKind;
 
@@ -20,19 +21,19 @@ public final class IdentifierExpression implements DeclarativeExpression {
     }
 
     @Override
-    public void validateType(Token type, BlockStatement parent) {
+    public void validateType(Type type, BlockStatement parent) {
         var currentType = parent.getVar(this.value.value());
         if (currentType == null) {
             parent.addVar(this.value.value(), type);
             return;
         }
-        if (type.kind() == TokenKind.OBJECT) {
+        if (type.token().kind() == TokenKind.OBJECT) {
             return;
         }
-        if (currentType.value().equals(type.value())) {
+        if (currentType.token().value().equals(type.token().value())) {
             return;
         }
-        throw new InvalidTypeError(type, this.value);
+        throw new InvalidTypeError(type.token(), this.value);
     }
 
     @Override
@@ -51,7 +52,7 @@ public final class IdentifierExpression implements DeclarativeExpression {
         if (type == null) {
             throw new UnresolvedError(this.value);
         }
-        return TokenKind.isNumberType(type.kind());
+        return TokenKind.isNumberType(type.token().kind());
     }
 
     @Override
