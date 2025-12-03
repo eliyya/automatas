@@ -4,6 +4,7 @@ import com.compiler.ast.Expression;
 import com.compiler.ast.Type;
 import com.compiler.ast.statements.BlockStatement;
 import com.compiler.ast.statements.ContolFlowStatement;
+import com.compiler.ast.statements.ExpressionStatement;
 import com.compiler.ast.statements.declaration.DeclarationVariableStatement;
 import com.compiler.lexer.Token;
 
@@ -16,6 +17,7 @@ public class ForStatement implements ContolFlowStatement {
     String _c = "ForStatement";
     ForType type;
     DeclarationVariableStatement statement;
+    ExpressionStatement expression;
     Expression collection;
     Expression condition;
     Expression increment;
@@ -39,10 +41,22 @@ public class ForStatement implements ContolFlowStatement {
         this.forToken = forToken;
     }
 
+    public ForStatement(ExpressionStatement expression, Expression condition, Expression increment, BlockStatement body, Token forToken) {
+        this.expression = expression;
+        this.condition = condition;
+        this.increment = increment;
+        this.body = body;
+        this.type = ForType.FORI;
+        this.forToken = forToken;
+    }
+
     @Override
     public String toString() {
         if (type == ForType.FOREACH) {
             return "for (" + statement + " : " + collection.toString() + ") " + body;
+        }
+        if (expression != null) {
+            return "for (" + expression + "; " + condition + "; " + increment + ") " + body;
         }
         return "for (" + statement + "; " + condition + "; " + increment + ") " + body;
     }
@@ -50,7 +64,11 @@ public class ForStatement implements ContolFlowStatement {
     @Override
     public void validate(BlockStatement parent) {
         if (this.type == ForType.FORI) {
-            this.statement.validate(parent);
+            if (this.statement != null) {
+                this.statement.validate(parent);
+            } else if (this.expression != null) {
+                this.expression.validate(parent);
+            }
             this.condition.validateType(BlockStatement.BooleanType, parent);
             this.increment.validateType(BlockStatement.ObjectType, parent);
         }

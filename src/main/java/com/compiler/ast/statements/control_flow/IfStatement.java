@@ -19,10 +19,11 @@ public class IfStatement implements ContolFlowStatement {
         this.ifToken = ifToken;
     }
 
-    public IfStatement(Expression condition, BlockStatement body, BlockStatement elseBody) {
+    public IfStatement(Expression condition, BlockStatement body, BlockStatement elseBody, Token ifToken) {
         this.condition = condition;
         this.body = body;
         this.elseBody = elseBody;
+        this.ifToken = ifToken;
     }
 
     @Override
