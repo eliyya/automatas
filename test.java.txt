@@ -11,11 +11,11 @@ i++;
 ++i;
 println(j);
 // while (i++ < 10) {
-//     if (i == 2) {
-//         // do things
-//     } else if (i ==3) {
-//         i+=2;
-//     } 
+    if (i == 2) {
+        // do things
+    } else if (i ==3) {
+        i+=2;
+    } 
 // }
 
 // for (String c : j) {

@@ -4,7 +4,6 @@ import com.compiler.ast.Expression;
 import com.compiler.ast.Type;
 import com.compiler.ast.statements.BlockStatement;
 import com.compiler.ast.statements.ContolFlowStatement;
-import com.compiler.lexer.Token;
 
 public class IfStatement implements ContolFlowStatement {
     String _c = "IfStatement";
@@ -33,13 +32,16 @@ public class IfStatement implements ContolFlowStatement {
 
     @Override
     public void validate(BlockStatement parent) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.condition.validateType(BlockStatement.BooleanType, parent);
+        this.body.validate(parent);
+        this.elseBody.validate(parent);
     }
 
     @Override
     public void validate(BlockStatement parent, Type returnType) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'validate'");
+        this.condition.validateType(BlockStatement.BooleanType, parent);
+        this.body.validate(parent.getVars(), parent.getFuncs(), returnType);
+        this.elseBody.validate(parent.getVars(), parent.getFuncs(), returnType);
     }
     
 }

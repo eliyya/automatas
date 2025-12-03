@@ -26,18 +26,22 @@ public class BinaryExpression implements Expression {
 
     @Override
     public void validateType(Type type, BlockStatement parent) {
-        if (this.operator.kind() == TokenKind.LESS
-                || this.operator.kind() == TokenKind.GREATER
-                || this.operator.kind() == TokenKind.LESS_EQUALS
-                || this.operator.kind() == TokenKind.GREATER_EQUALS) {
-            if (!this.left.isNumber(parent) || !this.right.isNumber(parent)) {
-                throw new InvalidTypeError(type.token(), this.operator);
-            } else {
-                return;
+       switch (this.operator.kind()) {
+            case LESS, GREATER, LESS_EQUALS, GREATER_EQUALS -> {
+                if (!this.left.isNumber(parent) || !this.right.isNumber(parent)) {
+                    throw new InvalidTypeError(type.token(), this.operator);
+                }
+            }
+            case EQUALS, NOT_EQUALS -> {
+                if (type.token().kind() != TokenKind.BOOLEAN) {
+                    throw new InvalidTypeError(type.token(), this.operator);
+                }
+            }
+            default -> {
+                left.validateType(type, parent);
+                right.validateType(type, parent);
             }
         }
-        left.validateType(type, parent);
-        right.validateType(type, parent);
     }
 
     @Override
