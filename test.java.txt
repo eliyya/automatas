@@ -22,10 +22,10 @@ while (i++ < 10) {
 //     // do things
 // }
 
-lab: for (l = 0; i < 10; i++) {
+lab: for (int l = 0; i < 10; i++) {
     if (i == 2) {
         // do things
-        break lab;
+        // break lab;
     } else if (i ==3) {
         i+=2;
     } else {

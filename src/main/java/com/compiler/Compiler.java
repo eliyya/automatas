@@ -30,8 +30,8 @@ public class Compiler {
             return false;
         }
         var jc = ToolProvider.getSystemJavaCompiler();
-        jc.run(System.in, System.out, System.err, file.getPath());
+        var r = jc.run(System.in, System.out, System.err, file.getPath());
         // file.delete();
-        return true;
+        return r == 0;
     }
 }

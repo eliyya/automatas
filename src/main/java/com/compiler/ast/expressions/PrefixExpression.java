@@ -31,7 +31,7 @@ public class PrefixExpression implements Expression {
 
     @Override
     public void validateType(Type type, BlockStatement parent) {
-        throw new UnsupportedOperationException("Unimplemented method 'expression'");
+        this.expression.validateType(type, parent);
     }
 
     @Override

@@ -22,7 +22,7 @@ public class LabeledCicleStatement implements ContolFlowStatement {
 
     @Override
     public String toString() {
-        return this.label + ": " + this.cicle;
+        return this.label.value() + ": " + this.cicle;
     }
 
     @Override

@@ -56,9 +56,9 @@ public class ForStatement implements ContolFlowStatement {
             return "for (" + statement + " : " + collection.toString() + ") " + body;
         }
         if (expression != null) {
-            return "for (" + expression + "; " + condition + "; " + increment + ") " + body;
+            return "for (" + expression + " " + condition + "; " + increment + ") " + body;
         }
-        return "for (" + statement + "; " + condition + "; " + increment + ") " + body;
+        return "for (" + statement + " " + condition + "; " + increment + ") " + body;
     }
 
     @Override
