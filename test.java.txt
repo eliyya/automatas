@@ -9,7 +9,6 @@ String j="hola mundo";
 char k = 'a';
 i++;
 ++i;
-b = 3f;
 println(j);
 // while (i++ < 10) {
 //     if (i == 2) {
@@ -34,20 +33,19 @@ println(j);
 //     }
 // }
 
-// do {
-//     // do things
-// } while (i < 10);
+do {
+    // do things
+} while (i < 10);
 
 void test(Object args) {
     var n = false;
     return;
 }
 
-// {
-//     int z = 0;
-// }
+{
+    int z = 0;
+}
 
-// main(1, "s", true, 1.0, 'a', 1.0f, a);
 
 // int[] arr;
 
@@ -55,4 +53,4 @@ void test(Object args) {
 
 // int[][] arr2 = {{1},{e},};
 
-// int a = 0x12.fp2f;
+float z = 0xF_2.f_1p-2f;

@@ -120,8 +120,10 @@ public class BlockStatement implements Statement {
 
     @Override
     public void validate(BlockStatement parent) {
+        this.funcs.putAll(funcs);
+        this.vars.putAll(vars);
         for (var elem : body) {
-            elem.validate(parent);
+            elem.validate(this);
         }
     }
 
@@ -136,4 +138,6 @@ public class BlockStatement implements Statement {
         }
         return text;
     }
+
+    public static SingleType BooleanType = new SingleType(new Token(TokenKind.BOOLEAN, "boolean", 0, 0, "global"));
 }

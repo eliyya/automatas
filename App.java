@@ -13,7 +13,12 @@ public class App {
         char k = 'a';
         i++;
         ++i;
-        b = 3f;
         println(j);
+        do {
+        } while (i < 10);
+        {
+        int z = 0;
+        }
+        float z = 0xF_2.f_1p-2f;
     }
 }
