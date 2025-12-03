@@ -57,4 +57,10 @@ public class PrefixExpression implements Expression {
     public boolean isDeclared(BlockStatement parent) {
         return this.expression.isDeclared(parent);
     }
+
+    @Override
+    public Token token() {
+        if (this.suffix) return this.expression.token();
+        return this.operator;
+    }
 }

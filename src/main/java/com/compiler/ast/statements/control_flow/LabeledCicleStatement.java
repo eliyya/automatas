@@ -17,7 +17,7 @@ public class LabeledCicleStatement implements ContolFlowStatement {
 
     @Override
     public void validate(BlockStatement parent) {
-        throw new UnsupportedOperationException("Unimplemented method 'Statement'");
+        this.cicle.validate(parent);
     }
 
     @Override
@@ -27,8 +27,12 @@ public class LabeledCicleStatement implements ContolFlowStatement {
 
     @Override
     public void validate(BlockStatement parent, Type returnType) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'validate'");
+        this.cicle.validate(parent, returnType);
+    }
+
+    @Override
+    public Token token() {
+        return this.label;
     }
     
 }

@@ -49,4 +49,9 @@ public class CharExpression implements PrimaryExpression {
     public boolean isDeclared(BlockStatement parent) {
         return true;
     }
+
+    @Override
+    public Token token() {
+        return this.value;
+    }
 }

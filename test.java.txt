@@ -10,28 +10,28 @@ char k = 'a';
 i++;
 ++i;
 println(j);
-// while (i++ < 10) {
+while (i++ < 10) {
     if (i == 2) {
         // do things
     } else if (i ==3) {
         i+=2;
     } 
-// }
+}
 
 // for (String c : j) {
 //     // do things
 // }
 
-// lab: for (int i = 0; i < 10; i++) {
-//     if (i == 2) {
-//         // do things
-//         break lab;
-//     } else if (i ==3) {
-//         i+=2;
-//     } else {
-//         i++;
-//     }
-// }
+lab: for (l = 0; i < 10; i++) {
+    if (i == 2) {
+        // do things
+        break lab;
+    } else if (i ==3) {
+        i+=2;
+    } else {
+        i++;
+    }
+}
 
 do {
     // do things

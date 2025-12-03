@@ -54,5 +54,10 @@ public final class AssignmentExpression implements DeclarativeExpression {
     public boolean isDeclared(BlockStatement parent) {
         return parent.getVar(this.identifier.value()) != null;
     }
+
+    @Override
+    public Token token() {
+        return this.identifier;
+    }
     
 }

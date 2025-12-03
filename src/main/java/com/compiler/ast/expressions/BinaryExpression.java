@@ -70,4 +70,9 @@ public class BinaryExpression implements Expression {
     public boolean isDeclared(BlockStatement parent) {
         return this.left.isDeclared(parent) && this.right.isDeclared(parent);
     }
+
+    @Override
+    public Token token() {
+        return this.left.token();
+    }
 }

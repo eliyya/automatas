@@ -5,6 +5,7 @@ import com.compiler.lexer.Token;
 
 public interface Expression {
     public void validateType(Type type, BlockStatement parent);
+    public Token token();
     public Token getIdentifier();
     public boolean isBoolean(BlockStatement parent);
     public boolean isNumber(BlockStatement parent);

@@ -63,5 +63,10 @@ public class FunctionCallExpression implements Expression {
         }
         return false;
     }
+
+    @Override
+    public Token token() {
+        return this.name;
+    }
     
 }

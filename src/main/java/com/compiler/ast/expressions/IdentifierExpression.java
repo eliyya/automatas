@@ -63,4 +63,9 @@ public final class IdentifierExpression implements DeclarativeExpression {
     public boolean isDeclared(BlockStatement parent) {
         return parent.getVar(this.value.value()) != null;
     }
+
+    @Override
+    public Token token() {
+        return this.value;
+    }
 }

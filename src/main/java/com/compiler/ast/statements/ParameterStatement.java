@@ -41,5 +41,10 @@ public class ParameterStatement implements Statement {
         ParameterStatement other = (ParameterStatement) o;
         return Objects.equals(type.token().value(), other.type.token().value());
     }
+
+    @Override
+    public Token token() {
+        return this.type.token();
+    }
     
 }

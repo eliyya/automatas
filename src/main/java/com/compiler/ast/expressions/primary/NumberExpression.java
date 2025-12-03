@@ -166,4 +166,9 @@ public class NumberExpression implements PrimaryExpression {
         return true;
     }
 
+    @Override
+    public Token token() {
+        return this.value;
+    }
+
 }

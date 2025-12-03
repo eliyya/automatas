@@ -13,10 +13,12 @@ public class WhileStatement implements ContolFlowStatement {
     String _c = "WhileStatement";
     Expression condition;
     BlockStatement body;
+    Token whileToken;
 
-    public WhileStatement(Expression condition, BlockStatement body) {
+    public WhileStatement(Expression condition, BlockStatement body, Token whileToken) {
         this.condition = condition;
         this.body = body;
+        this.whileToken = whileToken;
     }
 
     @Override
@@ -37,6 +39,11 @@ public class WhileStatement implements ContolFlowStatement {
     public void validate(BlockStatement parent, Type returnType) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'validate'");
+    }
+
+    @Override
+    public Token token() {
+        return this.whileToken;
     }
 
 }

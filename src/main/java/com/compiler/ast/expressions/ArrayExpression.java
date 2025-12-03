@@ -39,4 +39,9 @@ public class ArrayExpression implements Expression {
     public boolean isDeclared(BlockStatement parent) {
         return this.elements.stream().allMatch(e -> e.isDeclared(parent));
     }
+
+    @Override
+    public Token token() {
+        return this.elements.getFirst().token();
+    }
 }

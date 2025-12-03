@@ -51,7 +51,6 @@ public class StatementParser {
                 throw new UnexpectedSyntaxError(parser.currentToken());
             }
             body.add(handler.apply(parser));
-            continue;
         }
 
         return new BlockStatement(body);
@@ -331,7 +330,18 @@ public class StatementParser {
             return new ForStatement(stat, collection, body);
         }
         // for
-        var stat = parseDeclaratioStatement(parser);
+        var handler = PrattRegistry.stmtLU.get(parser.currentTokenKind());
+        if (handler == null) {
+            throw new UnexpectedSyntaxError(parser.currentToken());
+        }
+        var stat = handler.apply(parser);
+        if (stat instanceof DeclarationVariableStatement) {
+
+        } else if (stat instanceof ExpressionStatement) {
+            
+        } else {
+            throw new ExpectedError("declaration", stat.token());
+        }
         if (stat instanceof DeclarationVariableStatement dec) {
             var condition = Parser.parseExpression(parser);
             parser.expect(TokenKind.SEMI);

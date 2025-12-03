@@ -5,6 +5,7 @@ import com.compiler.ast.Statement;
 import com.compiler.ast.expressions.AssignmentExpression;
 import com.compiler.ast.expressions.FunctionCallExpression;
 import com.compiler.errors.UnresolvedError;
+import com.compiler.lexer.Token;
 
 public class ExpressionStatement implements Statement {
     final String _c = "ExpressionStatement";
@@ -35,5 +36,10 @@ public class ExpressionStatement implements Statement {
         } else if (!this.expression.isDeclared(parent)) {
             throw new UnresolvedError(this.expression.getIdentifier());
         }
+    }
+
+    @Override
+    public Token token() {
+        return this.expression.token();
     }
 }

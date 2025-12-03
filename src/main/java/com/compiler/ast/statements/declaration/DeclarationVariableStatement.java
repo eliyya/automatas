@@ -10,6 +10,7 @@ import com.compiler.ast.expressions.IdentifierExpression;
 import com.compiler.ast.statements.BlockStatement;
 import com.compiler.ast.statements.DeclarationStatement;
 import com.compiler.errors.DuplicateError;
+import com.compiler.lexer.Token;
 
 public class DeclarationVariableStatement implements DeclarationStatement {
     final String _c = "DeclarationVariableStatement";
@@ -49,6 +50,11 @@ public class DeclarationVariableStatement implements DeclarationStatement {
         //     return type.value() + " " + identifier.value() + ";";
         // }
         // return type.value() + " " + identifier.value() + " = " + expression + ";";
+    }
+
+    @Override
+    public Token token() {
+        return this.type.token();
     }
     
 }

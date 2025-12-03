@@ -54,5 +54,10 @@ public class DeclarationFunctionStatement implements DeclarationStatement {
         }
         throw new DuplicateError(this.name);
     }
+
+    @Override
+    public Token token() {
+        return this.type.token();
+    }
     
 }

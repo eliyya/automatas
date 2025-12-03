@@ -21,8 +21,11 @@ public class BlockStatement implements Statement {
     private Map<String, Type> vars = new HashMap<>();
     @JsonIgnore
     private Map<String, List<DeclarationFunctionStatement>> funcs = new HashMap<>();
+    @JsonIgnore
+    Token openToken;
 
-    public BlockStatement(List<Statement> body) {
+    public BlockStatement(List<Statement> body, Token openToken) {
+        this.openToken = openToken;
         this.body = body;
     }
 
@@ -102,26 +105,25 @@ public class BlockStatement implements Statement {
     }
 
     private ArrayList<DeclarationFunctionStatement> genPrintLn() {
-        var type = new SingleType(new Token(TokenKind.VOID, "void", 0, 0, ""));
         var name = new Token(TokenKind.IDENTIFIER, "printLn", 0, 0, "");
         var params = new ArrayList<ParameterStatement>();
-        var objParam = new ParameterStatement(new SingleType(new Token(TokenKind.OBJECT, "object", 0, 0, "")), new Token(TokenKind.IDENTIFIER, "obj", 0, 0, ""));
+        var objParam = new ParameterStatement(BlockStatement.ObjectType, new Token(TokenKind.IDENTIFIER, "obj", 0, 0, ""));
         params.add(objParam);
-        var body = new BlockStatement(new ArrayList<>());
-        var dec = new DeclarationFunctionStatement(type, name, params, body);
+        var body = new BlockStatement(new ArrayList<>(), new Token(TokenKind.OPEN_CURLY, "", 0, 0, ""));
+        var dec = new DeclarationFunctionStatement(BlockStatement.VoidType, name, params, body);
         var arr = new ArrayList<DeclarationFunctionStatement>();
         arr.add(dec);
         return arr;
     }
 
     private ArrayType genArgs() {
-        return new ArrayType(new SingleType(new Token(TokenKind.STRING, "String", 0, 0, "")));
+        return new ArrayType(BlockStatement.StringType);
     }   
 
     @Override
     public void validate(BlockStatement parent) {
-        this.funcs.putAll(funcs);
-        this.vars.putAll(vars);
+        this.funcs.putAll(parent.funcs);
+        this.vars.putAll(parent.vars);
         for (var elem : body) {
             elem.validate(this);
         }
@@ -139,5 +141,12 @@ public class BlockStatement implements Statement {
         return text;
     }
 
+    public Token token() {
+        return this.openToken;
+    }
+
     public static SingleType BooleanType = new SingleType(new Token(TokenKind.BOOLEAN, "boolean", 0, 0, "global"));
+    public static SingleType ObjectType = new SingleType(new Token(TokenKind.OBJECT, "object", 0, 0, "global"));
+    public static SingleType VoidType = new SingleType(new Token(TokenKind.VOID, "void", 0, 0, "global"));
+    public static SingleType StringType = new SingleType(new Token(TokenKind.STRING, "String", 0, 0, "global"));
 }

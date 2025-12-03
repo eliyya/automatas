@@ -14,6 +14,14 @@ public class App {
         i++;
         ++i;
         println(j);
+        while (i++ < 10) {
+        if (i == 2) {
+        } else {
+        if (i == 3) {
+        i += 2;
+        }
+        }
+        }
         do {
         } while (i < 10);
         {

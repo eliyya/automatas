@@ -38,4 +38,8 @@ public class ReturnStatement implements Statement {
         return "return " + expression + ";";
     }
     
+    @Override
+    public Token token() {
+        return returnToken;
+    }
 }
