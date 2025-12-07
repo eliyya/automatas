@@ -1,13 +1,9 @@
 public class App {
-    static void println(Object obj) {
-        IO.println(obj);
-    }
-
-    static void test(Object args) {
+    static void println(Object obj) { IO.println(obj); }
+    static void test(Object args){
         var n = false;
         return;
     }
-
     public static void main(String[] args) {
         int b;
         float a = 3f + 45.2f + 5f * 4f;
@@ -24,6 +20,7 @@ public class App {
         println(j);
         while (i++ < 10) {
             if (i == 2) {
+            
             } else {
                 if (i == 3) {
                     i += 2;
@@ -32,6 +29,7 @@ public class App {
         }
         lab: for (int l = 0; i < 10; i++) {
             if (i == 2) {
+                break;
             } else {
                 if (i == 3) {
                     i += 2;
@@ -41,6 +39,7 @@ public class App {
             }
         }
         do {
+        
         } while (i < 10);
         {
             int z = 0;

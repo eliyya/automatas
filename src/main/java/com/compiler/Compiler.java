@@ -15,7 +15,7 @@ public class Compiler {
                 public class App {
                     static void println(Object obj) { IO.println(obj); }
                     """;
-        gen += ast.getFunctions();
+        gen += ast.getFunctions().lines().map(s -> "    " + s).collect(Collectors.joining("\n")) + "\n";
         gen += """
                     public static void main(String[] args) {
                 """;

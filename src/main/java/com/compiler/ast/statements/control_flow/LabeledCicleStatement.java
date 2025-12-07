@@ -3,6 +3,7 @@ package com.compiler.ast.statements.control_flow;
 import com.compiler.ast.Type;
 import com.compiler.ast.statements.BlockStatement;
 import com.compiler.ast.statements.ContolFlowStatement;
+import com.compiler.errors.DuplicateError;
 import com.compiler.lexer.Token;
 
 public class LabeledCicleStatement implements ContolFlowStatement {
@@ -17,7 +18,12 @@ public class LabeledCicleStatement implements ContolFlowStatement {
 
     @Override
     public void validate(BlockStatement parent) {
+        if (parent.labels.contains(this.label.value())) {
+            throw new DuplicateError(this.label);
+        }
+        parent.labels.add(this.label.value());
         this.cicle.validate(parent);
+        parent.labels.remove(this.label.value());
     }
 
     @Override
@@ -27,7 +33,12 @@ public class LabeledCicleStatement implements ContolFlowStatement {
 
     @Override
     public void validate(BlockStatement parent, Type returnType) {
+        if (parent.labels.contains(this.label.value())) {
+            throw new DuplicateError(this.label);
+        }
+        parent.labels.add(this.label.value());
         this.cicle.validate(parent, returnType);
+        parent.labels.remove(this.label.value());    
     }
 
     @Override

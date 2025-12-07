@@ -1,6 +1,7 @@
 package com.compiler.ast.statements;
 
 import com.compiler.ast.Statement;
+import com.compiler.errors.UnresolvedError;
 import com.compiler.lexer.Token;
 
 public class BreakStatement implements Statement {
@@ -15,7 +16,11 @@ public class BreakStatement implements Statement {
 
     @Override
     public void validate(BlockStatement parent) {
-        throw new UnsupportedOperationException("Unimplemented method 'Statement'");
+        if (this.label != null) {
+            if (!parent.labels.contains(this.label.value())) {
+                throw new UnresolvedError(this.label);
+            }
+        }
     }
 
     @Override

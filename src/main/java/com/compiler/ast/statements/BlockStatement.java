@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.compiler.ast.Statement;
 import com.compiler.ast.statements.declaration.DeclarationFunctionStatement;
@@ -28,7 +29,7 @@ public class BlockStatement implements Statement {
     @JsonIgnore
     Token openToken;
     @JsonIgnore
-    Set<String> labels = new HashSet<>();
+    public Set<String> labels = new HashSet<>();
 
     public BlockStatement(List<Statement> body, Token openToken) {
         this.openToken = openToken;
@@ -71,9 +72,11 @@ public class BlockStatement implements Statement {
     @Override
     public String toString() {
         var text = "{\n";
+        var txtbd = "";
         for (var elem : body) {
-            text += elem + "\n";
+            txtbd += elem + "\n";
         }
+        text += txtbd.lines().map(s -> "    " + s).collect(Collectors.joining("\n")) + "\n";
         text += "}";
         return text;
     }

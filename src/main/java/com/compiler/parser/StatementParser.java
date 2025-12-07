@@ -242,6 +242,7 @@ public class StatementParser {
     public static BreakStatement parseBreakStatement(Parser parser) {
         var t = parser.expect(TokenKind.BREAK);
         if (parser.currentTokenKind() == TokenKind.SEMI) {
+            parser.advance();
             return new BreakStatement(null, t);
         }
         var expression = parser.expect(TokenKind.IDENTIFIER);
