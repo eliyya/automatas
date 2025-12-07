@@ -2,8 +2,10 @@ package com.compiler.ast.statements;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.compiler.ast.Statement;
 import com.compiler.ast.statements.declaration.DeclarationFunctionStatement;
@@ -20,9 +22,13 @@ public class BlockStatement implements Statement {
     @JsonIgnore
     private Map<String, Type> vars = new HashMap<>();
     @JsonIgnore
-    private Map<String, List<DeclarationFunctionStatement>> funcs = new HashMap<>();
+    Map<String, List<DeclarationFunctionStatement>> funcs = new HashMap<>();
+    @JsonIgnore
+    Map<String, List<DeclarationFunctionStatement>> pfuncs = new HashMap<>();
     @JsonIgnore
     Token openToken;
+    @JsonIgnore
+    Set<String> labels = new HashSet<>();
 
     public BlockStatement(List<Statement> body, Token openToken) {
         this.openToken = openToken;
@@ -47,6 +53,11 @@ public class BlockStatement implements Statement {
             funcs.put(identifier, new ArrayList<>());
         }
         funcs.get(identifier).add(func);
+        var a = this.pfuncs.get(identifier);
+        if (a == null) {
+            this.pfuncs.put(identifier, new ArrayList<>());
+        }
+        this.pfuncs.get(identifier).add(func);
     }
 
     public List<DeclarationFunctionStatement> getFuncs(String identifier) {
@@ -73,24 +84,15 @@ public class BlockStatement implements Statement {
         }
     }
 
-    public void validate(Map<String, Type> vars, Map<String, List<DeclarationFunctionStatement>> funcs) {
-        this.vars.putAll(vars);
-        this.funcs.putAll(funcs);
+    public void validate(BlockStatement parent, Type returnType) {
+        this.funcs.putAll(parent.funcs);
+        this.vars.putAll(parent.vars);
+        this.labels = parent.labels;
         for (var elem : body) {
-            elem.validate(this);
-        }
-    }
-
-    public void validate(Map<String, Type> vars, Map<String, List<DeclarationFunctionStatement>> funcs, Type returnType) {
-        this.vars.putAll(vars);
-        this.funcs.putAll(funcs);
-        for (var elem : body) {
-            if (elem instanceof ReturnStatement returnStatement) {
-                returnStatement.validate(this, returnType);
-            } else if (elem instanceof ContolFlowStatement controlFlowStatment) {
-                controlFlowStatment.validate(this, returnType);
-            } else {
-                elem.validate(this);
+            switch (elem) {
+                case ReturnStatement returnStatement -> returnStatement.validate(this, returnType);
+                case ContolFlowStatement controlFlowStatment -> controlFlowStatment.validate(this, returnType);
+                default -> elem.validate(this);
             }
         }
     }
@@ -107,7 +109,8 @@ public class BlockStatement implements Statement {
     private ArrayList<DeclarationFunctionStatement> genPrintLn() {
         var name = new Token(TokenKind.IDENTIFIER, "printLn", 0, 0, "");
         var params = new ArrayList<ParameterStatement>();
-        var objParam = new ParameterStatement(BlockStatement.ObjectType, new Token(TokenKind.IDENTIFIER, "obj", 0, 0, ""));
+        var objParam = new ParameterStatement(BlockStatement.ObjectType,
+                new Token(TokenKind.IDENTIFIER, "obj", 0, 0, ""));
         params.add(objParam);
         var body = new BlockStatement(new ArrayList<>(), new Token(TokenKind.OPEN_CURLY, "", 0, 0, ""));
         var dec = new DeclarationFunctionStatement(BlockStatement.VoidType, name, params, body);
@@ -118,12 +121,13 @@ public class BlockStatement implements Statement {
 
     private ArrayType genArgs() {
         return new ArrayType(BlockStatement.StringType);
-    }   
+    }
 
     @Override
     public void validate(BlockStatement parent) {
         this.funcs.putAll(parent.funcs);
         this.vars.putAll(parent.vars);
+        this.labels = parent.labels; // copy reference
         for (var elem : body) {
             elem.validate(this);
         }
@@ -143,6 +147,16 @@ public class BlockStatement implements Statement {
 
     public Token token() {
         return this.openToken;
+    }
+
+    public String getFunctions() {
+        var text = new StringBuilder();
+        this.pfuncs.forEach((name, list) -> {
+            for (var fns : list) {
+                text.append("static ").append(fns.toString()).append("\n");
+            }
+        });
+        return text.toString();
     }
 
     public static SingleType BooleanType = new SingleType(new Token(TokenKind.BOOLEAN, "boolean", 0, 0, "global"));

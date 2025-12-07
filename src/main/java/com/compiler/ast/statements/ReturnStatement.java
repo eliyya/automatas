@@ -35,7 +35,11 @@ public class ReturnStatement implements Statement {
 
     @Override
     public String toString() {
-        return "return " + expression + ";";
+        if (this.expression != null) {
+            return "return " + expression + ";";
+        } else {
+            return "return;";
+        }
     }
     
     @Override

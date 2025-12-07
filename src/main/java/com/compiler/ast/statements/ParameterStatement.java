@@ -18,7 +18,7 @@ public class ParameterStatement implements Statement {
 
     @Override
     public String toString() {
-        return type.toString() + " " + name;
+        return type.toString() + " " + name.value();
     }
 
     public Type type() {

@@ -14,6 +14,9 @@ public class Compiler {
         String gen = """
                 public class App {
                     static void println(Object obj) { IO.println(obj); }
+                    """;
+        gen += ast.getFunctions();
+        gen += """
                     public static void main(String[] args) {
                 """;
         gen += ast.getScript().lines().map(s -> "        " + s).collect(Collectors.joining("\n"));

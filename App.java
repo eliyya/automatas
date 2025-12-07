@@ -1,5 +1,13 @@
 public class App {
-    static void println(Object obj) { IO.println(obj); }
+    static void println(Object obj) {
+        IO.println(obj);
+    }
+
+    static void test(Object args) {
+        var n = false;
+        return;
+    }
+
     public static void main(String[] args) {
         int b;
         float a = 3f + 45.2f + 5f * 4f;
@@ -15,27 +23,27 @@ public class App {
         ++i;
         println(j);
         while (i++ < 10) {
-        if (i == 2) {
-        } else {
-        if (i == 3) {
-        i += 2;
-        }
-        }
+            if (i == 2) {
+            } else {
+                if (i == 3) {
+                    i += 2;
+                }
+            }
         }
         lab: for (int l = 0; i < 10; i++) {
-        if (i == 2) {
-        } else {
-        if (i == 3) {
-        i += 2;
-        } else {
-        i++;
-        }
-        }
+            if (i == 2) {
+            } else {
+                if (i == 3) {
+                    i += 2;
+                } else {
+                    i++;
+                }
+            }
         }
         do {
         } while (i < 10);
         {
-        int z = 0;
+            int z = 0;
         }
         float z = 0xF_2.f_1p-2f;
     }

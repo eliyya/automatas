@@ -46,9 +46,9 @@ public class IfStatement implements ContolFlowStatement {
     @Override
     public void validate(BlockStatement parent, Type returnType) {
         this.condition.validateType(BlockStatement.BooleanType, parent);
-        this.body.validate(parent.getVars(), parent.getFuncs(), returnType);
+        this.body.validate(parent, returnType);
         if (this.elseBody != null) {
-            this.elseBody.validate(parent.getVars(), parent.getFuncs(), returnType);
+            this.elseBody.validate(parent, returnType);
         }
     }
 

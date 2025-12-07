@@ -23,9 +23,9 @@ public class App {
             IO.println("----------------------------------------------");
             IO.println(format("No se proporcionó ningún archivo", ConsoleColor.RED));
             IO.println("especifique la ruta del archivo como argumento");
-            IO.println(
-                    "Ejemplo: " + format("java", ConsoleColor.YELLOW) + format(" -jar", ConsoleColor.BLACK_BRIGHT)
-                            + " App.jar " + format("test.java.txt", ConsoleColor.BLUE_UNDERLINED));
+            IO.println("Ejemplo: " + format("java", ConsoleColor.YELLOW)
+                    + format(" -jar", ConsoleColor.BLACK_BRIGHT) + " App.jar "
+                    + format("test.java.txt", ConsoleColor.BLUE_UNDERLINED));
             IO.println("----------------------------------------------");
             return;
         }
@@ -33,10 +33,14 @@ public class App {
         var source = Files.readString(Path.of(args[0]));
 
         IO.println("----------------------------------------------");
-        IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
-        IO.println("Fase 2: " + format("Parseo       ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
-        IO.println("Fase 3: " + format("Validación   ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
-        IO.println("Fase 4: " + format("Compilación  ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+        IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD)
+                + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+        IO.println("Fase 2: " + format("Parseo       ", ConsoleColor.BLUE_BOLD)
+                + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+        IO.println("Fase 3: " + format("Validación   ", ConsoleColor.BLUE_BOLD)
+                + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+        IO.println("Fase 4: " + format("Compilación  ", ConsoleColor.BLUE_BOLD)
+                + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
         IO.println(format("Presiona Enter para continuar", ConsoleColor.BLACK_BRIGHT));
         IO.println("----------------------------------------------");
         IO.readln();
@@ -52,10 +56,14 @@ public class App {
             writeTokensSucces(successTokens);
             IO.println();
             IO.println("----------------------------------------------");
-            IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
-            IO.println("Fase 2: " + format("Parseo       ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
-            IO.println("Fase 3: " + format("Validación   ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
-            IO.println("Fase 4: " + format("Compilación  ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+            IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD)
+                    + format("Exitoso", ConsoleColor.GREEN));
+            IO.println("Fase 2: " + format("Parseo       ", ConsoleColor.BLUE_BOLD)
+                    + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+            IO.println("Fase 3: " + format("Validación   ", ConsoleColor.BLUE_BOLD)
+                    + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+            IO.println("Fase 4: " + format("Compilación  ", ConsoleColor.BLUE_BOLD)
+                    + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
             IO.println(format("Presiona Enter para continuar", ConsoleColor.BLACK_BRIGHT));
             IO.println("----------------------------------------------");
             IO.readln();
@@ -74,10 +82,14 @@ public class App {
                 writeTreeSucces(successTree);
                 IO.println();
                 IO.println("----------------------------------------------");
-                IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
-                IO.println("Fase 2: " + format("Parseo       ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
-                IO.println("Fase 3: " + format("Validación   ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
-                IO.println("Fase 4: " + format("Compilación  ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+                IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD)
+                        + format("Exitoso", ConsoleColor.GREEN));
+                IO.println("Fase 2: " + format("Parseo       ", ConsoleColor.BLUE_BOLD)
+                        + format("Exitoso", ConsoleColor.GREEN));
+                IO.println("Fase 3: " + format("Validación   ", ConsoleColor.BLUE_BOLD)
+                        + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+                IO.println("Fase 4: " + format("Compilación  ", ConsoleColor.BLUE_BOLD)
+                        + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
                 IO.println(format("Presiona Enter para continuar", ConsoleColor.BLACK_BRIGHT));
                 IO.println("----------------------------------------------");
                 IO.readln();
@@ -93,10 +105,14 @@ public class App {
                     writeTreeSucces(successTree);
                     IO.println();
                     IO.println("----------------------------------------------");
-                    IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
-                    IO.println("Fase 2: " + format("Parseo       ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
-                    IO.println("Fase 3: " + format("Validación   ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
-                    IO.println("Fase 4: " + format("Compilación  ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+                    IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD)
+                            + format("Exitoso", ConsoleColor.GREEN));
+                    IO.println("Fase 2: " + format("Parseo       ", ConsoleColor.BLUE_BOLD)
+                            + format("Exitoso", ConsoleColor.GREEN));
+                    IO.println("Fase 3: " + format("Validación   ", ConsoleColor.BLUE_BOLD)
+                            + format("Exitoso", ConsoleColor.GREEN));
+                    IO.println("Fase 4: " + format("Compilación  ", ConsoleColor.BLUE_BOLD)
+                            + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
                     IO.println(format("Presiona Enter para continuar", ConsoleColor.BLACK_BRIGHT));
                     IO.println("----------------------------------------------");
                     IO.readln();
@@ -115,20 +131,28 @@ public class App {
                         writeCompilerSucces(success);
                         IO.println();
                         IO.println("----------------------------------------------");
-                        IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
-                        IO.println("Fase 2: " + format("Parseo       ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
-                        IO.println("Fase 3: " + format("Validación   ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
-                        IO.println("Fase 4: " + format("Compilación  ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
+                        IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD)
+                                + format("Exitoso", ConsoleColor.GREEN));
+                        IO.println("Fase 2: " + format("Parseo       ", ConsoleColor.BLUE_BOLD)
+                                + format("Exitoso", ConsoleColor.GREEN));
+                        IO.println("Fase 3: " + format("Validación   ", ConsoleColor.BLUE_BOLD)
+                                + format("Exitoso", ConsoleColor.GREEN));
+                        IO.println("Fase 4: " + format("Compilación  ", ConsoleColor.BLUE_BOLD)
+                                + format("Exitoso", ConsoleColor.GREEN));
                         IO.println("----------------------------------------------");
                     } catch (Exception e) {
                         e.printStackTrace();
                         IO.println("----------------------------------------------");
                         IO.println(format("Error al compilar el AST", ConsoleColor.RED));
                         IO.println("----------------------------------------------");
-                        IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
-                        IO.println("Fase 2: " + format("Parseo       ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
-                        IO.println("Fase 3: " + format("Validación   ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
-                        IO.println("Fase 4: " + format("Compilación  ", ConsoleColor.BLUE_BOLD) + format("Fallido", ConsoleColor.RED));
+                        IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD)
+                                + format("Exitoso", ConsoleColor.GREEN));
+                        IO.println("Fase 2: " + format("Parseo       ", ConsoleColor.BLUE_BOLD)
+                                + format("Exitoso", ConsoleColor.GREEN));
+                        IO.println("Fase 3: " + format("Validación   ", ConsoleColor.BLUE_BOLD)
+                                + format("Exitoso", ConsoleColor.GREEN));
+                        IO.println("Fase 4: " + format("Compilación  ", ConsoleColor.BLUE_BOLD)
+                                + format("Fallido", ConsoleColor.RED));
                         IO.println("----------------------------------------------");
                     }
                 } catch (Exception e) {
@@ -136,10 +160,14 @@ public class App {
                     IO.println("----------------------------------------------");
                     IO.println(format("Error al validar el AST", ConsoleColor.RED));
                     IO.println("----------------------------------------------");
-                    IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
-                    IO.println("Fase 2: " + format("Parseo       ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
-                    IO.println("Fase 3: " + format("Validación   ", ConsoleColor.BLUE_BOLD) + format("Fallido", ConsoleColor.RED));
-                    IO.println("Fase 4: " + format("Compilación  ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+                    IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD)
+                            + format("Exitoso", ConsoleColor.GREEN));
+                    IO.println("Fase 2: " + format("Parseo       ", ConsoleColor.BLUE_BOLD)
+                            + format("Exitoso", ConsoleColor.GREEN));
+                    IO.println("Fase 3: " + format("Validación   ", ConsoleColor.BLUE_BOLD)
+                            + format("Fallido", ConsoleColor.RED));
+                    IO.println("Fase 4: " + format("Compilación  ", ConsoleColor.BLUE_BOLD)
+                            + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
                     IO.println("----------------------------------------------");
                 }
             } catch (Exception e) {
@@ -147,10 +175,14 @@ public class App {
                 IO.println("----------------------------------------------");
                 IO.println(format("Error al generar el AST", ConsoleColor.RED));
                 IO.println("----------------------------------------------");
-                IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD) + format("Exitoso", ConsoleColor.GREEN));
-                IO.println("Fase 2: " + format("Parseo       ", ConsoleColor.BLUE_BOLD) + format("Fallido", ConsoleColor.RED));
-                IO.println("Fase 3: " + format("Validación   ", ConsoleColor.BLUE_BOLD) + format("Fallido", ConsoleColor.RED));
-                IO.println("Fase 4: " + format("Compilación  ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+                IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD)
+                        + format("Exitoso", ConsoleColor.GREEN));
+                IO.println("Fase 2: " + format("Parseo       ", ConsoleColor.BLUE_BOLD)
+                        + format("Fallido", ConsoleColor.RED));
+                IO.println("Fase 3: " + format("Validación   ", ConsoleColor.BLUE_BOLD)
+                        + format("Fallido", ConsoleColor.RED));
+                IO.println("Fase 4: " + format("Compilación  ", ConsoleColor.BLUE_BOLD)
+                        + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
                 IO.println("----------------------------------------------");
             }
         } catch (Exception e) {
@@ -158,10 +190,14 @@ public class App {
             IO.println("----------------------------------------------");
             IO.println(format("Error al generar tokens", ConsoleColor.RED));
             IO.println("----------------------------------------------");
-            IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD) + format("Fallido", ConsoleColor.RED));
-            IO.println("Fase 2: " + format("Parseo       ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
-            IO.println("Fase 3: " + format("Validación   ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
-            IO.println("Fase 4: " + format("Compilación  ", ConsoleColor.BLUE_BOLD) + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+            IO.println(
+                    "Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD) + format("Fallido", ConsoleColor.RED));
+            IO.println("Fase 2: " + format("Parseo       ", ConsoleColor.BLUE_BOLD)
+                    + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+            IO.println("Fase 3: " + format("Validación   ", ConsoleColor.BLUE_BOLD)
+                    + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
+            IO.println("Fase 4: " + format("Compilación  ", ConsoleColor.BLUE_BOLD)
+                    + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
             IO.println("----------------------------------------------");
         }
     }
@@ -239,7 +275,7 @@ public class App {
             return false;
         }
     }
-    
+
     private static void writeASTSucces(boolean success) {
         if (!success) {
             return;
@@ -265,7 +301,7 @@ public class App {
             return false;
         }
     }
-    
+
     private static void writeTreeSucces(boolean success) {
         if (!success) {
             return;
@@ -376,8 +412,8 @@ public class App {
         IO.println("");
         IO.println("--------------------------------------------------------");
         IO.println(
-                "Se ha " + format("compilado", ConsoleColor.GREEN) 
-                + " el código fuente en " + format("App.class", ConsoleColor.BLUE_UNDERLINED));
+                "Se ha " + format("compilado", ConsoleColor.GREEN)
+                        + " el código fuente en " + format("App.class", ConsoleColor.BLUE_UNDERLINED));
         IO.println("--------------------------------------------------------");
     }
 

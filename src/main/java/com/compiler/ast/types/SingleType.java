@@ -15,5 +15,10 @@ public class SingleType implements Type {
     public Token token() {
         return this.type;
     }
+
+    @Override
+    public String toString() {
+        return this.type.value();
+    }
     
 }

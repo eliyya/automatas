@@ -1,6 +1,7 @@
 package com.compiler.ast.statements.declaration;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.compiler.ast.statements.BlockStatement;
 import com.compiler.ast.statements.DeclarationStatement;
@@ -29,7 +30,7 @@ public class DeclarationFunctionStatement implements DeclarationStatement {
 
     @Override
     public String toString() {
-        return type.toString() + " " + name + "(" + parameters + ")" + body;
+        return type.token().value() + " " + name.value() + "(" + parameters.stream().map((p)->p.toString()).collect(Collectors.joining()) + ")" + body;
     }
 
     @Override
@@ -37,7 +38,7 @@ public class DeclarationFunctionStatement implements DeclarationStatement {
         var dec = parent.getFuncs(this.name.value());
         if (dec == null) {
             parent.addFunc(this.name.value(), this);
-            body.validate(parent.getVars(), parent.getFuncs(), this.type);
+            body.validate(parent, this.type);
             return;
         }
         // check if exist
@@ -49,7 +50,7 @@ public class DeclarationFunctionStatement implements DeclarationStatement {
         }
         if (!exists) {
             parent.addFunc(this.name.value(), this);
-            body.validate(parent.getVars(), parent.getFuncs());
+            body.validate(parent);
             return;
         }
         throw new DuplicateError(this.name);
@@ -58,6 +59,14 @@ public class DeclarationFunctionStatement implements DeclarationStatement {
     @Override
     public Token token() {
         return this.type.token();
+    }
+
+    public Type type() {
+        return this.type;
+    }
+
+    public Token name() {
+        return this.name;
     }
     
 }
