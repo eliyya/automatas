@@ -10,6 +10,7 @@ import javax.tools.ToolProvider;
 import com.compiler.ast.statements.BlockStatement;
 
 public class Compiler {
+    @SuppressWarnings("CallToPrintStackTrace")
     public static boolean compile(BlockStatement ast) {
         String gen = """
                 public class App {

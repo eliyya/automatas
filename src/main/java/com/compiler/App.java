@@ -18,6 +18,7 @@ import com.compiler.utils.JSON;
 
 public class App {
 
+    @SuppressWarnings("CallToPrintStackTrace")
     public static void main(String[] args) throws Exception {
         if (args.length == 0) {
             IO.println("----------------------------------------------");
@@ -387,18 +388,19 @@ public class App {
                 continue;
             }
 
-            if (c == '{' || c == '[') {
-                var col = palette[level % palette.length];
-                stack.push(col);
-
-                result.append(format(String.valueOf(c), col));
-                level++;
-            } else if (c == '}' || c == ']') {
-                level--;
-                var col = stack.pop();
-                result.append(format(String.valueOf(c), col));
-            } else {
-                result.append(c);
+            switch (c) {
+                case '{', '[' -> {
+                    var col = palette[level % palette.length];
+                    stack.push(col);
+                    result.append(format(String.valueOf(c), col));
+                    level++;
+                }
+                case '}', ']' ->                     {
+                    level--;
+                    var col = stack.pop();
+                    result.append(format(String.valueOf(c), col));
+                    }
+                default -> result.append(c);
             }
         }
 
