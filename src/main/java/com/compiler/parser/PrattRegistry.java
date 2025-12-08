@@ -41,6 +41,7 @@ public class PrattRegistry {
         PrattRegistry.led(TokenKind.STAR, BindingPower.MULTIPLICATIVE, ExpressionParser::parseBinaryExpression);
         PrattRegistry.led(TokenKind.SLASH, BindingPower.MULTIPLICATIVE, ExpressionParser::parseBinaryExpression);
         PrattRegistry.led(TokenKind.PERCENT, BindingPower.MULTIPLICATIVE, ExpressionParser::parseBinaryExpression);
+        // PrattRegistry.led(TokenKind.PERCENT, BindingPower.MULTIPLICATIVE, ExpressionParser::parseBinaryExpression);
 
         // literals
         PrattRegistry.nud(TokenKind.NUMBER_EXPRESSION, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);

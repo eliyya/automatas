@@ -34,6 +34,11 @@ public class ExpressionParser {
 
             var opbp = PrattRegistry.bpLU.get(opkb);
             if (opbp == null || opbp.ordinal() <= bp.ordinal()) {
+                System.out.print(opbp);
+                System.out.print(" ");
+                System.out.print(bp);
+                System.out.print(" ");
+                System.out.println(left);
                 break;
             }
 
@@ -141,4 +146,20 @@ public class ExpressionParser {
         parser.expect(TokenKind.CLOSE_CURLY);
         return new ArrayExpression(elements);
     }
+
+    // public static Expression parseArrayCallExpression(Parser parser) {
+    //     var token = parser.expect(TokenKind.OPEN_BRACKET);
+
+    //     var rhs = parser.parseExpression(parser);
+    //     parser.expect(TokenKind.CLOSE_BRACKET);
+    //     return ast.ComputedExpr{
+    //         Member:   left,
+    //         Property: rhs,
+    //     }
+
+	// return ast.MemberExpr{
+	// 	Member:   left,
+	// 	Property: p.expect(lexer.IDENTIFIER).Value,
+	// }
+    // }
 }

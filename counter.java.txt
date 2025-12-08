@@ -1,0 +1,62 @@
+// Contador de tareas completadas
+
+int total = 0;
+int[] tareas;
+tareas = {1, 5, 3, 2};
+
+println("Iniciando conteo...");
+
+// Usaremos un loop clásico con etiqueta
+sumLoop: for (int i = 0; i < length(tareas); i++) {
+    int valor = tareas[i];
+
+    if (valor == 0) {
+        break sumLoop;
+    } else if (valor < 0) {
+        continue sumLoop;
+    }
+
+    total += valor;
+}
+
+// Probemos operadores ++ y +=
+total++;
+++total;
+
+println("Total parcial: " + total);
+
+// Probemos función top-level
+int doble(int x) {
+    return x * 2;
+}
+
+int res = doble(total);
+println("Doble: " + res);
+
+// Probemos arrays 2D sintácticos
+int[][] matriz = {
+    {1, 2},
+    {3, total},
+};
+
+// Recorremos matriz
+for (int r = 0; r < length(matriz); r++) {
+    for (int c = 0; c < length(matriz[r]); c++) {
+        println(matriz[r][c]);
+    }
+}
+
+// Probemos do-while
+int x = 5;
+do {
+    println("x=" + x);
+    x--;
+} while (x > 0);
+
+// Probemos boolean y var
+boolean band = true;
+void log(Object a) {
+    println(a);
+}
+
+println("Fin del script");

@@ -98,7 +98,7 @@ public class Lexer {
 
     public Lexer(String source) {
         this.source = source;
-        this.lines = source.lines().toList();
+        this.lines = List.of(source.split("\n", -1));
     }
 
     public List<Token> tokenize() {

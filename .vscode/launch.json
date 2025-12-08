@@ -9,7 +9,7 @@
             "name": "Launch with Arguments Prompt",
             "request": "launch",
             "mainClass": "com.compiler.App",
-            "args": "test.java.txt -y",
+            "args": "counter.java.txt -y",
             "vmArgs": "--enable-preview"
         }
     ]
