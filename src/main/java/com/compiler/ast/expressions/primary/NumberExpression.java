@@ -7,7 +7,6 @@ import com.compiler.ast.statements.BlockStatement;
 import com.compiler.errors.InvalidTypeError;
 import com.compiler.ast.Type;
 import com.compiler.lexer.Token;
-import com.compiler.lexer.TokenKind;
 
 public class NumberExpression implements PrimaryExpression {
     Token value;
@@ -23,40 +22,45 @@ public class NumberExpression implements PrimaryExpression {
 
     @Override
     public void validateType(Type type, BlockStatement parent) {
-        if (type.token().kind() == TokenKind.OBJECT) {
-            // always valid
-        } else if (type.token().kind() == TokenKind.FLOAT) {
-            if (!this.isValidFloat()) {
-                throw new InvalidTypeError(type.token(), this.value);
+
+        switch (type.token().kind()) {
+            case OBJECT -> {
+                // always valid
             }
-        } else if (type.token().kind() == TokenKind.BYTE) {
-            if (!this.isValidByte()) {
-                throw new InvalidTypeError(type.token(), this.value);
+            case FLOAT -> {
+                if (!this.isValidFloat()) {
+                    throw new InvalidTypeError(type.token(), this.value);
+                }
             }
-        } else if (type.token().kind() == TokenKind.SHORT) {
-            if (!this.isValidShort()) {
-                throw new InvalidTypeError(type.token(), this.value);
+            case BYTE -> {
+                if (!this.isValidByte()) {
+                    throw new InvalidTypeError(type.token(), this.value);
+                }
             }
-        } else if (type.token().kind() == TokenKind.LONG) {
-            if (!this.isValidLong()) {
-                throw new InvalidTypeError(type.token(), this.value);
+            case SHORT -> {
+                if (!this.isValidShort()) {
+                    throw new InvalidTypeError(type.token(), this.value);
+                }
             }
-        } else if (type.token().kind() == TokenKind.INT) {
-            if (!this.isValidInt()) {
-                throw new InvalidTypeError(type.token(), this.value);
+            case LONG -> {
+                if (!this.isValidLong()) {
+                    throw new InvalidTypeError(type.token(), this.value);
+                }
             }
-        } else if (type.token().kind() == TokenKind.CHAR) {
-            if (!this.isValidInt() || this.isValidShort() || this.isValidByte()) {
-                throw new InvalidTypeError(type.token(), this.value);
+            case INT -> {
+                if (!this.isValidInt()) {
+                    throw new InvalidTypeError(type.token(), this.value);
+                }
             }
-        } else if (type.token().kind() == TokenKind.STRING) {
-            throw new InvalidTypeError(type.token(), this.value);
-        } else if (type.token().kind() == TokenKind.VOID) {
-            throw new InvalidTypeError(type.token(), this.value);
-        } else if (type.token().kind() == TokenKind.BOOLEAN) {
-            throw new InvalidTypeError(type.token(), this.value);
-        } else {
-            throw new UnsupportedOperationException("Unimplemented method 'validateType' for type " + type.token().value());
+            case CHAR -> {
+                if (!this.isValidInt() || this.isValidShort() || this.isValidByte()) {
+                    throw new InvalidTypeError(type.token(), this.value);
+                }
+            }
+            case STRING -> throw new InvalidTypeError(type.token(), this.value);
+            case VOID -> throw new InvalidTypeError(type.token(), this.value);
+            case BOOLEAN -> throw new InvalidTypeError(type.token(), this.value);
+            default -> throw new RuntimeException("Unimplemented method 'validateType' for type " + type.token().value());
         }
     }
 
@@ -141,7 +145,8 @@ public class NumberExpression implements PrimaryExpression {
         if (this.isOctal()) {
             return Integer.parseInt(this.value.value(), 8) <= Long.MAX_VALUE;
         }
-        if (this.isValidLong()) return false;
+        if (this.isValidLong())
+            return false;
         return Integer.parseInt(this.value.value()) <= Integer.MAX_VALUE;
     }
 

@@ -45,5 +45,9 @@ public class ParameterStatement implements Statement {
     public Token token() {
         return this.type.token();
     }
-    
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type.token().value());
+    }
 }

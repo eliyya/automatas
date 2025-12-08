@@ -94,8 +94,7 @@ public class BlockStatement implements Statement {
     private ArrayList<DeclarationFunctionStatement> genPrintLn() {
         var name = new Token(TokenKind.IDENTIFIER, "printLn", 0, 0, "");
         var params = new ArrayList<ParameterStatement>();
-        var objParam = new ParameterStatement(BlockStatement.ObjectType,
-                new Token(TokenKind.IDENTIFIER, "obj", 0, 0, ""));
+        var objParam = new ParameterStatement(BlockStatement.ObjectType, BlockStatement.Identifier("obj"));
         params.add(objParam);
         var fbody = new BlockStatement(new ArrayList<>(), new Token(TokenKind.OPEN_CURLY, "", 0, 0, ""));
         var dec = new DeclarationFunctionStatement(BlockStatement.VoidType, name, params, fbody);
@@ -155,4 +154,7 @@ public class BlockStatement implements Statement {
     public static SingleType ObjectType = new SingleType(new Token(TokenKind.OBJECT, "object", 0, 0, "global"));
     public static SingleType VoidType = new SingleType(new Token(TokenKind.VOID, "void", 0, 0, "global"));
     public static SingleType StringType = new SingleType(new Token(TokenKind.STRING, "String", 0, 0, "global"));
+    public static Token Identifier(String value) {
+        return new Token(TokenKind.IDENTIFIER, value, 0, 0, "global");
+    }
 }

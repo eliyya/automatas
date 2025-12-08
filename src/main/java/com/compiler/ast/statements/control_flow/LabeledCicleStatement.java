@@ -1,6 +1,5 @@
 package com.compiler.ast.statements.control_flow;
 
-import com.compiler.ast.Type;
 import com.compiler.ast.statements.BlockStatement;
 import com.compiler.ast.statements.ContolFlowStatement;
 import com.compiler.errors.DuplicateError;

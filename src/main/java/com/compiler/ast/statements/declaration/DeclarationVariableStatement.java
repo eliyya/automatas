@@ -45,10 +45,6 @@ public class DeclarationVariableStatement implements DeclarationStatement {
     @Override
     public String toString() {
         return this.type.token().value() + " " + this.identifiers.stream().map(DeclarativeExpression::toString).collect(Collectors.joining(", ")) + ";";
-        // if (expression == null) {
-        //     return type.value() + " " + identifier.value() + ";";
-        // }
-        // return type.value() + " " + identifier.value() + " = " + expression + ";";
     }
 
     @Override
