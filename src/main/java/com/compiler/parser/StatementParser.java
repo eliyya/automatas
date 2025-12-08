@@ -343,9 +343,10 @@ public class StatementParser {
             throw new UnexpectedSyntaxError(parser.currentToken());
         }
         var stat = handler.apply(parser);
-        if (!(stat instanceof DeclarationVariableStatement) &&
-                !(stat instanceof ExpressionStatement)) {
-            throw new ExpectedError("declaration", stat.token());
+        switch (stat) {
+            case DeclarationVariableStatement _ -> {}
+            case ExpressionStatement _ -> {}
+            default -> throw new ExpectedError("declaration", stat.token());
         }
         var condition = Parser.parseExpression(parser);
         parser.expect(TokenKind.SEMI);
