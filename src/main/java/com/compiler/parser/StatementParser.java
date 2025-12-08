@@ -13,6 +13,7 @@ import com.compiler.ast.expressions.IdentifierExpression;
 import com.compiler.ast.expressions.PrefixExpression;
 import com.compiler.ast.statements.BlockStatement;
 import com.compiler.ast.statements.BreakStatement;
+import com.compiler.ast.statements.ContinueStatement;
 import com.compiler.ast.statements.ContolFlowStatement;
 import com.compiler.ast.statements.DeclarationStatement;
 import com.compiler.ast.statements.ExpressionStatement;
@@ -239,15 +240,22 @@ public class StatementParser {
         return new ReturnStatement(expression, rt);
     }
 
-    public static BreakStatement parseBreakStatement(Parser parser) {
-        var t = parser.expect(TokenKind.BREAK);
+    public static Statement parseControlCicleStatement(Parser parser) {
+        var t = parser.advance();
+        if (t.kind() != TokenKind.BREAK && t.kind() != TokenKind.CONTINUE) {
+            throw new ExpectedError("break", t);
+        }
         if (parser.currentTokenKind() == TokenKind.SEMI) {
             parser.advance();
             return new BreakStatement(null, t);
         }
         var expression = parser.expect(TokenKind.IDENTIFIER);
         parser.expect(TokenKind.SEMI);
-        return new BreakStatement(expression, t);
+        return switch (t.kind()) {
+            case BREAK -> new BreakStatement(expression, t);
+            case CONTINUE -> new ContinueStatement(expression, t);
+            default -> throw new ExpectedError("break", t);
+        };
     }
 
     // // -----------------------

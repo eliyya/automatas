@@ -91,6 +91,7 @@ public enum TokenKind {
 	// misc
 	// AT("@"),
 	BREAK("break"),
+	CONTINUE("continue"),
 	RETURN("return");
 
 	private static final Map<String, TokenKind> lookup = new HashMap<>();
@@ -137,7 +138,9 @@ public enum TokenKind {
 				|| kind == TokenKind.STRING
 				|| kind == TokenKind.OBJECT
 				|| kind == TokenKind.RETURN
-				|| kind == TokenKind.BREAK;
+				|| kind == TokenKind.BREAK
+				|| kind == TokenKind.SWITCH
+				|| kind == TokenKind.CONTINUE;
 	}
 
 	public static boolean isPrimitiveType(TokenKind kind) {

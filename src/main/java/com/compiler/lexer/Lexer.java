@@ -67,33 +67,8 @@ public class Lexer {
             new RegexPattern(Pattern.compile("/"), handler(TokenKind.SLASH)),
             new RegexPattern(Pattern.compile("\\*"), handler(TokenKind.STAR)),
             new RegexPattern(Pattern.compile("%"), handler(TokenKind.PERCENT)),
-            // types
-            new RegexPattern(Pattern.compile("float"), handler(TokenKind.FLOAT)),
-            new RegexPattern(Pattern.compile("double"), handler(TokenKind.DOUBLE)),
-            new RegexPattern(Pattern.compile("int"), handler(TokenKind.INT)),
-            new RegexPattern(Pattern.compile("short"), handler(TokenKind.SHORT)),
-            new RegexPattern(Pattern.compile("long"), handler(TokenKind.LONG)),
-            new RegexPattern(Pattern.compile("byte"), handler(TokenKind.BYTE)),
-            new RegexPattern(Pattern.compile("char"), handler(TokenKind.CHAR)),
-            new RegexPattern(Pattern.compile("boolean"), handler(TokenKind.BOOLEAN)),
-            new RegexPattern(Pattern.compile("String"), handler(TokenKind.STRING)),
-            new RegexPattern(Pattern.compile("Object"), handler(TokenKind.OBJECT)),
-            new RegexPattern(Pattern.compile("void"), handler(TokenKind.VOID)),
-            new RegexPattern(Pattern.compile("var"), handler(TokenKind.VAR)),
-            new RegexPattern(Pattern.compile("true"), handler(TokenKind.TRUE)),
-            new RegexPattern(Pattern.compile("false"), handler(TokenKind.FALSE)),
-            new RegexPattern(Pattern.compile("null"), handler(TokenKind.NULL)),
-            // control flow
-            new RegexPattern(Pattern.compile("if"), handler(TokenKind.IF)),
-            new RegexPattern(Pattern.compile("else"), handler(TokenKind.ELSE)),
-            new RegexPattern(Pattern.compile("while"), handler(TokenKind.WHILE)),
-            new RegexPattern(Pattern.compile("for"), handler(TokenKind.FOR)),
-            new RegexPattern(Pattern.compile("do"), handler(TokenKind.DO)),
-            new RegexPattern(Pattern.compile("switch"), handler(TokenKind.SWITCH)),
-            new RegexPattern(Pattern.compile("break"), handler(TokenKind.BREAK)),
-            new RegexPattern(Pattern.compile("return"), handler(TokenKind.RETURN)),
             // identifier
-            new RegexPattern(Pattern.compile("[a-zA-Z_$][a-zA-Z0-9_$]*"), handler(TokenKind.IDENTIFIER)),
+            new RegexPattern(Pattern.compile("[a-zA-Z_$][a-zA-Z0-9_$]*"), handleIdentifiers()),
     };
 
     public Lexer(String source) {
@@ -178,6 +153,22 @@ public class Lexer {
             var match = pattern.matcher(reminder());
             if (match.find() && match.start() == 0) {
                 advance(match.end());
+            }
+        };
+    }
+
+    private Consumer<Pattern> handleIdentifiers() {
+        return (regex) -> {
+            var match = regex.matcher(this.reminder());
+            if (match.find() && match.start() == 0) {
+                this.advance(match.end());
+                var value = match.group();
+                var kind = TokenKind.fromText(value);
+                kind = switch (TokenKind.isReservedKeyword(kind)) {
+                    case true -> kind;
+                    case false -> TokenKind.IDENTIFIER;
+                };
+                this.push(new Token(kind, value, this.row, this.col - value.length(), this.lines.get(this.row - 1)));
             }
         };
     }

@@ -1,5 +1,7 @@
 package com.compiler.ast.types;
 
+import java.util.Objects;
+
 import com.compiler.ast.Type;
 import com.compiler.lexer.Token;
 
@@ -29,6 +31,17 @@ public class ArrayType implements Type {
         return "ArrayList<" + this.inner.toString(generic) + ">";
     }
 
-    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ArrayType)) return false;
+        ArrayType other = (ArrayType) o;
+        return Objects.equals(this.inner, other.inner);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.inner);
+    }
 
 }

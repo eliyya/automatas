@@ -27,8 +27,11 @@ public class BinaryExpression implements Expression {
     public void validateType(Type type, BlockStatement parent) {
        switch (this.operator.kind()) {
             case LESS, GREATER, LESS_EQUALS, GREATER_EQUALS -> {
-                if (!this.left.isNumber(parent) || !this.right.isNumber(parent)) {
-                    throw new InvalidTypeError(type.token(), this.operator);
+                if (!this.left.isNumber(parent)) {
+                    throw new InvalidTypeError(BlockStatement.IntType.token(), this.left.token());
+                }
+                if (!this.right.isNumber(parent)) {
+                    throw new InvalidTypeError(BlockStatement.IntType.token(), this.right.token());
                 }
             }
             case EQUALS, NOT_EQUALS -> {

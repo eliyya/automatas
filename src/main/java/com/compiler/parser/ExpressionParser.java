@@ -3,6 +3,7 @@ package com.compiler.parser;
 import java.util.ArrayList;
 
 import com.compiler.ast.Expression;
+import com.compiler.ast.expressions.ArrayAccessExpression;
 import com.compiler.ast.expressions.ArrayExpression;
 import com.compiler.ast.expressions.BinaryExpression;
 import com.compiler.ast.expressions.FunctionCallExpression;
@@ -20,6 +21,7 @@ public class ExpressionParser {
 
     public static Expression parseExpression(Parser parser, BindingPower bp) {
         var tokenKind = parser.currentTokenKind();
+        System.out.println(parser.currentToken());
         var nud = PrattRegistry.nudLU.get(tokenKind);
         if (nud == null) {
             throw new RuntimeException("nud handler expected for token: " + tokenKind);
@@ -147,19 +149,10 @@ public class ExpressionParser {
         return new ArrayExpression(elements);
     }
 
-    // public static Expression parseArrayCallExpression(Parser parser) {
-    //     var token = parser.expect(TokenKind.OPEN_BRACKET);
-
-    //     var rhs = parser.parseExpression(parser);
-    //     parser.expect(TokenKind.CLOSE_BRACKET);
-    //     return ast.ComputedExpr{
-    //         Member:   left,
-    //         Property: rhs,
-    //     }
-
-	// return ast.MemberExpr{
-	// 	Member:   left,
-	// 	Property: p.expect(lexer.IDENTIFIER).Value,
-	// }
-    // }
+    public static ArrayAccessExpression parseArrayAccesExpression(Parser parser, Expression left, BindingPower bp) {
+        parser.expect(TokenKind.OPEN_BRACKET);
+        Expression index = Parser.parseExpression(parser);
+        parser.expect(TokenKind.CLOSE_BRACKET);
+        return new ArrayAccessExpression(left, index);
+    }
 }

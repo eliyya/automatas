@@ -41,7 +41,8 @@ public class PrattRegistry {
         PrattRegistry.led(TokenKind.STAR, BindingPower.MULTIPLICATIVE, ExpressionParser::parseBinaryExpression);
         PrattRegistry.led(TokenKind.SLASH, BindingPower.MULTIPLICATIVE, ExpressionParser::parseBinaryExpression);
         PrattRegistry.led(TokenKind.PERCENT, BindingPower.MULTIPLICATIVE, ExpressionParser::parseBinaryExpression);
-        // PrattRegistry.led(TokenKind.PERCENT, BindingPower.MULTIPLICATIVE, ExpressionParser::parseBinaryExpression);
+        // array access
+        PrattRegistry.led(TokenKind.OPEN_BRACKET, BindingPower.MEMBER, ExpressionParser::parseArrayAccesExpression);
 
         // literals
         PrattRegistry.nud(TokenKind.NUMBER_EXPRESSION, BindingPower.PRIMARY, ExpressionParser::parsePrimaryExpression);
@@ -87,7 +88,8 @@ public class PrattRegistry {
         PrattRegistry.stmt(TokenKind.DO, StatementParser::parseControlFlowStatement);
         PrattRegistry.stmt(TokenKind.OPEN_CURLY, StatementParser::parseBlockStatement);
         PrattRegistry.stmt(TokenKind.RETURN, StatementParser::parseReturnStatement);
-        PrattRegistry.stmt(TokenKind.BREAK, StatementParser::parseBreakStatement);
+        PrattRegistry.stmt(TokenKind.BREAK, StatementParser::parseControlCicleStatement);
+        PrattRegistry.stmt(TokenKind.CONTINUE, StatementParser::parseControlCicleStatement);
     }
 
     static void led(TokenKind kind, BindingPower bp, LedHandler fn) {

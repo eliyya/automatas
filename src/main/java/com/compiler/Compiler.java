@@ -17,6 +17,7 @@ public class Compiler {
                 import java.util.ArrayList;
                 public class Out {
                     static void println(Object obj) { IO.println(obj); }
+                    static int length(List<?> obj) { return obj.size(); }
                     """;
         gen += ast.getFunctions().lines().map(s -> "    " + s).collect(Collectors.joining("\n")) + "\n";
         gen += """

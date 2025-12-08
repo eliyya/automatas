@@ -85,6 +85,7 @@ public class BlockStatement implements Statement {
     public BlockStatement poblate() {
         Map<String, List<DeclarationFunctionStatement>> tfuncs = new HashMap<>();
         tfuncs.put("println", this.genPrintLn());
+        tfuncs.put("length", this.genLength());
         this.funcs.putAll(tfuncs);
 
         this.vars.put("args", this.genArgs());
@@ -92,12 +93,30 @@ public class BlockStatement implements Statement {
     }
 
     private ArrayList<DeclarationFunctionStatement> genPrintLn() {
-        var name = new Token(TokenKind.IDENTIFIER, "printLn", 0, 0, "");
+        // name
+        var name = BlockStatement.Token(TokenKind.IDENTIFIER, "printLn");
+        // params
         var params = new ArrayList<ParameterStatement>();
-        var objParam = new ParameterStatement(BlockStatement.ObjectType, BlockStatement.Identifier("obj"));
+        var objParam = new ParameterStatement(BlockStatement.ObjectType, BlockStatement.Token(TokenKind.IDENTIFIER,"obj"));
         params.add(objParam);
-        var fbody = new BlockStatement(new ArrayList<>(), new Token(TokenKind.OPEN_CURLY, "", 0, 0, ""));
+        // rest
+        var fbody = new BlockStatement(new ArrayList<>(), BlockStatement.Token(TokenKind.OPEN_CURLY));
         var dec = new DeclarationFunctionStatement(BlockStatement.VoidType, name, params, fbody);
+        var arr = new ArrayList<DeclarationFunctionStatement>();
+        arr.add(dec);
+        return arr;
+    }
+
+    private ArrayList<DeclarationFunctionStatement> genLength() {
+        // name
+        var name = new Token(TokenKind.IDENTIFIER, "length", 0, 0, "global");
+        // params
+        var params = new ArrayList<ParameterStatement>();
+        var objParam = new ParameterStatement(new ArrayType(BlockStatement.ObjectType), BlockStatement.Token(TokenKind.IDENTIFIER,"obj"));
+        params.add(objParam);
+        // rest
+        var fbody = new BlockStatement(new ArrayList<>(), BlockStatement.Token(TokenKind.OPEN_CURLY));
+        var dec = new DeclarationFunctionStatement(BlockStatement.IntType, name, params, fbody);
         var arr = new ArrayList<DeclarationFunctionStatement>();
         arr.add(dec);
         return arr;
@@ -150,11 +169,15 @@ public class BlockStatement implements Statement {
         return text.toString();
     }
 
-    public static SingleType BooleanType = new SingleType(new Token(TokenKind.BOOLEAN, "boolean", 0, 0, "global"));
-    public static SingleType ObjectType = new SingleType(new Token(TokenKind.OBJECT, "object", 0, 0, "global"));
-    public static SingleType VoidType = new SingleType(new Token(TokenKind.VOID, "void", 0, 0, "global"));
-    public static SingleType StringType = new SingleType(new Token(TokenKind.STRING, "String", 0, 0, "global"));
-    public static Token Identifier(String value) {
-        return new Token(TokenKind.IDENTIFIER, value, 0, 0, "global");
+    public static SingleType BooleanType = new SingleType(BlockStatement.Token(TokenKind.BOOLEAN));
+    public static SingleType ObjectType = new SingleType(BlockStatement.Token(TokenKind.OBJECT));
+    public static SingleType VoidType = new SingleType(BlockStatement.Token(TokenKind.VOID));
+    public static SingleType StringType = new SingleType(BlockStatement.Token(TokenKind.STRING));
+    public static SingleType IntType = new SingleType(BlockStatement.Token(TokenKind.INT));
+    public static Token Token(TokenKind kind, String value) {
+        return new Token(kind, value, 0, 0, "global");
+    }
+    public static Token Token(TokenKind kind) {
+        return new Token(kind, kind.text(), 0, 0, "global");
     }
 }

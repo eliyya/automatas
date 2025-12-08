@@ -21,9 +21,9 @@ sumLoop: for (int i = 0; i < length(tareas); i++) {
 
 // Probemos operadores ++ y +=
 total++;
-++total;
+--total;
 
-println("Total parcial: " + total);
+println("Total: " + total);
 
 // Probemos función top-level
 int doble(int x) {
@@ -37,9 +37,10 @@ println("Doble: " + res);
 int[][] matriz = {
     {1, 2},
     {3, total},
-};
-
-// Recorremos matriz
+    };
+    
+    // Recorremos matriz
+println("Recorriendo matriz:");
 for (int r = 0; r < length(matriz); r++) {
     for (int c = 0; c < length(matriz[r]); c++) {
         println(matriz[r][c]);

@@ -5,8 +5,12 @@ import java.util.stream.Collectors;
 
 import com.compiler.ast.Expression;
 import com.compiler.ast.statements.BlockStatement;
+import com.compiler.ast.statements.declaration.DeclarationFunctionStatement;
+import com.compiler.errors.UnresolvedError;
 import com.compiler.ast.Type;
+import com.compiler.errors.InvalidTypeError;
 import com.compiler.lexer.Token;
+import com.compiler.lexer.TokenKind;
 
 public class FunctionCallExpression implements Expression {
     Token name;
@@ -24,7 +28,15 @@ public class FunctionCallExpression implements Expression {
 
     @Override
     public void validateType(Type type, BlockStatement parent) {
-        throw new UnsupportedOperationException("Unimplemented method 'expression'");
+        if (type == BlockStatement.ObjectType) {
+            return;
+        }
+        System.out.println(this.getType(parent)); 
+        System.out.println(type); 
+        if (this.getType(parent).equals(type)) {
+            return;
+        }
+        throw new InvalidTypeError(type.token().value(), this.token()); 
     }
 
     @Override
@@ -37,9 +49,46 @@ public class FunctionCallExpression implements Expression {
         throw new UnsupportedOperationException("Unimplemented method 'isBoolean'");
     }
 
+    Type getType(BlockStatement parent) {
+        var funcs = parent.getFuncs(this.name.value());
+        if (funcs == null) {
+            throw new UnresolvedError(this.name);
+        }
+        DeclarationFunctionStatement coin = null;
+        for (var fn : funcs) {
+            if (this.parameters.size() != fn.parameters().size()) continue;
+            var isfn = false;
+            for (var i = 0; i < fn.parameters().size(); i++) {
+                var p = fn.parameters().get(i);
+                try {
+                    this.parameters.get(i).validateType(p.type(), parent);
+                    isfn = true;
+                } catch (Exception e) {
+                    isfn = false;
+                }
+            }
+            if (isfn) {
+                coin = fn;
+                break;
+            }
+        }
+        if (coin == null) {
+            throw new UnresolvedError(this.name);
+        }
+        return coin.type();
+    }
+
     @Override
     public boolean isNumber(BlockStatement parent) {
-        throw new UnsupportedOperationException("Unimplemented method 'isNumber'");
+        var k = getType(parent).token().kind();
+        var isNumber = k == TokenKind.NUMBER_EXPRESSION 
+        || k == TokenKind.INT 
+        || k == TokenKind.FLOAT
+        || k == TokenKind.DOUBLE
+        || k == TokenKind.LONG
+        || k == TokenKind.BYTE
+        || k == TokenKind.SHORT;
+        return isNumber;
     }
 
     @Override
