@@ -1,10 +1,12 @@
 package com.compiler.ast.expressions;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.compiler.ast.Expression;
 import com.compiler.ast.statements.BlockStatement;
 import com.compiler.ast.Type;
+import com.compiler.ast.types.ArrayType;
 import com.compiler.lexer.Token;
 
 public class ArrayExpression implements Expression {
@@ -16,7 +18,16 @@ public class ArrayExpression implements Expression {
 
     @Override
     public void validateType(Type type, BlockStatement parent) {
-        throw new UnsupportedOperationException("Unimplemented method 'expression'");
+        System.out.println(type);
+        System.out.println(this.elements);
+        switch (type) {
+            case ArrayType at -> {
+                for (var element : this.elements) {
+                    element.validateType(at.inner(), parent);
+                }
+            }
+            default -> throw new AssertionError();
+        }
     }
 
     @Override
@@ -42,5 +53,10 @@ public class ArrayExpression implements Expression {
     @Override
     public Token token() {
         return this.elements.getFirst().token();
+    }
+
+    @Override
+    public String toString() {
+        return "new ArrayList<>(List.of("+this.elements.stream().map(e -> e.toString()).collect(Collectors.joining(", "))+"))";
     }
 }

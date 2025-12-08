@@ -6,26 +6,10 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Laberinto",
-            "request": "launch",
-            "mainClass": "com.laberinto.Laberinto",
-            "projectName": "oraciones",
-            "args": "./laberinto1.txt"
-        },
-        {
-            "type": "java",
-            "name": "Laberinto",
-            "request": "launch",
-            "mainClass": "com.laberinto.Laberinto",
-            "projectName": "automatas",
-            "args": "./laberinto4.txt"
-        },
-        {
-            "type": "java",
             "name": "Launch with Arguments Prompt",
             "request": "launch",
             "mainClass": "com.compiler.App",
-            "args": "test.java.txt",
+            "args": "test.java.txt -y",
             "vmArgs": "--enable-preview"
         }
     ]

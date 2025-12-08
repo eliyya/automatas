@@ -13,7 +13,9 @@ public class Compiler {
     @SuppressWarnings("CallToPrintStackTrace")
     public static boolean compile(BlockStatement ast) {
         String gen = """
-                public class App {
+                import java.util.List;
+                import java.util.ArrayList;
+                public class Out {
                     static void println(Object obj) { IO.println(obj); }
                     """;
         gen += ast.getFunctions().lines().map(s -> "    " + s).collect(Collectors.joining("\n")) + "\n";
@@ -26,7 +28,7 @@ public class Compiler {
                     }
                 }
                 """;
-        var file = new File("App.java");
+        var file = new File("Out.java");
         try (var writer = new FileWriter(file)) {
             writer.write(gen);
         } catch (IOException e) {
@@ -35,7 +37,6 @@ public class Compiler {
         }
         var jc = ToolProvider.getSystemJavaCompiler();
         var r = jc.run(System.in, System.out, System.err, file.getPath());
-        // file.delete();
         return r == 0;
     }
 }

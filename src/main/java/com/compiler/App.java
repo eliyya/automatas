@@ -20,6 +20,7 @@ public class App {
 
     @SuppressWarnings("CallToPrintStackTrace")
     public static void main(String[] args) throws Exception {
+        var YES = List.of(args).contains("-y");
         if (args.length == 0) {
             IO.println("----------------------------------------------");
             IO.println(format("No se proporcionó ningún archivo", ConsoleColor.RED));
@@ -44,7 +45,7 @@ public class App {
                 + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
         IO.println(format("Presiona Enter para continuar", ConsoleColor.BLACK_BRIGHT));
         IO.println("----------------------------------------------");
-        IO.readln();
+        if (!YES) IO.readln();
         // --------------------
         // lexer - tokenization
         // --------------------
@@ -67,7 +68,7 @@ public class App {
                     + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
             IO.println(format("Presiona Enter para continuar", ConsoleColor.BLACK_BRIGHT));
             IO.println("----------------------------------------------");
-            IO.readln();
+            if (!YES) IO.readln();
             Console.clear();
 
             // ----------------
@@ -93,7 +94,7 @@ public class App {
                         + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
                 IO.println(format("Presiona Enter para continuar", ConsoleColor.BLACK_BRIGHT));
                 IO.println("----------------------------------------------");
-                IO.readln();
+                if (!YES) IO.readln();
                 Console.clear();
                 IO.println();
                 // ----------------
@@ -116,7 +117,7 @@ public class App {
                             + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
                     IO.println(format("Presiona Enter para continuar", ConsoleColor.BLACK_BRIGHT));
                     IO.println("----------------------------------------------");
-                    IO.readln();
+                    if (!YES) IO.readln();
                     Console.clear();
                     try {
                         // ----------------
@@ -403,7 +404,6 @@ public class App {
                 default -> result.append(c);
             }
         }
-
         return result.toString();
     }
 
@@ -415,7 +415,7 @@ public class App {
         IO.println("--------------------------------------------------------");
         IO.println(
                 "Se ha " + format("compilado", ConsoleColor.GREEN)
-                        + " el código fuente en " + format("App.class", ConsoleColor.BLUE_UNDERLINED));
+                + " el código fuente en " + format("Out.class", ConsoleColor.BLUE_UNDERLINED));
         IO.println("--------------------------------------------------------");
     }
 

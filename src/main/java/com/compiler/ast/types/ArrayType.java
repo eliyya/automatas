@@ -15,4 +15,20 @@ public class ArrayType implements Type {
         return this.inner.token();
     }
 
+    public Type inner() {
+        return this.inner;
+    }
+
+    @Override
+    public String toString() {
+        return "ArrayList<" + this.inner.toString(true) + ">";
+    }
+
+    @Override
+    public String toString(boolean generic) {
+        return "ArrayList<" + this.inner.toString(generic) + ">";
+    }
+
+    
+
 }

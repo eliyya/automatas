@@ -115,8 +115,7 @@ public class Lexer {
             }
 
             if (!matched) {
-                var lines = this.source.lines().toList();
-                var line = lines.get(this.row - 1);
+                var line = this.source.lines().toList().get(this.row - 1);
                 IO.println("");
                 IO.println(line);
                 IO.println(" ".repeat(this.col) + "^");

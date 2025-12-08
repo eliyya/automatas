@@ -24,19 +24,22 @@ public class DeclarationVariableStatement implements DeclarationStatement {
     @Override
     public void validate(BlockStatement parent) {
         for (var identifier : identifiers) {
-            if (identifier instanceof IdentifierExpression id) {
-                if (id.isDeclared(parent)) {
-                    throw new DuplicateError(id.getIdentifier());
-                } else {
-                    parent.addVar(id.name(), this.type);
+            switch (identifier) {
+                case IdentifierExpression id -> {
+                    if (id.isDeclared(parent)) {
+                        throw new DuplicateError(id.getIdentifier());
+                    } else {
+                        parent.addVar(id.name(), this.type);
+                    }
                 }
-            } else if (identifier instanceof AssignmentExpression as) {
-                var id = as.getIdentifier();
-                if (as.isDeclared(parent)) {
-                    throw new DuplicateError(id);
-                } else {
-                    parent.addVar(id.value(), this.type);
-                    as.expression().validateType(this.type, parent);
+                case AssignmentExpression as -> {
+                    var id = as.getIdentifier();
+                    if (as.isDeclared(parent)) {
+                        throw new DuplicateError(id);
+                    } else {
+                        parent.addVar(id.value(), this.type);
+                        as.expression().validateType(this.type, parent);
+                    }
                 }
             }
         }
@@ -44,7 +47,7 @@ public class DeclarationVariableStatement implements DeclarationStatement {
 
     @Override
     public String toString() {
-        return this.type.token().value() + " " + this.identifiers.stream().map(DeclarativeExpression::toString).collect(Collectors.joining(", ")) + ";";
+        return this.type + " " + this.identifiers.stream().map(DeclarativeExpression::toString).collect(Collectors.joining(", ")) + ";";
     }
 
     @Override

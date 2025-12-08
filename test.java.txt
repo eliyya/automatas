@@ -47,10 +47,12 @@ void test(Object args) {
 }
 
 
-// int[] arr;
+int[] arr;
 
-// arr = {};
+arr = {};
 
-// int[][] arr2 = {{1},{e},};
+arr = {1,2,3};
+
+int[][] arr2 = {{1},{i},};
 
 float z = 0xF_2.f_1p-2f;

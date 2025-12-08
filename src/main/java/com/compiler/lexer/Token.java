@@ -3,14 +3,14 @@ package com.compiler.lexer;
 import com.compiler.utils.JsonIgnore;
 
 public class Token {
-    private TokenKind kind;
-    private String value;
+    private final TokenKind kind;
+    private final String value;
     @JsonIgnore
-    private int line;
+    private final int line;
     @JsonIgnore
-    private int column;
+    private final int column;
     @JsonIgnore
-    private String textLine;
+    private final String textLine;
 
     public Token(TokenKind kind, String value, int line, int column, String textLine) {
         this.kind = kind;
@@ -40,6 +40,7 @@ public class Token {
         return this.textLine;
     }
 
+    @Override
     public String toString() {
         return "Token{" + "kind=" + kind + ", value='" + value + '\'' + ", line=" + line + ", column=" + column + '}';
     }

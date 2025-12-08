@@ -19,5 +19,23 @@ public class SingleType implements Type {
     public String toString() {
         return this.type.value();
     }
+
+    @Override
+    public String toString(boolean generic) {
+        if (!generic) return this.toString();
+        return switch (this.type.kind()) {
+            case STRING -> "String";
+            case CHAR -> "Character";
+            case INT -> "Integer";
+            case FLOAT -> "Float";
+            case BOOLEAN -> "Boolean";
+            case LONG -> "Long";
+            case SHORT -> "Short";
+            case BYTE -> "Byte";
+            case DOUBLE -> "Double";
+            case OBJECT -> "Object";
+            default -> this.toString();
+        };
+    }
     
 }

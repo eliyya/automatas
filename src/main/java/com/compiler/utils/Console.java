@@ -1,5 +1,7 @@
 package com.compiler.utils;
 
+import java.io.IOException;
+
 public class Console {
     public static String format(Object text, ConsoleColor color) {
         return color + text.toString() + ConsoleColor.RESET;
@@ -19,7 +21,7 @@ public class Console {
                     .start()
                     .waitFor();
             }
-        } catch (Exception e) {
+        } catch (IOException | InterruptedException e) {
             IO.println("\033[H\033[2J");
         }
     }

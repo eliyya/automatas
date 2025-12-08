@@ -15,13 +15,13 @@ interface LedHandler {
 
 public class PrattRegistry {
     // statement
-    public static final Map<TokenKind, Function<Parser, Statement>> stmtLU = new HashMap<>();
+    static final Map<TokenKind, Function<Parser, Statement>> stmtLU = new HashMap<>();
     // null denotation
-    public static final Map<TokenKind, Function<Parser, Expression>> nudLU = new HashMap<>();
+    static final Map<TokenKind, Function<Parser, Expression>> nudLU = new HashMap<>();
     // left denotation
-    public static final Map<TokenKind, LedHandler> ledLU = new HashMap<>();
+    static final Map<TokenKind, LedHandler> ledLU = new HashMap<>();
     // binding power
-    public static final Map<TokenKind, BindingPower> bpLU = new HashMap<>();
+    static final Map<TokenKind, BindingPower> bpLU = new HashMap<>();
     static {
         // logical
         PrattRegistry.led(TokenKind.AND, BindingPower.LOGICAL, ExpressionParser::parseBinaryExpression);
@@ -89,17 +89,17 @@ public class PrattRegistry {
         PrattRegistry.stmt(TokenKind.BREAK, StatementParser::parseBreakStatement);
     }
 
-    public static void led(TokenKind kind, BindingPower bp, LedHandler fn) {
+    static void led(TokenKind kind, BindingPower bp, LedHandler fn) {
         bpLU.put(kind, bp);
         ledLU.put(kind, fn);
     }
 
-    public static void nud(TokenKind kind, BindingPower bp, Function<Parser, Expression> fn) {
+    static void nud(TokenKind kind, BindingPower bp, Function<Parser, Expression> fn) {
         bpLU.put(kind, BindingPower.PRIMARY);
         nudLU.put(kind, fn);
     }
 
-    public static void stmt(TokenKind kind, Function<Parser, Statement> fn) {
+    static void stmt(TokenKind kind, Function<Parser, Statement> fn) {
         bpLU.put(kind, BindingPower.DEFAULT_BP);
         stmtLU.put(kind, fn);
     }

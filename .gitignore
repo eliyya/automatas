@@ -6,6 +6,8 @@
 analized.json
 tree.json
 ast.json
+Out.java
+Out.class
 
 # Package Files
 *.jar
