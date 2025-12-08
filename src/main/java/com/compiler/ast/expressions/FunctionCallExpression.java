@@ -31,8 +31,6 @@ public class FunctionCallExpression implements Expression {
         if (type == BlockStatement.ObjectType) {
             return;
         }
-        System.out.println(this.getType(parent)); 
-        System.out.println(type); 
         if (this.getType(parent).equals(type)) {
             return;
         }

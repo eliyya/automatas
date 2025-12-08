@@ -101,7 +101,7 @@ public class App {
                 // validator
                 // ----------------
                 try {
-                    ast.poblate().validate();
+                    ast.validate();
                     writeTokensSucces(successTokens);
                     writeASTSucces(successAST);
                     writeTreeSucces(successTree);

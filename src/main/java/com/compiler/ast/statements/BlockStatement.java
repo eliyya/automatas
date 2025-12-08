@@ -127,6 +127,7 @@ public class BlockStatement implements Statement {
     }
 
     public void validate() {
+        this.poblate();
         for (var elem : body) {
             elem.validate(this);
         }

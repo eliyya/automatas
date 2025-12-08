@@ -18,8 +18,6 @@ public class ArrayExpression implements Expression {
 
     @Override
     public void validateType(Type type, BlockStatement parent) {
-        System.out.println(type);
-        System.out.println(this.elements);
         switch (type) {
             case ArrayType at -> {
                 for (var element : this.elements) {

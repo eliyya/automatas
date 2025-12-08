@@ -21,7 +21,6 @@ public class ExpressionParser {
 
     public static Expression parseExpression(Parser parser, BindingPower bp) {
         var tokenKind = parser.currentTokenKind();
-        System.out.println(parser.currentToken());
         var nud = PrattRegistry.nudLU.get(tokenKind);
         if (nud == null) {
             throw new RuntimeException("nud handler expected for token: " + tokenKind);
@@ -36,11 +35,6 @@ public class ExpressionParser {
 
             var opbp = PrattRegistry.bpLU.get(opkb);
             if (opbp == null || opbp.ordinal() <= bp.ordinal()) {
-                System.out.print(opbp);
-                System.out.print(" ");
-                System.out.print(bp);
-                System.out.print(" ");
-                System.out.println(left);
                 break;
             }
 
