@@ -182,7 +182,7 @@ public class App {
                 IO.println("Fase 2: " + format("Parseo       ", ConsoleColor.BLUE_BOLD)
                         + format("Fallido", ConsoleColor.RED));
                 IO.println("Fase 3: " + format("Validación   ", ConsoleColor.BLUE_BOLD)
-                        + format("Fallido", ConsoleColor.RED));
+                        + format("Pendiente", ConsoleColor.RED));
                 IO.println("Fase 4: " + format("Compilación  ", ConsoleColor.BLUE_BOLD)
                         + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
                 IO.println("----------------------------------------------");
