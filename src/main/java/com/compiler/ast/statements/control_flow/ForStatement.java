@@ -76,12 +76,6 @@ public class ForStatement implements ContolFlowStatement {
     }
 
     @Override
-    public void validate(BlockStatement parent, Type returnType) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'validate'");
-    }
-
-    @Override
     public Token token() {
         return this.forToken;
     }

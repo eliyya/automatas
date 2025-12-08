@@ -38,7 +38,9 @@ public class DeclarationFunctionStatement implements DeclarationStatement {
         var dec = parent.getFuncs(this.name.value());
         if (dec == null) {
             parent.addFunc(this.name.value(), this);
-            body.validate(parent, this.type);
+            parent.returnType = this.type;
+            body.validate(parent);
+            parent.returnType = null;
             return;
         }
         // check if exist

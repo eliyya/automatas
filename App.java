@@ -29,7 +29,7 @@ public class App {
         }
         lab: for (int l = 0; i < 10; i++) {
             if (i == 2) {
-                break;
+                break lab;
             } else {
                 if (i == 3) {
                     i += 2;

@@ -32,16 +32,6 @@ public class LabeledCicleStatement implements ContolFlowStatement {
     }
 
     @Override
-    public void validate(BlockStatement parent, Type returnType) {
-        if (parent.labels.contains(this.label.value())) {
-            throw new DuplicateError(this.label);
-        }
-        parent.labels.add(this.label.value());
-        this.cicle.validate(parent, returnType);
-        parent.labels.remove(this.label.value());    
-    }
-
-    @Override
     public Token token() {
         return this.label;
     }

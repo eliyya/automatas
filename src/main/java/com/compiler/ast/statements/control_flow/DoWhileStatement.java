@@ -30,12 +30,6 @@ public class DoWhileStatement implements ContolFlowStatement {
     }
 
     @Override
-    public void validate(BlockStatement parent, Type returnType) {
-        this.condition.validateType(BlockStatement.BooleanType, parent);
-        this.body.validate(parent, returnType);
-    }
-
-    @Override
     public Token token() {
         return this.doToken;
     }

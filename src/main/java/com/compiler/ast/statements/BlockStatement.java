@@ -21,7 +21,7 @@ public class BlockStatement implements Statement {
     final String _c = "BlockStatement";
     List<Statement> body;
     @JsonIgnore
-    private Map<String, Type> vars = new HashMap<>();
+    Map<String, Type> vars = new HashMap<>();
     @JsonIgnore
     Map<String, List<DeclarationFunctionStatement>> funcs = new HashMap<>();
     @JsonIgnore
@@ -30,6 +30,8 @@ public class BlockStatement implements Statement {
     Token openToken;
     @JsonIgnore
     public Set<String> labels = new HashSet<>();
+    @JsonIgnore
+    public Type returnType;
 
     public BlockStatement(List<Statement> body, Token openToken) {
         this.openToken = openToken;
@@ -81,29 +83,10 @@ public class BlockStatement implements Statement {
         return text;
     }
 
-    public void validate() {
-        for (var elem : body) {
-            elem.validate(this);
-        }
-    }
-
-    public void validate(BlockStatement parent, Type returnType) {
-        this.funcs.putAll(parent.funcs);
-        this.vars.putAll(parent.vars);
-        this.labels = parent.labels;
-        for (var elem : body) {
-            switch (elem) {
-                case ReturnStatement returnStatement -> returnStatement.validate(this, returnType);
-                case ContolFlowStatement controlFlowStatment -> controlFlowStatment.validate(this, returnType);
-                default -> elem.validate(this);
-            }
-        }
-    }
-
     public BlockStatement poblate() {
-        Map<String, List<DeclarationFunctionStatement>> funcs = new HashMap<>();
-        funcs.put("println", this.genPrintLn());
-        this.funcs.putAll(funcs);
+        Map<String, List<DeclarationFunctionStatement>> tfuncs = new HashMap<>();
+        tfuncs.put("println", this.genPrintLn());
+        this.funcs.putAll(tfuncs);
 
         this.vars.put("args", this.genArgs());
         return this;
@@ -115,8 +98,8 @@ public class BlockStatement implements Statement {
         var objParam = new ParameterStatement(BlockStatement.ObjectType,
                 new Token(TokenKind.IDENTIFIER, "obj", 0, 0, ""));
         params.add(objParam);
-        var body = new BlockStatement(new ArrayList<>(), new Token(TokenKind.OPEN_CURLY, "", 0, 0, ""));
-        var dec = new DeclarationFunctionStatement(BlockStatement.VoidType, name, params, body);
+        var fbody = new BlockStatement(new ArrayList<>(), new Token(TokenKind.OPEN_CURLY, "", 0, 0, ""));
+        var dec = new DeclarationFunctionStatement(BlockStatement.VoidType, name, params, fbody);
         var arr = new ArrayList<DeclarationFunctionStatement>();
         arr.add(dec);
         return arr;
@@ -126,11 +109,18 @@ public class BlockStatement implements Statement {
         return new ArrayType(BlockStatement.StringType);
     }
 
+    public void validate() {
+        for (var elem : body) {
+            elem.validate(this);
+        }
+    }
+
     @Override
     public void validate(BlockStatement parent) {
         this.funcs.putAll(parent.funcs);
         this.vars.putAll(parent.vars);
         this.labels = parent.labels; // copy reference
+        this.returnType = parent.returnType; // copy reference
         for (var elem : body) {
             elem.validate(this);
         }
@@ -139,15 +129,15 @@ public class BlockStatement implements Statement {
     public String getScript() {
         var text = "";
         for (var elem : body) {
-            if (elem instanceof DeclarationFunctionStatement) {
-                // do nothing
-            } else {
-                text += elem.toString() + "\n";
+            switch (elem) {
+                case DeclarationFunctionStatement _ -> {}
+                default -> text += elem.toString() + "\n";
             }
         }
         return text;
     }
 
+    @Override
     public Token token() {
         return this.openToken;
     }
