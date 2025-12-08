@@ -11,7 +11,6 @@ import com.compiler.ast.Type;
 import com.compiler.errors.DuplicateError;
 
 public class DeclarationFunctionStatement implements DeclarationStatement {
-    String _c = "DeclarationFunctionStatement";
     Type type;
     Token name;
     List<ParameterStatement> parameters;

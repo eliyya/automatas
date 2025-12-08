@@ -4,7 +4,6 @@ import com.compiler.ast.Type;
 import com.compiler.lexer.Token;
 
 public class ArrayType implements Type {
-    String _c = "ArrayType";
     Type inner;
 
     public ArrayType(Type inner) {

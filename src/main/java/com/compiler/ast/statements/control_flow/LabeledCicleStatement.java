@@ -7,7 +7,6 @@ import com.compiler.errors.DuplicateError;
 import com.compiler.lexer.Token;
 
 public class LabeledCicleStatement implements ContolFlowStatement {
-    String _c = "LabeledCicleStatement";
     Token label;
     ContolFlowStatement cicle;
 

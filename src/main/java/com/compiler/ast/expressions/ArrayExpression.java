@@ -8,7 +8,6 @@ import com.compiler.ast.Type;
 import com.compiler.lexer.Token;
 
 public class ArrayExpression implements Expression {
-    String _c = "ArrayExpression";
     List<Expression> elements;
 
     public ArrayExpression(List<Expression> elements) {

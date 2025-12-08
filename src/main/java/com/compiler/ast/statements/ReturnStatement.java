@@ -7,7 +7,6 @@ import com.compiler.lexer.Token;
 import com.compiler.utils.JsonIgnore;
 
 public class ReturnStatement implements Statement {
-    String _c = "ReturnStatement";
     @JsonIgnore
     Token returnToken;
     Expression expression;

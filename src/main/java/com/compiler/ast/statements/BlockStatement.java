@@ -18,7 +18,6 @@ import com.compiler.lexer.TokenKind;
 import com.compiler.utils.JsonIgnore;
 
 public class BlockStatement implements Statement {
-    final String _c = "BlockStatement";
     List<Statement> body;
     @JsonIgnore
     Map<String, Type> vars = new HashMap<>();

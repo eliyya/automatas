@@ -337,7 +337,6 @@ public class StatementParser {
             return new ForStatement(stat, collection, body, t);
         }
         // for
-        System.out.println(parser.currentTokenKind());
         var handler = PrattRegistry.stmtLU.get(parser.currentTokenKind());
         if (handler == null) {
             throw new UnexpectedSyntaxError(parser.currentToken());

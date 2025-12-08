@@ -13,7 +13,6 @@ import com.compiler.errors.DuplicateError;
 import com.compiler.lexer.Token;
 
 public class DeclarationVariableStatement implements DeclarationStatement {
-    final String _c = "DeclarationVariableStatement";
     Type type;
     List<DeclarativeExpression> identifiers;
 

@@ -8,7 +8,6 @@ import com.compiler.lexer.Token;
 import com.compiler.lexer.TokenKind;
 
 public class BinaryExpression implements Expression {
-    final String _c = "BinaryExpression";
     Expression left;
     Token operator;
     Expression right;

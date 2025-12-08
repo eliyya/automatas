@@ -20,8 +20,7 @@ public class Console {
                     .waitFor();
             }
         } catch (Exception e) {
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
+            IO.println("\033[H\033[2J");
         }
     }
 }

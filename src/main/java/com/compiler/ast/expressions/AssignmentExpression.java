@@ -6,7 +6,6 @@ import com.compiler.ast.Type;
 import com.compiler.lexer.Token;
 
 public final class AssignmentExpression implements DeclarativeExpression {
-    final String _c = "AssignmentExpression";
     Token identifier;
     Token operator;
     Expression expression;

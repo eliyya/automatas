@@ -14,7 +14,6 @@ enum ForType {
 }
 
 public class ForStatement implements ContolFlowStatement {
-    String _c = "ForStatement";
     ForType type;
     DeclarationVariableStatement statement;
     ExpressionStatement expression;

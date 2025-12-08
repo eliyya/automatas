@@ -10,7 +10,6 @@ import com.compiler.lexer.Token;
 import com.compiler.lexer.TokenKind;
 
 public class NumberExpression implements PrimaryExpression {
-    final String _c = "NumberExpression";
     Token value;
 
     public NumberExpression(Token value) {
@@ -125,7 +124,7 @@ public class NumberExpression implements PrimaryExpression {
         }
         try {
             return Long.parseLong(this.value.value()) > Integer.MAX_VALUE;
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             return Long.parseLong(this.value.value().replaceAll("[lLdDfF]", "")) <= Long.MAX_VALUE;
         }
     }

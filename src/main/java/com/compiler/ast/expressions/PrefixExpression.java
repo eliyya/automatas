@@ -7,7 +7,6 @@ import com.compiler.lexer.Token;
 import com.compiler.lexer.TokenKind;
 
 public class PrefixExpression implements Expression {
-    final String _c = "PrefixExpression";
     Expression expression;
     Token operator;
     boolean suffix;

@@ -8,7 +8,6 @@ import com.compiler.lexer.Token;
 import com.compiler.lexer.TokenKind;
 
 public class StringExpression implements PrimaryExpression {
-    final String _c = "StringExpression";
     Token value;
 
     public StringExpression(Token value) {

@@ -10,7 +10,6 @@ import com.compiler.lexer.Token;
 import com.compiler.lexer.TokenKind;
 
 public class WhileStatement implements ContolFlowStatement {
-    String _c = "WhileStatement";
     Expression condition;
     BlockStatement body;
     Token whileToken;

@@ -8,7 +8,6 @@ import com.compiler.lexer.Token;
 import com.compiler.lexer.TokenKind;
 
 public final class IdentifierExpression implements DeclarativeExpression {
-    final String _c = "IdentifierExpression";
     Token value;
 
     public IdentifierExpression(Token value) {

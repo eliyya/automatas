@@ -8,7 +8,6 @@ import com.compiler.errors.UnresolvedError;
 import com.compiler.lexer.Token;
 
 public class ExpressionStatement implements Statement {
-    final String _c = "ExpressionStatement";
     Expression expression;
 
     public ExpressionStatement(Expression expression) {

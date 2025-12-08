@@ -7,7 +7,6 @@ import com.compiler.ast.statements.ContolFlowStatement;
 import com.compiler.lexer.Token;
 
 public class DoWhileStatement implements ContolFlowStatement {
-    String _c = "DoWhileStatement";
     BlockStatement body;
     Expression condition;
     Token doToken;

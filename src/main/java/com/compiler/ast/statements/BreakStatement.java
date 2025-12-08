@@ -5,7 +5,6 @@ import com.compiler.errors.UnresolvedError;
 import com.compiler.lexer.Token;
 
 public class BreakStatement implements Statement {
-    String _c = "BreakStatement";
     Token label;
     Token breakToken;
 

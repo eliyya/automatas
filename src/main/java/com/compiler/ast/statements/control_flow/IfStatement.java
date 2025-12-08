@@ -6,7 +6,6 @@ import com.compiler.ast.statements.ContolFlowStatement;
 import com.compiler.lexer.Token;
 
 public class IfStatement implements ContolFlowStatement {
-    String _c = "IfStatement";
     Expression condition;
     BlockStatement body;
     BlockStatement elseBody;

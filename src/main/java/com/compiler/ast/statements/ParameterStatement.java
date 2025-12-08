@@ -7,7 +7,6 @@ import com.compiler.ast.Type;
 import com.compiler.lexer.Token;
 
 public class ParameterStatement implements Statement {
-    String _c = "ParameterStatement";
     Type type;
     Token name;
 
