@@ -7,9 +7,12 @@ boolean f, g = true;
 int h = 10; int i = 20;
 String j="hola mundo";
 char k = 'a';
+
 i++;
 ++i;
+
 println(j);
+
 while (i++ < 10) {
     if (i == 2) {
         // do things

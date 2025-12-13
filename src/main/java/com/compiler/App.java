@@ -1,10 +1,13 @@
 package com.compiler;
 
+import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
@@ -20,8 +23,26 @@ public class App {
 
     @SuppressWarnings("CallToPrintStackTrace")
     public static void main(String[] args) throws Exception {
-        var YES = List.of(args).contains("-y");
-        if (args.length == 0) {
+        var arguments = new ArrayList<>(List.of(args));
+        if (arguments.size() > 0) {
+            if (arguments.get(0).equals("run")) {
+                arguments.remove(0);
+                if (arguments.size() == 0) {
+                    IO.println("----------------------------------------------");
+                    IO.println(format("No se proporcionó ningún archivo", ConsoleColor.RED));
+                    IO.println("especifique la ruta del archivo como argumento");
+                    IO.println("Ejemplo: " + format("java", ConsoleColor.YELLOW)
+                            + format(" -jar", ConsoleColor.BLACK_BRIGHT) + " App.jar "
+                            + format("run", ConsoleColor.YELLOW)
+                            + format("test.java.txt", ConsoleColor.BLUE_UNDERLINED));
+                    IO.println("----------------------------------------------");
+                    return;
+                }
+                run(arguments.get(0));
+                return;
+            }    
+        }
+        if (arguments.size() == 0) {
             IO.println("----------------------------------------------");
             IO.println(format("No se proporcionó ningún archivo", ConsoleColor.RED));
             IO.println("especifique la ruta del archivo como argumento");
@@ -31,8 +52,15 @@ public class App {
             IO.println("----------------------------------------------");
             return;
         }
+        
+        // --------------------
+        // source reading
+        // --------------------
+        var source = Files.readString(Path.of(arguments.get(0)));
+        arguments.remove(0);
 
-        var source = Files.readString(Path.of(args[0]));
+        var YES = arguments.contains("-y");
+        arguments.remove("-y");
 
         IO.println("----------------------------------------------");
         IO.println("Fase 1: " + format("Tokenización ", ConsoleColor.BLUE_BOLD)
@@ -201,6 +229,26 @@ public class App {
             IO.println("Fase 4: " + format("Compilación  ", ConsoleColor.BLUE_BOLD)
                     + format("Pendiente", ConsoleColor.BLACK_BRIGHT));
             IO.println("----------------------------------------------");
+        }
+    }
+
+    private static void run(String string) throws IOException, InterruptedException {
+        // compilation
+        var source = Files.readString(Path.of(string));
+        var lexer = new Lexer(source);
+        var tokens = lexer.tokenize();
+        var ast = Parser.parse(tokens);
+        ast.validate();
+        Compiler.compile(ast);
+        // execution
+        var pb = new ProcessBuilder("java", "Out");
+        pb.redirectErrorStream(true);
+        var process = pb.start();
+        var is = process.getInputStream();
+        var sr = new InputStreamReader(is);
+        try (BufferedReader reader = new BufferedReader(sr)) {
+            String line;
+            while ((line = reader.readLine()) != null) IO.println(line);
         }
     }
 

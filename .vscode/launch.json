@@ -6,10 +6,18 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Launch with Arguments Prompt",
+            "name": "Launch Compiler",
             "request": "launch",
             "mainClass": "com.compiler.App",
             "args": "src/test/inputs/test.java.txt",
+            "vmArgs": "--enable-preview",
+        },
+        {
+            "type": "java",
+            "name": "Launch Runner",
+            "request": "launch",
+            "mainClass": "com.compiler.App",
+            "args": "run src/test/inputs/test.java.txt",
             "vmArgs": "--enable-preview"
         }
     ]
